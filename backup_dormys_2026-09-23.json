@@ -1,0 +1,746 @@
+{
+  "dormysData": {
+    "1": {
+      "duenio": "Grosso, Pablo"
+    },
+    "2": {
+      "duenio": "Lerman Marcelo"
+    },
+    "3": {
+      "duenio": "Barbalaco, Alberto A."
+    },
+    "4": {
+      "duenio": "Marmo, Norberto Rafael"
+    },
+    "5": {
+      "duenio": "Delgado, Gustavo"
+    },
+    "6": {
+      "duenio": "Testa, Constanza"
+    },
+    "7": {
+      "duenio": "Pescio Maria Isabel"
+    },
+    "8": {
+      "duenio": "Ferraro, Omar"
+    },
+    "9": {
+      "duenio": "Salmeri, Guido"
+    },
+    "10": {
+      "duenio": "Bucholc, Oscar"
+    },
+    "11": {
+      "duenio": "Jatzkaer, Enrique"
+    },
+    "12": {
+      "duenio": "Bonialian, Eduardo"
+    },
+    "13": {
+      "duenio": "Ponce, Adrian"
+    },
+    "14": {
+      "duenio": "Orco. Eugenio"
+    },
+    "15": {
+      "duenio": "Zampa, Maria Cristina"
+    },
+    "16": {
+      "duenio": "Alvarez, Juan Antonio"
+    },
+    "17": {
+      "duenio": "Bianchin, Mauro"
+    },
+    "18": {
+      "duenio": "Romano Antonio"
+    },
+    "19": {
+      "duenio": "Corral Fernando"
+    },
+    "20": {
+      "duenio": "Gómez, Marcelo Fabián"
+    },
+    "21": {
+      "duenio": "Vicario, Adrian"
+    },
+    "22": {
+      "duenio": "Calvo Echeverry, Martin"
+    },
+    "23": {
+      "duenio": "Conzon, Flavio"
+    },
+    "24": {
+      "duenio": "Nuri, Marcelo"
+    },
+    "25": {
+      "duenio": "Fideicomiso  SMM"
+    },
+    "26": {
+      "duenio": "Campisi, Hugo"
+    },
+    "27": {
+      "duenio": "Imperatore, Oscar"
+    },
+    "28": {
+      "duenio": "Bucholc Erika"
+    },
+    "29": {
+      "duenio": "Kichic, Ramón E."
+    },
+    "30": {
+      "duenio": "Linardi, Andrea"
+    },
+    "31": {
+      "duenio": "Coltellini, Sergio"
+    },
+    "32": {
+      "duenio": "Vera, Raúl Horacio"
+    },
+    "33": {
+      "duenio": "Juliani, Andrea"
+    },
+    "34": {
+      "duenio": "Marcovich, Norma"
+    },
+    "35": {
+      "duenio": "Montone, Fabiana"
+    },
+    "36": {
+      "duenio": "Gonzalez, Silvia Gabriela"
+    },
+    "37": {
+      "duenio": "Russo Brian"
+    },
+    "38": {
+      "duenio": "Morelle Lopez, Francisco"
+    },
+    "39": {
+      "duenio": "Lamas Sergio"
+    },
+    "40": {
+      "duenio": "Cosce Maria Angelica"
+    },
+    "41": {
+      "duenio": "Balanian Silvia"
+    },
+    "42": {
+      "duenio": "Pedace, Jorge"
+    },
+    "43": {
+      "duenio": "Pedace, Jorge"
+    },
+    "44": {
+      "duenio": "Calcagno, Alicia"
+    },
+    "45": {
+      "duenio": "Martin, Olga"
+    },
+    "46": {
+      "duenio": "Lisjak, Hugo Roberto"
+    },
+    "47": {
+      "duenio": "Forlano, Alberto O."
+    },
+    "48": {
+      "duenio": "Forlano, Alberto O."
+    },
+    "49": {
+      "duenio": "Cozza Eduardo"
+    },
+    "50": {
+      "duenio": "Mayo, Ricardo F."
+    },
+    "51": {
+      "duenio": "Bejarano, Jorge"
+    },
+    "52": {
+      "duenio": "Gutierrez Maximiliano"
+    },
+    "53": {
+      "duenio": "Eidelman Gabriel"
+    },
+    "54": {
+      "duenio": "Risso, Jorge y Sra."
+    },
+    "55": {
+      "duenio": "Novoa, Mirta"
+    },
+    "56": {
+      "duenio": "Repetto Daniel"
+    },
+    "57": {
+      "duenio": "Di Marino Giselle"
+    },
+    "58": {
+      "duenio": "Douce Carlos"
+    },
+    "59": {
+      "duenio": "Paruolo, Alejandro y Sra."
+    },
+    "60": {
+      "duenio": "Garcia Laura"
+    },
+    "61": {
+      "duenio": "Sosa, Graciela"
+    },
+    "62": {
+      "duenio": "Sierra de Arias, Viviana"
+    },
+    "63": {
+      "duenio": "Rebora, Fernando"
+    },
+    "64": {
+      "duenio": "Zugasti, Adriana"
+    },
+    "65": {
+      "duenio": "Visintin Maria Cristina"
+    },
+    "66": {
+      "duenio": "Marmo, Norberto Rafael"
+    },
+    "67": {
+      "duenio": "Perrone, Martha"
+    },
+    "68": {
+      "duenio": "Tavella Alicia"
+    },
+    "69": {
+      "duenio": "Tejero, Alberto"
+    },
+    "70": {
+      "duenio": "Distefano, Analia"
+    },
+    "71": {
+      "duenio": "Spata, Pablo Gabriel"
+    },
+    "72": {
+      "duenio": "Rizzo, Ignacio"
+    },
+    "73": {
+      "duenio": "Lopez Lado, Daniel"
+    },
+    "74": {
+      "duenio": "De La Fuente, Alberto"
+    },
+    "75": {
+      "duenio": "Avila Norma"
+    },
+    "76": {
+      "duenio": "De La Fuente, Alberto"
+    },
+    "77": {
+      "duenio": "Eidelman, Mario"
+    },
+    "78": {
+      "duenio": "Dominijanni Florencia"
+    },
+    "79": {
+      "duenio": "Mao, Silvia"
+    },
+    "80": {
+      "duenio": "Rocino Luis"
+    },
+    "81": {
+      "duenio": "Polin Carmen"
+    },
+    "82": {
+      "duenio": "Emanuelli, Monica"
+    },
+    "83": {
+      "duenio": "Fuhrmann, Karin"
+    },
+    "84": {
+      "duenio": "Zapico, Marria Soledad"
+    },
+    "85": {
+      "duenio": "Anselmo, Armando"
+    },
+    "86": {
+      "duenio": "Vazquez Maria del Carmen"
+    },
+    "87": {
+      "duenio": "Romano, Veronica"
+    },
+    "88": {
+      "duenio": "Respighi, Pablo G."
+    },
+    "89": {
+      "duenio": "Torres Lacal, Andrea"
+    },
+    "90": {
+      "duenio": "Moyano, Carlos"
+    },
+    "91": {
+      "duenio": "Bustamante Epifania"
+    },
+    "92": {
+      "duenio": "Hochman, Damian"
+    },
+    "93": {
+      "duenio": "Codina, Gabriel"
+    },
+    "94": {
+      "duenio": "Juarez Roldan Anahi"
+    },
+    "95": {
+      "duenio": "Cosce Maria Angelica"
+    },
+    "96": {
+      "duenio": "De La fuente, Ramiro"
+    },
+    "97": {
+      "duenio": "Morganti, Alejandro"
+    },
+    "98": {
+      "duenio": "Cestona, Pedro"
+    },
+    "99": {
+      "duenio": "Montiel, Angel David"
+    }
+  },
+  "reparacionesData": {
+    "1": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "2": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "3": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "4": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "5": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "6": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "7": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "8": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "9": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "10": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "11": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "12": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "13": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "14": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "15": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "16": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "17": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "18": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "19": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "20": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "21": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "22": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "23": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "24": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "25": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "26": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "27": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "28": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "29": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "30": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "31": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "32": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "33": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "34": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "35": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "36": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "37": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "38": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "39": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "40": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "41": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "42": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "43": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "44": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "45": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "46": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "47": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "48": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "49": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "50": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "51": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "52": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "53": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "54": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "55": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "56": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "57": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "58": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "59": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "60": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "61": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "62": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "63": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "64": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "65": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "66": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "67": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "68": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "69": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "70": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "71": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "72": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "73": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "74": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "75": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "76": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "77": {
+      "estado": "Reparación parcial",
+      "presupuesto": ""
+    },
+    "78": {
+      "estado": "Reparación parcial",
+      "presupuesto": ""
+    },
+    "79": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "80": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "81": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "82": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "83": {
+      "estado": "Sin registrar",
+      "presupuesto": ""
+    },
+    "84": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "85": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "86": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "87": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "88": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "89": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "90": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "91": {
+      "estado": "Reparación urgente",
+      "presupuesto": ""
+    },
+    "92": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "93": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "94": {
+      "estado": "Reparación media",
+      "presupuesto": ""
+    },
+    "95": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "96": {
+      "estado": "Reparación leve",
+      "presupuesto": ""
+    },
+    "97": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "98": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    },
+    "99": {
+      "estado": "Reparado",
+      "presupuesto": ""
+    }
+  },
+  "novedades": [
+    {
+      "id": 1789655722242,
+      "dormy": "1",
+      "fecha": "2026-09-17",
+      "estado": "En reparacion",
+      "descripcion": "Tiene tejas rotas",
+      "observacion": "",
+      "archivos": [
+        {
+          "id": "file_1789661962183_qrkbp",
+          "name": "Zoom_1709.jpeg"
+        }
+      ]
+    }
+  ],
+  "pagos": [
+    {
+      "id": 1789661911417,
+      "fecha": "2026-09-15",
+      "responsable": "FERREYRA ELIAS EZEQUIEL",
+      "monto": 220000,
+      "concepto": "Limpieza dormys. Mano de obra y materiales",
+      "facturas": [
+        {
+          "id": "file_1789661901368_9lx1l",
+          "name": "FC 61.pdf"
+        }
+      ]
+    }
+  ],
+  "estadosConfig": [
+    {
+      "nombre": "En espera",
+      "color": "#f59e0b"
+    },
+    {
+      "nombre": "En reparacion",
+      "color": "#3b82f6"
+    },
+    {
+      "nombre": "Reparado",
+      "color": "#10b981"
+    }
+  ],
+  "textoImporteConfig": "Importe Total: $",
+  "fechaExportacion": "2026-09-23T20:37:45.999Z"
+}

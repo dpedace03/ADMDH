@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Techos - Dormys</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #cbd5e1;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 12px; max-width: 1000px; margin: 0 auto; }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        header h2 { font-size: 1.15rem; font-weight: 700; }
+        .user-control { display: flex; align-items: center; gap: 6px; }
+        .user-control select { padding: 6px 10px; border-radius: 6px; border: none; font-weight: bold; font-size: 0.9rem; background: #ffffff; color: var(--text); }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+        nav button {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        nav button:hover, nav button.active { background-color: var(--primary-light); color: white; border-color: var(--primary-light); }
+
+        .section { display: none; background: var(--card-bg); padding: 16px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .section.active { display: block; }
+
+        .card-box { background: #f8fafc; padding: 14px; border-radius: 10px; margin-bottom: 16px; border: 1px solid var(--border); }
+        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #334155; }
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #ffffff;
+            width: 100%;
+        }
+
+        .btn-group-form {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+        }
+
+        button.btn-submit {
+            flex: 1;
+            background-color: var(--primary);
+            color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
+        button.btn-submit:hover { background-color: var(--primary-light); }
+
+        button.btn-reset-form {
+            background-color: var(--secondary);
+            color: white; border: none; padding: 12px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
+        button.btn-reset-form:hover { background-color: #475569; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; min-width: 600px; }
+        th, td { border: 1px solid var(--border); padding: 10px; text-align: left; font-size: 0.88rem; }
+        th { background-color: #f1f5f9; font-weight: 700; color: #1e293b; }
+
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: white; font-weight: bold; display: inline-block; }
+        .btn-delete { background-color: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+        .btn-edit { background-color: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; margin-right: 4px; font-size: 0.85rem; }
+        .btn-action { background-color: var(--primary-light); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+
+        .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+        .preview-item { display: flex; flex-direction: column; align-items: center; position: relative; }
+        .preview-thumb {
+            width: 52px; height: 52px; border-radius: 8px; border: 1px solid var(--border); object-fit: cover; cursor: pointer; background: #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; text-align: center; color: var(--primary);
+            overflow: hidden; text-decoration: none;
+        }
+        .preview-thumb:hover { transform: scale(1.05); }
+        .remove-file-btn {
+            position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none;
+            border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 10px; }
+        .modal-content-wrapper { position: relative; max-width: 95%; max-height: 90%; display: flex; flex-direction: column; align-items: center; }
+        .modal-viewer { max-width: 100%; max-height: 70vh; border-radius: 8px; transition: transform 0.2s ease; background: white; }
+        .modal-controls { margin-top: 15px; display: flex; gap: 8px; background: rgba(255,255,255,0.25); padding: 8px 12px; border-radius: 20px; flex-wrap: wrap; justify-content: center; }
+        .modal-controls button, .modal-controls a { background: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; color: black; font-size: 0.85rem;}
+        .close-modal { position: absolute; top: -40px; right: 0; color: white; font-size: 32px; font-weight: bold; cursor: pointer; }
+
+        .excel-box { border: 2px dashed var(--primary-light); background: #eff6ff; padding: 14px; border-radius: 10px; margin-bottom: 20px; }
+        .excel-params { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 12px; text-align: left; }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .reparaciones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .dormy-cell {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            user-select: none;
+            position: relative;
+        }
+        .dormy-cell:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+            z-index: 2;
+        }
+        .dormy-cell .dormy-num { font-size: 1.1rem; }
+        .dormy-cell .dormy-sub { font-size: 0.65rem; opacity: 0.9; font-weight: normal; margin-top: 2px; text-align: center; line-height: 1; }
+
+        .leyenda-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+        .leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
+        .leyenda-color { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
+
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            header { flex-direction: column; align-items: stretch; text-align: center; }
+            .user-control { justify-content: center; }
+            .config-grid { grid-template-columns: 1fr; }
+            .section { padding: 12px; }
+            nav button { padding: 10px 12px; font-size: 0.85rem; }
+            form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Administración de Techos - Dormys (1-99)</h2>
+        <div class="user-control">
+            <label for="userSelect" style="color:white;">Usuario:</label>
+            <select id="userSelect" onchange="changeUser()">
+                <option value="Ferreyra">Ferreyra (Operador)</option>
+                <option value="comision">Comisión (Admin)</option>
+            </select>
+        </div>
+    </header>
+
+    <nav>
+        <button id="btn-admin-dormys" class="active" onclick="showSection('admin-dormys')">🏢 Administración Dormys</button>
+        <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Reparaciones Techos</button>
+        <button id="btn-novedades" onclick="showSection('novedades')">Novedades</button>
+        <button id="btn-pagos" onclick="showSection('pagos')">Pagos Responsables</button>
+        <button id="btn-stats" onclick="showSection('stats')">Estadísticas</button>
+        <button id="btn-config" onclick="showSection('config')">Configuración</button>
+    </nav>
+
+    <!-- PANTALLA PRINCIPAL: ADMINISTRACIÓN DORMYS -->
+    <section id="sec-admin-dormys" class="section active" style="text-align: center; padding: 30px 15px;">
+        <h2 style="color: var(--primary); margin-bottom: 25px; font-size: 1.5rem;">Administración Dormys</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 750px; margin: 0 auto 30px auto;">
+            <button onclick="moduloProximamente('Facundo')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">👤</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Facundo</span>
+            </button>
+
+            <button onclick="moduloProximamente('Casita')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">🏡</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Casita</span>
+            </button>
+
+            <button onclick="showSection('reparaciones')" style="background: var(--primary); color: white; border: 2px solid var(--primary); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">🏚️</span>
+                <span style="font-weight: bold; font-size: 1.1rem;">Techos</span>
+            </button>
+
+            <button onclick="moduloProximamente('Informes')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">📊</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Informes</span>
+            </button>
+
+            <button onclick="moduloProximamente('Gastos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">💸</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Gastos</span>
+            </button>
+
+            <button onclick="moduloProximamente('Piscina')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">🏊</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Piscina</span>
+            </button>
+        </div>
+
+        <div style="background: #f1f5f9; padding: 18px; border-radius: 12px; max-width: 380px; margin: 0 auto; border: 1px solid var(--border);">
+            <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--text);">Acceso Rápido por Dormy</label>
+            <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+                <span style="font-weight: bold;">DH n°:</span>
+                <input type="number" id="home-dh-num" min="1" max="99" placeholder="1-99" style="width: 85px; text-align: center; font-size: 1rem; font-weight: bold;" onkeydown="if(event.key==='Enter') ingresarPorDH()">
+                <button onclick="ingresarPorDH()" style="background-color: var(--primary-light); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">Ir</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- REPARACIONES (GRILLA 1-99) -->
+    <section id="sec-reparaciones" class="section">
+        <h3>Estado de Reparaciones por Dormy (1-99)</h3>
+        <p style="color: var(--secondary); font-size: 0.9rem; margin-bottom: 15px;">Haga clic en el número de Dormy para ver detalles, cambiar el estado o registrar un presupuesto.</p>
+
+        <div class="leyenda-container">
+            <div class="leyenda-item" id="filtro-rep-Reparación urgente" onclick="filtrarReparacionesPorEstado('Reparación urgente')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #ef4444;"></span> Rojo (Urgente / Val. 1)</div>
+            <div class="leyenda-item" id="filtro-rep-Reparación media" onclick="filtrarReparacionesPorEstado('Reparación media')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #f59e0b;"></span> Amarillo (Media / Val. 2)</div>
+            <div class="leyenda-item" id="filtro-rep-Reparación parcial" onclick="filtrarReparacionesPorEstado('Reparación parcial')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #f97316;"></span> Naranjita (Parcial)</div>
+            <div class="leyenda-item" id="filtro-rep-Reparación leve" onclick="filtrarReparacionesPorEstado('Reparación leve')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #84cc16;"></span> Verde Claro (Leve / Val. 3)</div>
+            <div class="leyenda-item" id="filtro-rep-Reparado" onclick="filtrarReparacionesPorEstado('Reparado')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #10b981;"></span> Verde Esmeralda (Reparado)</div>
+            <div class="leyenda-item" id="filtro-rep-Sin registrar" onclick="filtrarReparacionesPorEstado('Sin registrar')" style="cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;"><span class="leyenda-color" style="background-color: #cbd5e1;"></span> Gris (Sin registrar)</div>
+            <button id="btn-limpiar-filtro-rep" onclick="filtrarReparacionesPorEstado(null)" style="display: none; margin-left: auto; background-color: var(--secondary); color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">Ver Todos</button>
+        </div>
+
+        <div id="grilla-dormys" class="reparaciones-grid"></div>
+    </section>
+
+    <!-- MODAL DE EDICIÓN DE REPARACIÓN -->
+    <div id="modalReparacion" class="modal">
+        <div class="modal-content-wrapper" style="background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 90%;">
+            <span class="close-modal" onclick="cerrarModalReparacion()" style="color: #333; top: 10px; right: 15px;">&times;</span>
+            <h3 id="modal-rep-titulo" style="color: var(--primary); margin-bottom: 5px;">Dormy N° --</h3>
+            <p id="modal-rep-duenio" style="color: var(--secondary); font-size: 0.9rem; margin-bottom: 15px;">Dueño: --</p>
+
+            <form onsubmit="guardarReparacionModal(event)" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="hidden" id="modal-rep-dormy-id">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Orden (1-99)</label>
+                        <input type="number" id="modal-rep-orden" min="1" max="99" placeholder="Ej: 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha :</label>
+                        <input type="date" id="modal-rep-fecha">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Estado de la Reparación</label>
+                    <select id="modal-rep-estado" required>
+                        <option value="Sin registrar">⚪ Sin registrar - Gris</option>
+                        <option value="Reparación urgente">🔴 Reparación urgente - Rojo</option>
+                        <option value="Reparación media">🟡 Reparación media - Amarillo</option>
+                        <option value="Reparación parcial">🟠 Reparación parcial - Naranjita</option>
+                        <option value="Reparación leve">🟢 Reparación leve - Verde claro</option>
+                        <option value="Reparado">🟩 Reparado - Verde esmeralda</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Información del Presupuesto / Observaciones</label>
+                    <textarea id="modal-rep-presupuesto" rows="3" placeholder=" Ingrese aqui el presupuesto"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="submit" class="btn-submit">Guardar Cambios</button>
+                    <button type="button" class="btn-reset-form" onclick="cerrarModalReparacion()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NOVEDADES -->
+    <section id="sec-novedades" class="section">
+        <h3>Cargar / Modificar Novedad</h3>
+        <div class="card-box">
+            <form id="form-novedad" onsubmit="guardarNovedad(event)">
+                <input type="hidden" id="nov-id">
+                <div class="form-group">
+                    <label>Nro. Dormy (1-99)</label>
+                    <input type="number" id="nov-dormy" min="1" max="99" required onchange="actualizarDuenioLabel()">
+                    <small id="lbl-duenio" style="color: var(--secondary);"></small>
+                </div>
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="nov-fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="nov-estado" required></select>
+                </div>
+                <div class="form-group full-width">
+                    <label>Descripción</label>
+                    <input type="text" id="nov-descripcion" required placeholder="Ej: Filtración en canaleta">
+                </div>
+                <div class="form-group full-width">
+                    <label>Observaciones</label>
+                    <textarea id="nov-observacion" rows="2"></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>Archivos Adjuntos (Imágenes / PDF / Documentos)</label>
+                    <input type="file" id="nov-archivo" multiple accept="image/*,application/pdf" onchange="previewNuevosArchivosNov(event)">
+                    <div id="nov-archivos-existentes" class="preview-container"></div>
+                </div>
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-nov">Guardar Novedad</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormNovedad()">Nueva</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Consultar Novedades</h3>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="buscar-nov" placeholder="Filtrar por Dormy o Descripción..." onkeyup="renderNovedades()" style="flex: 1; min-width: 200px;">
+            <select id="filtro-estado-nov" onchange="renderNovedades()" style="min-width: 150px;">
+                <option value="">Todos los Estados</option>
+            </select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Dormy</th>
+                        <th>Dueño</th>
+                        <th>Descripción</th>
+                        <th>Observación</th>
+                        <th>Estado</th>
+                        <th>Adjuntos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-novedades"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- PAGOS RESPONSABLES -->
+    <section id="sec-pagos" class="section">
+        <h3>Gestionar Pagos al Responsable de Techos</h3>
+        <div class="card-box">
+            <form id="form-pago" onsubmit="guardarPago(event)">
+                <input type="hidden" id="pago-id">
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="pago-fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>Responsable / Prestador</label>
+                    <input type="text" id="pago-responsable" required placeholder="Nombre del techista/empresa">
+                </div>
+                <div class="form-group">
+                    <label>Monto ($)</label>
+                    <input type="number" id="pago-monto" min="0" step="0.01" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Concepto / Detalle del Trabajo</label>
+                    <input type="text" id="pago-concepto" required placeholder="Ej: Pago arreglo techos">
+                </div>
+                <div class="form-group full-width">
+                    <label>Adjuntar Facturas (PDF / Imágenes)</label>
+                    <input type="file" id="pago-facturas" accept="image/*,application/pdf" multiple onchange="previewNuevasFacturasPago(event)">
+                    <div id="pago-facturas-existentes" class="preview-container"></div>
+                </div>
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-pago">Registrar Pago</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormPago()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Historial de Pagos</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Responsable</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Facturas</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-pagos"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ESTADÍSTICAS -->
+    <section id="sec-stats" class="section">
+        <h3>Estadísticas del Estado de Techos</h3>
+        <br>
+        <div class="stats-grid">
+            <div>
+                <h4 style="text-align: center;">Distribución de Estados</h4>
+                <div class="chart-container"><canvas id="chartEstados"></canvas></div>
+            </div>
+            <div>
+                <h4 style="text-align: center;">Resumen General</h4>
+                <div id="resumen-stats" style="margin-top: 20px; line-height: 2;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONFIGURACIÓN -->
+    <section id="sec-config" class="section">
+        <h3>Configuración General y Copia de Seguridad</h3>
+        <br>
+
+        <!-- COPIA DE SEGURIDAD (BACKUP) -->
+        <div class="card-box" style="border: 2px dashed var(--primary-light); background: #eff6ff; margin-bottom: 25px;">
+            <h4 style="color: var(--primary); margin-bottom: 8px;">💾 Copia de Seguridad (Backup JSON)</h4>
+            <p style="font-size: 0.9rem; color: var(--secondary); margin-bottom: 15px;">Exporta un respaldo con la información de la aplicación o restaura una copia de seguridad existente (.json).</p>
+            
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <button type="button" onclick="exportarBackupJSON()" class="btn-action" style="background-color: var(--success); padding: 10px 18px; font-size: 0.95rem;">
+                    ⬇️ Exportar Backup JSON
+                </button>
+
+                <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 280px;">
+                    <input type="file" id="import-json-file" accept=".json" style="padding: 6px;">
+                    <button type="button" onclick="importarBackupJSON()" class="btn-action" style="background-color: var(--warning); padding: 10px 18px; font-size: 0.95rem; white-space: nowrap;">
+                        ⬆️ Importar Backup JSON
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-grid">
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <h4>Configuración de Facturas</h4>
+                    <div class="card-box" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label>Texto importe (para extracción automática en PDF):</label>
+                            <input type="text" id="cfg-texto-importe" value="Importe Total: $" placeholder="Ej: Importe Total: $">
+                        </div>
+                        <button type="button" class="btn-action" style="margin-top: 10px;" onclick="guardarTextoImporteConfig()">Guardar Texto Importe</button>
+                    </div>
+                </div>
+
+                <h4>Gestión de Estados de Techos y Colores</h4>
+                <div class="card-box" style="margin-top: 10px;">
+                    <form id="form-estado" onsubmit="guardarEstadoConfig(event)" style="grid-template-columns: 1fr auto auto;">
+                        <div class="form-group">
+                            <label>Nombre del Estado</label>
+                            <input type="text" id="cfg-estado-nombre" required placeholder="Ej: Urgente, Pendiente">
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="color" id="cfg-estado-color" value="#3b82f6" style="height: 38px; padding: 2px;">
+                        </div>
+                        <div class="form-group" style="justify-content: flex-end;">
+                            <button type="submit" class="btn-action" style="height: 38px;">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Estado</th><th>Color</th><th>Muestra</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla-estados-config"></tbody>
+                </table>
+            </div>
+
+            <div>
+                <h4>Configuración de Dormys (Asignación de Dueños)</h4>
+                
+                <div class="excel-box" style="margin-top: 10px;">
+                    <label style="font-size: 0.95rem; color: var(--primary); display: block; margin-bottom: 8px;">
+                        <strong>Importar Dueños desde Excel (.xlsx / .xls / .csv)</strong>
+                    </label>
+                    <div class="excel-params">
+                        <div class="form-group">
+                            <label>Nombre Pestaña</label>
+                            <input type="text" id="xls-sheet" value="Saldos a Cobrar">
+                        </div>
+                        <div class="form-group">
+                            <label>Fila Inicio</label>
+                            <input type="number" id="xls-row" value="4" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Col. Dormy</label>
+                            <input type="text" id="xls-col-dormy" value="B" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Col. Dueño</label>
+                            <input type="text" id="xls-col-duenio" value="D" style="text-transform: uppercase;">
+                        </div>
+                    </div>
+                    <input type="file" id="excel-file" accept=".xlsx, .xls, .csv" onchange="cargarExcelDuenios(event)">
+                </div>
+
+                <div style="max-height: 350px; overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Nro. Dormy</th><th>Nombre del Dueño</th><th>Acción</th></tr>
+                        </thead>
+                        <tbody id="tabla-config"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL DE VISUALIZACIÓN / ZOOM -->
+    <div id="modalViewer" class="modal">
+        <div class="modal-content-wrapper">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+            <div id="modalBody" style="display:flex; justify-content:center; align-items:center;"></div>
+            <div class="modal-controls">
+                <button onclick="zoomModal(0.2)">Zoom +</button>
+                <button onclick="zoomModal(-0.2)">Zoom -</button>
+                <button onclick="rotateModal(90)">Rotar</button>
+                <a id="modalDownload" href="#" download>Descargar</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let textoImporteConfig = localStorage.getItem('textoImporteConfig') || 'Importe Total: $';
+
+        function guardarTextoImporteConfig() {
+            const val = document.getElementById('cfg-texto-importe').value;
+            textoImporteConfig = val;
+            localStorage.setItem('textoImporteConfig', val);
+            alert('Texto para extracción de importe guardado.');
+        }
+
+        const DB_NAME = 'TechosDormysFilesDB';
+        const DB_VERSION = 1;
+        let dbInstance = null;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('files')) {
+                        db.createObjectStore('files', { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = (e) => {
+                    dbInstance = e.target.result;
+                    resolve(dbInstance);
+                };
+                request.onerror = (e) => {
+                    console.error('Error IndexedDB:', e);
+                    reject(e);
+                };
+            });
+        }
+
+        async function guardarArchivoIDB(fileId, name, url) {
+            if (!dbInstance) await initDB();
+            return new Promise((resolve, reject) => {
+                const transaction = dbInstance.transaction(['files'], 'readwrite');
+                const store = transaction.objectStore('files');
+                store.put({ id: fileId, name, url });
+                transaction.oncomplete = () => resolve(fileId);
+                transaction.onerror = (e) => reject(e);
+            });
+        }
+
+        async function obtenerArchivoIDB(fileId) {
+            if (!dbInstance) await initDB();
+            return new Promise((resolve) => {
+                const transaction = dbInstance.transaction(['files'], 'readonly');
+                const store = transaction.objectStore('files');
+                const request = store.get(fileId);
+                request.onsuccess = (e) => resolve(e.target.result ? e.target.result.url : null);
+                request.onerror = () => resolve(null);
+            });
+        }
+
+        function reconstruirTextoPorFilas(items) {
+            const its = items
+                .filter(it => it.str && it.str.trim() !== '')
+                .map(it => ({ str: it.str, x: it.transform[4], y: it.transform[5] }));
+            const tolY = 4;
+            const filas = [];
+            for (const it of its) {
+                let fila = filas.find(f => Math.abs(f.y - it.y) <= tolY);
+                if (!fila) { fila = { y: it.y, items: [] }; filas.push(fila); }
+                fila.items.push(it);
+            }
+            filas.sort((a, b) => b.y - a.y);
+            return filas
+                .map(f => f.items.sort((a, b) => a.x - b.x).map(it => it.str).join(' '))
+                .join('\n');
+        }
+
+        async function extraerTextoDePDF(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    fullText += '\n' + reconstruirTextoPorFilas(textContent.items);
+                }
+
+                if (!fullText.trim()) {
+                    console.log('PDF sin texto embebido. Iniciando OCR con Tesseract...');
+                    const url = await readFileAsBase64(file);
+                    const result = await Tesseract.recognize(url, 'spa');
+                    fullText = result.data.text;
+                }
+                return fullText;
+            } catch (err) {
+                console.error('Error extrayendo texto del PDF:', err);
+                return '';
+            }
+        }
+
+        async function extraerTextoDeImagen(file) {
+            try {
+                const url = await readFileAsBase64(file);
+                const result = await Tesseract.recognize(url, 'spa');
+                return result.data.text;
+            } catch (err) {
+                console.error('Error en OCR de imagen:', err);
+                return '';
+            }
+        }
+
+        function parsearNumero(raw) {
+            let s = String(raw).replace(/\s/g, '').replace(/[^0-9.,]/g, '');
+            if (!s) return null;
+            const tieneComa = s.includes(','), tienePunto = s.includes('.');
+            if (tieneComa && tienePunto) {
+                if (s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g, '').replace(',', '.');
+                else s = s.replace(/,/g, '');
+            } else if (tieneComa) {
+                const p = s.split(',');
+                s = (p.length === 2 && p[1].length <= 2) ? p[0] + '.' + p[1] : s.replace(/,/g, '');
+            } else if (tienePunto) {
+                const p = s.split('.');
+                if (!(p.length === 2 && p[1].length <= 2)) s = s.replace(/\./g, '');
+            }
+            const val = parseFloat(s);
+            return isNaN(val) ? null : val;
+        }
+
+        function buscarMontoEnTexto(texto, patronConfig) {
+            if (!texto) return null;
+            const textoNorm = texto.replace(/\s+/g, ' ');
+            const patrones = [];
+            if (patronConfig && patronConfig.trim()) patrones.push(patronConfig.trim());
+            ["Importe Total", "Total a Pagar", "Total:", "TOTAL", "Importe"].forEach(p => patrones.push(p));
+
+            for (let pat of patrones) {
+                const patronEscaped = pat.trim()
+                    .replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+                    .replace(/\s+/g, '\\s*');
+
+                const etiquetaRe = new RegExp(patronEscaped, 'i');
+                const m = textoNorm.match(etiquetaRe);
+                if (!m) continue;
+
+                const resto = textoNorm
+                    .slice(m.index + m[0].length, m.index + m[0].length + 40)
+                    .replace(/\s/g, '');
+
+                const numMatch = resto.match(/^[:=$]*\$?(\d[\d.,]*\d|\d)/);
+                if (numMatch && numMatch[1]) {
+                    const val = parsearNumero(numMatch[1]);
+                    if (val !== null && val > 0) return val;
+                }
+            }
+            return null;
+        }
+
+        function extraerFechaFactura(texto) {
+            if (!texto) return '';
+            let m = texto.match(/Fecha\s+de\s+Emisi[oó]n\s*:?\s*(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/i);
+            if (!m) m = texto.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+            if (!m) return '';
+            let [, d, mo, y] = m;
+            if (y.length === 2) y = '20' + y;
+            return `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`;
+        }
+
+        function extraerRazonSocial(texto) {
+            if (!texto) return '';
+            const lineas = texto.split('\n').map(l => l.trim());
+            for (const l of lineas) {
+                const m = l.match(/^Raz[oó]n\s+Social\s*:\s*(.+)$/i);
+                if (m) {
+                    let val = m[1].trim();
+                    val = val.split(/\s+(?:Fecha|CUIT|Domicilio|Ingresos|Condici[oó]n|Punto|Comp\.|Apellido)\b/i)[0].trim();
+                    if (val) return val;
+                }
+            }
+            return '';
+        }
+
+        function extraerConceptoFactura(texto) {
+            if (!texto) return '';
+            const lineas = texto.split('\n').map(l => l.trim());
+            const h = lineas.findIndex(l => /Producto\s*\/\s*Servicio/i.test(l) && /Cantidad/i.test(l));
+            if (h === -1) return '';
+            const finTabla = /^(Subtotal|Importe|CAE|Comprobante|"?RESPONSABLE|P[aá]g\.)/i;
+            const tieneNumCol = l => /\s\d+[.,]\d+/.test(' ' + l + ' ');
+            const partes = [];
+            for (let i = h + 1; i < lineas.length; i++) {
+                const l = lineas[i];
+                if (!l) continue;
+                if (finTabla.test(l)) break;
+                if (tieneNumCol(l)) {
+                    const idx = l.search(/\s\d+[.,]\d+/);
+                    partes.push(idx > 0 ? l.slice(0, idx).trim() : l.trim());
+                    for (let j = i + 1; j < lineas.length; j++) {
+                        const nl = lineas[j];
+                        if (!nl) continue;
+                        if (finTabla.test(nl) || tieneNumCol(nl)) break;
+                        partes.push(nl.trim());
+                    }
+                    break;
+                } else {
+                    partes.push(l.trim());
+                }
+            }
+            return partes.join(' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function extraerDatosFactura(texto) {
+            return {
+                fecha: extraerFechaFactura(texto),
+                responsable: extraerRazonSocial(texto),
+                concepto: extraerConceptoFactura(texto)
+            };
+        }
+
+        let dormysData = JSON.parse(localStorage.getItem('dormysData')) || {};
+        let novedades = JSON.parse(localStorage.getItem('novedades')) || [];
+        let pagos = JSON.parse(localStorage.getItem('pagos')) || [];
+        let estadosConfig = JSON.parse(localStorage.getItem('estadosConfig')) || [
+            { nombre: 'En espera', color: '#f59e0b' },
+            { nombre: 'En reparacion', color: '#3b82f6' },
+            { nombre: 'Reparado', color: '#10b981' }
+        ];
+
+        for (let i = 1; i <= 99; i++) {
+            if (!dormysData[i]) dormysData[i] = { duenio: `Propietario ${i}` };
+        }
+        localStorage.setItem('dormysData', JSON.stringify(dormysData));
+        localStorage.setItem('estadosConfig', JSON.stringify(estadosConfig));
+
+        function moduloProximamente(nombre) {
+            alert(`El módulo "${nombre}" estará disponible próximamente.`);
+        }
+
+        function ingresarPorDH() {
+            const num = parseInt(document.getElementById('home-dh-num').value);
+            if (isNaN(num) || num < 1 || num > 99) {
+                alert('Por favor ingrese un número del 1 al 99.');
+                return;
+            }
+            document.getElementById('nov-dormy').value = num;
+            actualizarDuenioLabel();
+            document.getElementById('buscar-nov').value = num;
+            renderNovedades();
+            showSection('novedades');
+        }
+
+        let estadoFiltroActivo = null;
+
+        function filtrarReparacionesPorEstado(estado) {
+            estadoFiltroActivo = estado;
+            
+            const estadosLeyenda = [
+                'Reparación urgente', 'Reparación media', 'Reparación parcial',
+                'Reparación leve', 'Reparado', 'Sin registrar'
+            ];
+
+            estadosLeyenda.forEach(est => {
+                const el = document.getElementById(`filtro-rep-${est}`);
+                if (el) {
+                    if (estado === est) {
+                        el.style.background = '#e2e8f0';
+                        el.style.border = '2px solid var(--primary)';
+                    } else {
+                        el.style.background = 'transparent';
+                        el.style.border = 'none';
+                    }
+                }
+            });
+
+            const btnLimpiar = document.getElementById('btn-limpiar-filtro-rep');
+            if (btnLimpiar) {
+                btnLimpiar.style.display = estado ? 'inline-block' : 'none';
+            }
+
+            renderGrillaReparaciones();
+        }
+
+        const datosInicialesReparaciones = {"34": "Reparación leve", "35": "Reparación leve", "36": "Reparado", "37": "Reparado", "38": "Reparado", "39": "Reparación media", "40": "Reparación media", "41": "Reparación urgente", "42": "Reparado", "43": "Reparado", "44": "Reparación leve", "45": "Reparación leve", "46": "Reparación leve", "47": "Reparación leve", "48": "Reparación leve", "49": "Reparación urgente", "50": "Reparación urgente", "51": "Reparación urgente", "52": "Reparación media", "53": "Reparado", "54": "Reparado", "55": "Reparación urgente", "56": "Reparación media", "57": "Reparación urgente", "58": "Reparación media", "59": "Reparación leve", "60": "Reparación urgente", "99": "Reparado", "98": "Reparado", "97": "Reparado", "96": "Reparación leve", "95": "Reparado", "94": "Reparación media", "93": "Reparado", "92": "Reparado", "91": "Reparación urgente", "90": "Reparación urgente", "89": "Reparación urgente", "88": "Reparación urgente", "87": "Reparación media", "86": "Reparación urgente", "75": "Reparado", "76": "Reparación urgente", "77": "Reparación parcial", "78": "Reparación parcial", "79": "Reparación media", "80": "Reparado", "81": "Reparación leve", "82": "Reparación leve", "84": "Reparación leve", "85": "Reparación leve"};
+
+        let reparacionesData = JSON.parse(localStorage.getItem('reparacionesData')) || null;
+
+        if (!reparacionesData) {
+            reparacionesData = {};
+            for (let i = 1; i <= 99; i++) {
+                reparacionesData[i] = {
+                    estado: datosInicialesReparaciones[i] || 'Sin registrar',
+                    presupuesto: ''
+                };
+            }
+            localStorage.setItem('reparacionesData', JSON.stringify(reparacionesData));
+        }
+
+        const coloresReparacion = {
+            'Reparación urgente': '#ef4444',
+            'Reparación media': '#f59e0b',
+            'Reparación parcial': '#f97316',
+            'Reparación leve': '#84cc16',
+            'Reparado': '#10b981',
+            'Sin registrar': '#cbd5e1'
+        };
+
+        function renderGrillaReparaciones() {
+            const grid = document.getElementById('grilla-dormys');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            for (let i = 1; i <= 99; i++) {
+                const item = reparacionesData[i] || { estado: 'Sin registrar', presupuesto: '' };
+                
+                if (estadoFiltroActivo && item.estado !== estadoFiltroActivo) {
+                    continue;
+                }
+
+                const color = coloresReparacion[item.estado] || '#cbd5e1';
+                
+                let txtSub = '';
+                if (item.estado === 'Reparación urgente') txtSub = 'Urgente';
+                else if (item.estado === 'Reparación media') txtSub = 'Media';
+                else if (item.estado === 'Reparación parcial') txtSub = 'Parcial';
+                else if (item.estado === 'Reparación leve') txtSub = 'Leve';
+                else if (item.estado === 'Reparado') txtSub = 'Reparado';
+
+                const ordenBadge = item.orden ? `<span style="position: absolute; top: 2px; right: 4px; font-size: 0.65rem; background: rgba(0,0,0,0.4); color: #fff; padding: 1px 4px; border-radius: 4px;">#${item.orden}</span>` : '';
+
+                grid.innerHTML += `
+                    <div class="dormy-cell" style="background-color: ${color};" onclick="abrirModalReparacion(${i})">
+                        ${ordenBadge}
+                        <span class="dormy-num">${i}</span>
+                        ${txtSub ? `<span class="dormy-sub">${txtSub}</span>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        function abrirModalReparacion(dormyId) {
+            const item = reparacionesData[dormyId] || { estado: 'Sin registrar', presupuesto: '', orden: '', fecha: '' };
+            const duenio = (dormysData && dormysData[dormyId]) ? dormysData[dormyId].duenio : 'Sin asignar';
+
+            document.getElementById('modal-rep-dormy-id').value = dormyId;
+            document.getElementById('modal-rep-titulo').innerText = `Dormy N° ${dormyId}`;
+            document.getElementById('modal-rep-duenio').innerText = `Propietario: ${duenio}`;
+            document.getElementById('modal-rep-orden').value = item.orden || '';
+            document.getElementById('modal-rep-fecha').value = item.fecha || '';
+            document.getElementById('modal-rep-estado').value = item.estado || 'Sin registrar';
+            document.getElementById('modal-rep-presupuesto').value = item.presupuesto || '';
+
+            document.getElementById('modalReparacion').style.display = 'flex';
+        }
+
+        function cerrarModalReparacion() {
+            document.getElementById('modalReparacion').style.display = 'none';
+        }
+
+        function guardarReparacionModal(e) {
+            e.preventDefault();
+            const dormyId = document.getElementById('modal-rep-dormy-id').value;
+            const orden = document.getElementById('modal-rep-orden').value;
+            const fecha = document.getElementById('modal-rep-fecha').value;
+            const estado = document.getElementById('modal-rep-estado').value;
+            const presupuesto = document.getElementById('modal-rep-presupuesto').value;
+
+            reparacionesData[dormyId] = { estado, presupuesto, orden, fecha };
+            localStorage.setItem('reparacionesData', JSON.stringify(reparacionesData));
+
+            cerrarModalReparacion();
+            renderGrillaReparaciones();
+            alert(`Reparación guardada para el Dormy N° ${dormyId}.`);
+        }
+
+        let currentUser = "Ferreyra";
+        let tempFilesNov = [];
+        let tempFilesPago = [];
+
+        function changeUser() {
+            currentUser = document.getElementById('userSelect').value;
+            const btnConfig = document.getElementById('btn-config');
+            if (btnConfig) btnConfig.style.display = 'inline-block';
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(`sec-${sectionId}`).classList.add('active');
+            document.getElementById(`btn-${sectionId}`).classList.add('active');
+
+            if (sectionId === 'stats') renderCharts();
+            if (sectionId === 'reparaciones') renderGrillaReparaciones();
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); }
+        }
+
+        function populateEstadoSelects() {
+            const selectNov = document.getElementById('nov-estado');
+            const selectFiltro = document.getElementById('filtro-estado-nov');
+            selectNov.innerHTML = '';
+            selectFiltro.innerHTML = '<option value="">Todos los Estados</option>';
+            estadosConfig.forEach(est => {
+                selectNov.innerHTML += `<option value="${est.nombre}">${est.nombre}</option>`;
+                selectFiltro.innerHTML += `<option value="${est.nombre}">${est.nombre}</option>`;
+            });
+        }
+
+        function renderEstadosConfig() {
+            const tbody = document.getElementById('tabla-estados-config');
+            tbody.innerHTML = '';
+            estadosConfig.forEach((est, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${est.nombre}</strong></td>
+                        <td><input type="color" value="${est.color}" onchange="actualizarColorEstado(${idx}, this.value)"></td>
+                        <td><span class="badge" style="background-color: ${est.color};">${est.nombre}</span></td>
+                        <td><button class="btn-delete" onclick="eliminarEstadoConfig(${idx})">Eliminar</button></td>
+                    </tr>
+                `;
+            });
+            populateEstadoSelects();
+        }
+
+        function guardarEstadoConfig(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('cfg-estado-nombre').value.trim();
+            const color = document.getElementById('cfg-estado-color').value;
+            if (!nombre) return;
+            estadosConfig.push({ nombre, color });
+            localStorage.setItem('estadosConfig', JSON.stringify(estadosConfig));
+            document.getElementById('form-estado').reset();
+            renderEstadosConfig();
+            renderNovedades();
+        }
+
+        function actualizarColorEstado(index, nuevoColor) {
+            estadosConfig[index].color = nuevoColor;
+            localStorage.setItem('estadosConfig', JSON.stringify(estadosConfig));
+            renderEstadosConfig();
+            renderNovedades();
+        }
+
+        function eliminarEstadoConfig(index) {
+            if (estadosConfig.length <= 1) return alert('Debe haber al menos un estado.');
+            if (confirm('¿Eliminar estado?')) {
+                estadosConfig.splice(index, 1);
+                localStorage.setItem('estadosConfig', JSON.stringify(estadosConfig));
+                renderEstadosConfig();
+                renderNovedades();
+            }
+        }
+
+        function getColorDeEstado(nombreEstado) {
+            const est = estadosConfig.find(e => e.nombre === nombreEstado);
+            return est ? est.color : '#64748b';
+        }
+
+        function colToNumber(col) {
+            col = col.toUpperCase().trim();
+            let num = 0;
+            for (let i = 0; i < col.length; i++) {
+                num = num * 26 + col.charCodeAt(i) - 64;
+            }
+            return num - 1;
+        }
+
+        function cargarExcelDuenios(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const sheetParam = document.getElementById('xls-sheet').value.trim();
+            const startRowParam = parseInt(document.getElementById('xls-row').value) - 1;
+            const colDormyIdx = colToNumber(document.getElementById('xls-col-dormy').value);
+            const colDuenioIdx = colToNumber(document.getElementById('xls-col-duenio').value);
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = new Uint8Array(evt.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    let targetSheetName = workbook.SheetNames.find(
+                        s => s.trim().toLowerCase() === sheetParam.toLowerCase()
+                    );
+
+                    if (!targetSheetName) {
+                        targetSheetName = workbook.SheetNames.find(
+                            s => s.toLowerCase().includes('saldo') || s.toLowerCase().includes('cobrar')
+                        ) || workbook.SheetNames[0];
+                    }
+
+                    const worksheet = workbook.Sheets[targetSheetName];
+
+                    if (worksheet['!ref']) {
+                        const refParsed = XLSX.utils.decode_range(worksheet['!ref']);
+                        refParsed.s.c = 0;
+                        refParsed.s.r = 0;
+                        worksheet['!ref'] = XLSX.utils.encode_range(refParsed);
+                    }
+
+                    const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+
+                    let actualizados = 0;
+                    for (let i = startRowParam; i < json.length; i++) {
+                        const row = json[i];
+                        if (!row) continue;
+
+                        let nro = parseInt(row[colDormyIdx]);
+                        let duenio = row[colDuenioIdx] ? row[colDuenioIdx].toString().trim() : '';
+
+                        if (nro >= 1 && nro <= 99 && duenio !== '') {
+                            dormysData[nro] = { duenio: duenio };
+                            actualizados++;
+                        }
+                    }
+
+                    if (actualizados > 0) {
+                        localStorage.setItem('dormysData', JSON.stringify(dormysData));
+                        alert(`¡Éxito! Se actualizaron ${actualizados} dueños desde la pestaña "${targetSheetName}".`);
+                        renderConfig();
+                        renderNovedades();
+                    } else {
+                        alert(`No se encontraron datos válidos en la pestaña "${targetSheetName}".`);
+                    }
+                } catch (err) {
+                    alert('Error al leer el archivo Excel.');
+                    console.error(err);
+                }
+                document.getElementById('excel-file').value = '';
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function renderConfig() {
+            const tbody = document.getElementById('tabla-config');
+            tbody.innerHTML = '';
+            for (let i = 1; i <= 99; i++) {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>Dormy ${i}</strong></td>
+                        <td><input type="text" id="duenio-${i}" value="${dormysData[i].duenio}"></td>
+                        <td><button class="btn-edit" onclick="guardarDuenio(${i})">Guardar</button></td>
+                    </tr>
+                `;
+            }
+        }
+
+        function guardarDuenio(id) {
+            dormysData[id].duenio = document.getElementById(`duenio-${id}`).value;
+            localStorage.setItem('dormysData', JSON.stringify(dormysData));
+            alert(`Dueño de Dormy ${id} guardado.`);
+            renderNovedades();
+        }
+
+        function actualizarDuenioLabel() {
+            const id = document.getElementById('nov-dormy').value;
+            const label = document.getElementById('lbl-duenio');
+            label.innerText = (id >= 1 && id <= 99) ? `Dueño: ${dormysData[id] ? dormysData[id].duenio : 'Sin asignar'}` : '';
+        }
+
+        let zoomLevel = 1;
+        let rotationAngle = 0;
+
+        function abrirModal(fileUrl, fileName, isPdf) {
+            const modal = document.getElementById('modalViewer');
+            const modalBody = document.getElementById('modalBody');
+            const downloadBtn = document.getElementById('modalDownload');
+            
+            zoomLevel = 1;
+            rotationAngle = 0;
+            downloadBtn.href = fileUrl;
+            downloadBtn.download = fileName;
+
+            if (isPdf) {
+                modalBody.innerHTML = `<iframe src="${fileUrl}" class="modal-viewer" style="width:80vw; height:70vh;"></iframe>`;
+            } else {
+                modalBody.innerHTML = `<img id="modalImg" src="${fileUrl}" class="modal-viewer" style="transform: scale(1) rotate(0deg);">`;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModal() { document.getElementById('modalViewer').style.display = 'none'; }
+
+        function zoomModal(delta) {
+            const img = document.getElementById('modalImg');
+            if (!img) return;
+            zoomLevel = Math.max(0.5, zoomLevel + delta);
+            img.style.transform = `scale(${zoomLevel}) rotate(${rotationAngle}deg)`;
+        }
+
+        function rotateModal(deg) {
+            const img = document.getElementById('modalImg');
+            if (!img) return;
+            rotationAngle = (rotationAngle + deg) % 360;
+            img.style.transform = `scale(${zoomLevel}) rotate(${rotationAngle}deg)`;
+        }
+
+        function normalizarArchivos(arch) {
+            if (!arch) return [];
+            if (!Array.isArray(arch)) arch = [arch];
+            return arch.map(item => {
+                if (typeof item === 'string') return { id: 'file_' + Date.now(), name: 'Adjunto', url: item };
+                if (item && typeof item === 'object') {
+                    return {
+                        id: item.id || ('file_' + Math.random().toString(36).substr(2, 9)),
+                        name: item.name || 'Adjunto',
+                        url: item.url || item.src || ''
+                    };
+                }
+                return null;
+            }).filter(item => item && (item.url || item.id));
+        }
+
+        function generarThumbnailsHTML(archivosRaw, canRemove = false, removeType = '') {
+            const archivos = normalizarArchivos(archivosRaw);
+            if (archivos.length === 0) return '<span style="color:#94a3b8; font-size:0.8rem;">Sin adjuntos</span>';
+            
+            return '<div class="preview-container">' + archivos.map((a, idx) => {
+                const isPdf = (a.name && a.name.toLowerCase().endsWith('.pdf')) || 
+                              (a.url && (a.url.includes('application/pdf') || a.url.startsWith('data:application/pdf')));
+                
+                const removeBtnHtml = canRemove ? `<button type="button" class="remove-file-btn" onclick="quitarArchivoTemp('${removeType}', ${idx})">✕</button>` : '';
+                
+                const safeUrl = (a.url || '').replace(/'/g, "\\'");
+                const safeName = (a.name || 'Archivo').replace(/'/g, "\\'");
+                
+                let thumbContent = isPdf 
+                    ? `<div class="preview-thumb" onclick="abrirModal('${safeUrl}', '${safeName}', true)">PDF</div>` 
+                    : `<img src="${safeUrl}" class="preview-thumb" onclick="abrirModal('${safeUrl}', '${safeName}', false)">`;
+                    
+                return `<div class="preview-item">${thumbContent}${removeBtnHtml}</div>`;
+            }).join('') + '</div>';
+        }
+
+        function quitarArchivoTemp(type, idx) {
+            if (type === 'nov') {
+                tempFilesNov.splice(idx, 1);
+                renderTempFilesNov();
+            } else if (type === 'pago') {
+                tempFilesPago.splice(idx, 1);
+                renderTempFilesPago();
+            }
+        }
+
+        async function previewNuevosArchivosNov(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                for (let file of files) {
+                    const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                    const url = await readFileAsBase64(file);
+                    await guardarArchivoIDB(fileId, file.name, url);
+                    tempFilesNov.push({ id: fileId, name: file.name, url: url });
+                }
+                document.getElementById('nov-archivo').value = '';
+                renderTempFilesNov();
+            }
+        }
+
+        function renderTempFilesNov() {
+            document.getElementById('nov-archivos-existentes').innerHTML = generarThumbnailsHTML(tempFilesNov, true, 'nov');
+        }
+
+        async function previewNuevasFacturasPago(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                for (let file of files) {
+                    const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf';
+                    const isImg = file.type.startsWith('image/');
+                    
+                    let textoExtraido = '';
+                    if (isPdf) {
+                        textoExtraido = await extraerTextoDePDF(file);
+                    } else if (isImg) {
+                        textoExtraido = await extraerTextoDeImagen(file);
+                    }
+
+                    if (textoExtraido) {
+                        const detectados = [];
+
+                        const montoDetectado = buscarMontoEnTexto(textoExtraido, textoImporteConfig);
+                        if (montoDetectado !== null) {
+                            document.getElementById('pago-monto').value = montoDetectado;
+                            detectados.push('Monto: $' + montoDetectado);
+                        }
+
+                        const datos = extraerDatosFactura(textoExtraido);
+                        const fEl = document.getElementById('pago-fecha');
+                        const rEl = document.getElementById('pago-responsable');
+                        const cEl = document.getElementById('pago-concepto');
+                        if (datos.fecha && !fEl.value) { fEl.value = datos.fecha; detectados.push('Fecha: ' + datos.fecha); }
+                        if (datos.responsable && !rEl.value) { rEl.value = datos.responsable; detectados.push('Responsable: ' + datos.responsable); }
+                        if (datos.concepto && !cEl.value) { cEl.value = datos.concepto; detectados.push('Concepto: ' + datos.concepto); }
+
+                        if (detectados.length > 0) {
+                            alert('Datos detectados en la factura:\n\n' + detectados.join('\n'));
+                        } else {
+                            alert('No se detectaron datos automáticamente. Por favor complete los campos manualmente.');
+                        }
+                    }
+
+                    const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                    const url = await readFileAsBase64(file);
+                    await guardarArchivoIDB(fileId, file.name, url);
+                    tempFilesPago.push({ id: fileId, name: file.name, url: url });
+                }
+                document.getElementById('pago-facturas').value = '';
+                renderTempFilesPago();
+            }
+        }
+
+        function renderTempFilesPago() {
+            document.getElementById('pago-facturas-existentes').innerHTML = generarThumbnailsHTML(tempFilesPago, true, 'pago');
+        }
+
+        // --- NOVEDADES ---
+        async function guardarNovedad(e) {
+            e.preventDefault();
+            try {
+                const id = document.getElementById('nov-id').value;
+                const fileInput = document.getElementById('nov-archivo');
+
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    for (let file of fileInput.files) {
+                        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        const url = await readFileAsBase64(file);
+                        await guardarArchivoIDB(fileId, file.name, url);
+                        tempFilesNov.push({ id: fileId, name: file.name, url: url });
+                    }
+                    fileInput.value = '';
+                }
+
+                const archivosLigeros = tempFilesNov.map(f => ({ id: f.id, name: f.name }));
+
+                const item = {
+                    id: id ? parseInt(id) : Date.now(),
+                    dormy: document.getElementById('nov-dormy').value,
+                    fecha: document.getElementById('nov-fecha').value,
+                    estado: document.getElementById('nov-estado').value,
+                    descripcion: document.getElementById('nov-descripcion').value,
+                    observacion: document.getElementById('nov-observacion').value,
+                    archivos: archivosLigeros,
+                    _cacheArchivos: [...tempFilesNov]
+                };
+
+                if (id) {
+                    const index = novedades.findIndex(n => n.id == id);
+                    if (index !== -1) novedades[index] = item;
+                    else novedades.push(item);
+                } else { novedades.push(item); }
+
+                localStorage.setItem('novedades', JSON.stringify(novedades.map(n => ({ ...n, _cacheArchivos: undefined }))));
+                resetFormNovedad();
+                renderNovedades();
+                alert('Novedad guardada correctamente.');
+            } catch (err) {
+                console.error("Error guardando novedad:", err);
+                alert("Error al guardar novedad: " + err.message);
+            }
+        }
+
+        function resetFormNovedad() {
+            document.getElementById('form-novedad').reset();
+            document.getElementById('nov-id').value = '';
+            document.getElementById('nov-archivos-existentes').innerHTML = '';
+            document.getElementById('lbl-duenio').innerText = '';
+            tempFilesNov = [];
+            document.getElementById('btn-guardar-nov').innerText = 'Guardar Novedad';
+        }
+
+        async function renderNovedades() {
+            const tbody = document.getElementById('tabla-novedades');
+            const filtroTexto = document.getElementById('buscar-nov').value.toLowerCase();
+            const filtroEstado = document.getElementById('filtro-estado-nov').value;
+            tbody.innerHTML = '';
+
+            const listaFiltrada = novedades.filter(n => (n.dormy.toString().includes(filtroTexto) || n.descripcion.toLowerCase().includes(filtroTexto)) && (filtroEstado === '' || n.estado === filtroEstado));
+
+            for (let n of listaFiltrada) {
+                const duenio = dormysData[n.dormy] ? dormysData[n.dormy].duenio : 'Desconocido';
+                
+                if (!n._cacheArchivos && n.archivos) {
+                    n._cacheArchivos = [];
+                    for (let f of n.archivos) {
+                        const url = f.url || await obtenerArchivoIDB(f.id);
+                        n._cacheArchivos.push({ id: f.id, name: f.name, url: url || '' });
+                    }
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${n.fecha}</td>
+                        <td><b>Dormy ${n.dormy}</b></td>
+                        <td>${duenio}</td>
+                        <td>${n.descripcion}</td>
+                        <td>${n.observacion || '-'}</td>
+                        <td><span class="badge" style="background-color: ${getColorDeEstado(n.estado)};">${n.estado}</span></td>
+                        <td>${generarThumbnailsHTML(n._cacheArchivos || n.archivos)}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarNovedad(${n.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarNovedad(${n.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function editarNovedad(id) {
+            const nov = novedades.find(n => n.id === id);
+            if (!nov) return;
+            document.getElementById('nov-id').value = nov.id;
+            document.getElementById('nov-dormy').value = nov.dormy;
+            document.getElementById('nov-fecha').value = nov.fecha;
+            document.getElementById('nov-estado').value = nov.estado;
+            document.getElementById('nov-descripcion').value = nov.descripcion;
+            document.getElementById('nov-observacion').value = nov.observacion;
+
+            if (!nov._cacheArchivos && nov.archivos) {
+                nov._cacheArchivos = [];
+                for (let f of nov.archivos) {
+                    const url = f.url || await obtenerArchivoIDB(f.id);
+                    nov._cacheArchivos.push({ id: f.id, name: f.name, url: url || '' });
+                }
+            }
+
+            tempFilesNov = [...(nov._cacheArchivos || [])];
+            renderTempFilesNov();
+            document.getElementById('btn-guardar-nov').innerText = 'Actualizar Novedad';
+            actualizarDuenioLabel();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarNovedad(id) {
+            if (confirm('¿Eliminar novedad?')) {
+                novedades = novedades.filter(n => n.id !== id);
+                localStorage.setItem('novedades', JSON.stringify(novedades.map(n => ({ ...n, _cacheArchivos: undefined }))));
+                renderNovedades();
+            }
+        }
+
+        // --- PAGOS RESPONSABLES ---
+        async function guardarPago(e) {
+            if (e) e.preventDefault();
+            try {
+                const id = document.getElementById('pago-id').value;
+                const fecha = document.getElementById('pago-fecha').value;
+                const responsable = document.getElementById('pago-responsable').value;
+                const monto = parseFloat(document.getElementById('pago-monto').value) || 0;
+                const concepto = document.getElementById('pago-concepto').value;
+                const fileInput = document.getElementById('pago-facturas');
+
+                if (!fecha || !responsable || !concepto) {
+                    alert('Por favor complete todos los campos obligatorios.');
+                    return;
+                }
+
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    for (let file of fileInput.files) {
+                        const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf';
+                        const isImg = file.type.startsWith('image/');
+                        
+                        let textoExtraido = '';
+                        if (isPdf && !monto) {
+                            textoExtraido = await extraerTextoDePDF(file);
+                        } else if (isImg && !monto) {
+                            textoExtraido = await extraerTextoDeImagen(file);
+                        }
+
+                        if (textoExtraido && !monto) {
+                            const montoDetectado = buscarMontoEnTexto(textoExtraido, textoImporteConfig);
+                            if (montoDetectado !== null) {
+                                document.getElementById('pago-monto').value = montoDetectado;
+                            }
+                        }
+
+                        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        const url = await readFileAsBase64(file);
+                        await guardarArchivoIDB(fileId, file.name, url);
+                        tempFilesPago.push({ id: fileId, name: file.name, url: url });
+                    }
+                    fileInput.value = '';
+                }
+
+                const finalMonto = parseFloat(document.getElementById('pago-monto').value) || monto || 0;
+
+                const facturasLigeras = tempFilesPago.map(f => ({ id: f.id, name: f.name }));
+
+                const item = { 
+                    id: id ? parseInt(id) : Date.now(), 
+                    fecha: fecha, 
+                    responsable: responsable, 
+                    monto: finalMonto, 
+                    concepto: concepto,
+                    facturas: facturasLigeras,
+                    _cacheFacturas: [...tempFilesPago]
+                };
+
+                if (id) {
+                    const index = pagos.findIndex(p => p.id == id);
+                    if (index !== -1) pagos[index] = item;
+                    else pagos.push(item);
+                } else {
+                    pagos.push(item);
+                }
+
+                localStorage.setItem('pagos', JSON.stringify(pagos.map(p => ({ ...p, _cacheFacturas: undefined }))));
+                resetFormPago();
+                await renderPagos();
+                renderGrillaReparaciones();
+                alert('¡Pago registrado correctamente!');
+            } catch (err) {
+                console.error("Error al registrar pago:", err);
+                alert("Error al registrar el pago: " + err.message);
+            }
+        }
+
+        function resetFormPago() {
+            document.getElementById('form-pago').reset();
+            document.getElementById('pago-id').value = '';
+            document.getElementById('pago-facturas-existentes').innerHTML = '';
+            tempFilesPago = [];
+            document.getElementById('btn-guardar-pago').innerText = 'Registrar Pago';
+        }
+
+        async function renderPagos() {
+            const tbody = document.getElementById('tabla-pagos');
+            tbody.innerHTML = '';
+            for (let p of pagos) {
+                if (!p._cacheFacturas && p.facturas) {
+                    p._cacheFacturas = [];
+                    for (let f of p.facturas) {
+                        const url = f.url || await obtenerArchivoIDB(f.id);
+                        p._cacheFacturas.push({ id: f.id, name: f.name, url: url || '' });
+                    }
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${p.fecha}</td>
+                        <td>${p.responsable}</td>
+                        <td>${p.concepto}</td>
+                        <td>$${p.monto.toFixed(2)}</td>
+                        <td>${generarThumbnailsHTML(p._cacheFacturas || p.facturas)}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarPago(${p.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarPago(${p.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function editarPago(id) {
+            const p = pagos.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('pago-id').value = p.id;
+            document.getElementById('pago-fecha').value = p.fecha;
+            document.getElementById('pago-responsable').value = p.responsable;
+            document.getElementById('pago-monto').value = p.monto;
+            document.getElementById('pago-concepto').value = p.concepto;
+
+            if (!p._cacheFacturas && p.facturas) {
+                p._cacheFacturas = [];
+                for (let f of p.facturas) {
+                    const url = f.url || await obtenerArchivoIDB(f.id);
+                    p._cacheFacturas.push({ id: f.id, name: f.name, url: url || '' });
+                }
+            }
+
+            tempFilesPago = [...(p._cacheFacturas || [])];
+            renderTempFilesPago();
+            document.getElementById('btn-guardar-pago').innerText = 'Actualizar Pago';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarPago(id) {
+            if (confirm('¿Eliminar pago?')) {
+                pagos = pagos.filter(p => p.id !== id);
+                localStorage.setItem('pagos', JSON.stringify(pagos.map(p => ({ ...p, _cacheFacturas: undefined }))));
+                renderPagos();
+            }
+        }
+
+        // --- ESTADÍSTICAS ---
+        let chartInstance = null;
+        function renderCharts() {
+            const estadosRep = [
+                'Reparación urgente',
+                'Reparación media',
+                'Reparación parcial',
+                'Reparación leve',
+                'Reparado',
+                'Sin registrar'
+            ];
+
+            const conteoEstados = {};
+            estadosRep.forEach(e => conteoEstados[e] = 0);
+
+            for (let i = 1; i <= 99; i++) {
+                const item = reparacionesData[i] || { estado: 'Sin registrar' };
+                const est = item.estado || 'Sin registrar';
+                if (conteoEstados[est] !== undefined) {
+                    conteoEstados[est]++;
+                } else {
+                    conteoEstados[est] = 1;
+                }
+            }
+
+            const labels = Object.keys(conteoEstados);
+            const dataValues = Object.values(conteoEstados);
+            const bgColors = labels.map(l => coloresReparacion[l] || '#cbd5e1');
+            const totalPagos = pagos.reduce((sum, p) => sum + p.monto, 0);
+
+            let resumenHtml = `<p style="margin-bottom: 8px;"><strong>Total Dormys Evaluados:</strong> 99</p>`;
+            labels.forEach(l => {
+                const color = coloresReparacion[l] || '#cbd5e1';
+                resumenHtml += `<p style="margin-bottom: 4px;"><strong>${l}:</strong> <span style="color:${color}; font-weight:bold;">${conteoEstados[l]}</span> (${((conteoEstados[l]/99)*100).toFixed(1)}%)</p>`;
+            });
+            resumenHtml += `<hr style="margin: 12px 0;"><p><strong>Total Invertido en Pagos:</strong> $${totalPagos.toFixed(2)}</p>`;
+            resumenHtml += `<p><strong>Total Novedades Cargadas:</strong> ${novedades.length}</p>`;
+            
+            document.getElementById('resumen-stats').innerHTML = resumenHtml;
+
+            const ctx = document.getElementById('chartEstados').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels, datasets: [{ data: dataValues, backgroundColor: bgColors }] },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.onload = async function() {
+            await initDB();
+            populateEstadoSelects();
+            changeUser();
+            await renderNovedades();
+            await renderPagos();
+            renderGrillaReparaciones();
+            if (document.getElementById('cfg-texto-importe')) {
+                document.getElementById('cfg-texto-importe').value = textoImporteConfig;
+            }
+        };
+
+        function exportarBackupJSON() {
+            try {
+                const dataToExport = {
+                    dormysData: JSON.parse(localStorage.getItem('dormysData')) || {},
+                    reparacionesData: JSON.parse(localStorage.getItem('reparacionesData')) || {},
+                    novedades: JSON.parse(localStorage.getItem('novedades')) || [],
+                    pagos: JSON.parse(localStorage.getItem('pagos')) || [],
+                    estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
+                    textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
+                    fechaExportacion: new Date().toISOString()
+                };
+
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+                const downloadAnchor = document.createElement('a');
+                const fechaStr = new Date().toISOString().slice(0,10);
+                
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `backup_dormys_${fechaStr}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            } catch (err) {
+                alert("Error al exportar el backup: " + err.message);
+            }
+        }
+
+        function importarBackupJSON() {
+            const fileInput = document.getElementById('import-json-file');
+            const file = fileInput ? fileInput.files[0] : null;
+            
+            if (!file) {
+                alert('Por favor selecciona un archivo .json de backup primero.');
+                return;
+            }
+
+            if (!confirm('⚠️ ¿Deseas importar este backup? Se actualizarán los datos actuales de la aplicación.')) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+
+                    if (importedData.dormysData) localStorage.setItem('dormysData', JSON.stringify(importedData.dormysData));
+                    if (importedData.reparacionesData) localStorage.setItem('reparacionesData', JSON.stringify(importedData.reparacionesData));
+                    if (importedData.novedades) localStorage.setItem('novedades', JSON.stringify(importedData.novedades));
+                    if (importedData.pagos) localStorage.setItem('pagos', JSON.stringify(importedData.pagos));
+                    if (importedData.estadosConfig) localStorage.setItem('estadosConfig', JSON.stringify(importedData.estadosConfig));
+                    if (importedData.textoImporteConfig) localStorage.setItem('textoImporteConfig', importedData.textoImporteConfig);
+
+                    alert('✅ ¡Backup importado correctamente! La aplicación se actualizará.');
+                    location.reload();
+                } catch (err) {
+                    alert('❌ Error al leer el archivo JSON de backup. Formato no válido.');
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
