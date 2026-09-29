@@ -970,15 +970,42 @@
     }
   ],
   "categoriasConfig": [
-    "Mantenimiento",
-    "Jardinería",
-    "Electricidad",
-    "Limpieza",
-    "General",
-    "Grupo electrogeno",
-    "Casita",
-    "Pileta",
-    "Riego"
+    {
+      "nombre": "Mantenimiento",
+      "color": "#3071d9"
+    },
+    {
+      "nombre": "Jardinería",
+      "color": "#2bc54a"
+    },
+    {
+      "nombre": "Electricidad",
+      "color": "#e5b32a"
+    },
+    {
+      "nombre": "Limpieza",
+      "color": "#956df3"
+    },
+    {
+      "nombre": "General",
+      "color": "#3b82f6"
+    },
+    {
+      "nombre": "Grupo electrogeno",
+      "color": "#f52996"
+    },
+    {
+      "nombre": "Casita",
+      "color": "#53dddf"
+    },
+    {
+      "nombre": "Pileta",
+      "color": "#ecdd3c"
+    },
+    {
+      "nombre": "Riego",
+      "color": "#1dcd49"
+    }
   ],
   "estadosConfig": [
     {
@@ -995,5 +1022,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T03:33:48.542Z"
+  "fechaExportacion": "2026-09-29T03:57:42.542Z"
 }
