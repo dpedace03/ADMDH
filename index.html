@@ -209,6 +209,9 @@
         <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Reparaciones Techos</button>
         <button id="btn-novedades" onclick="showSection('novedades')">Novedades</button>
         <button id="btn-pagos" onclick="showSection('pagos')">Pagos Responsables</button>
+        <button id="btn-electrogeno" onclick="showSection('electrogeno')">⚡ Grupo Electrógeno</button>
+        <button id="btn-matafuegos" onclick="showSection('matafuegos')">🧯 Matafuegos</button>
+        <button id="btn-tareas" onclick="showSection('tareas')">📋 Tareas</button>
         <button id="btn-stats" onclick="showSection('stats')">Estadísticas</button>
         <button id="btn-config" onclick="showSection('config')">Configuración</button>
     </nav>
@@ -246,6 +249,21 @@
             <button onclick="moduloProximamente('Piscina')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
                 <span style="font-size: 2.2rem;">🏊</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Piscina</span>
+            </button>
+
+            <button onclick="showSection('electrogeno')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">⚡</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Grupo electrógeno</span>
+            </button>
+
+            <button onclick="showSection('matafuegos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">🧯</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Matafuegos</span>
+            </button>
+
+            <button onclick="showSection('tareas')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">📋</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Tareas</span>
             </button>
         </div>
 
@@ -445,6 +463,223 @@
         </div>
     </section>
 
+    <!-- ABM: GRUPO ELECTRÓGENO -->
+    <section id="sec-electrogeno" class="section">
+        <h3>⚡ Grupo electrogenos -  Caracteristicas.</h3>
+        <div class="card-box">
+            <form id="form-electrogeno" onsubmit="guardarElectrogeno(event)">
+                <input type="hidden" id="electro-id">
+                
+                <div class="form-group full-width">
+                    <label>Descripción del Grupo</label>
+                    <input type="text" id="electro-descripcion" required placeholder="Ej: Grupo diésel Trifásico 50 KVA marca Generac">
+                </div>
+
+                <div class="form-group">
+                    <label>¿Cuándo pedir Service?</label>
+                    <input type="text" id="electro-service" placeholder="Ej: Cada 200 hs o en Octubre 2026">
+                </div>
+
+                <div class="form-group">
+                    <label>¿A quién pedir combustible?</label>
+                    <input type="text" id="electro-combustible" placeholder="Ej: YPF Directo - Proveedor Juan Perez">
+                </div>
+
+                <div class="form-group">
+                    <label>Horas de uso totales</label>
+                    <input type="number" id="electro-hrs-total" step="0.1" placeholder="Ej: 1450.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Horas desde el último service</label>
+                    <input type="number" id="electro-hrs-service" step="0.1" placeholder="Ej: 85.0">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Observación</label>
+                    <textarea id="electro-observacion" rows="2" placeholder="Ej: Funciona en óptimas condiciones. Filtro de aire cambiado recientemente."></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-electro">Guardar Características</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormElectrogeno()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Registros del Grupo Electrógeno</h3>
+        <div style="overflow-x: auto; margin-bottom: 30px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Pedir Service</th>
+                        <th>Pedir Combustible</th>
+                        <th>Horas Totales</th>
+                        <th>Horas d/Service</th>
+                        <th>Observación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-electrogeno"></tbody>
+            </table>
+        </div>
+
+        <!-- ABM DE NOVEDADES DEL GRUPO ELECTRÓGENO -->
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid var(--border);">
+        <h3 style="color: var(--primary);">📝 Novedades del Grupo Electrógeno</h3>
+        
+        <div class="card-box" style="margin-top: 15px;">
+            <form id="form-electro-nov" onsubmit="guardarElectrogenoNovedad(event)">
+                <input type="hidden" id="electro-nov-id">
+                
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="electro-nov-fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Importe ($)</label>
+                    <input type="number" id="electro-nov-importe" step="0.01" min="0" placeholder="Ej: 45000">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción</label>
+                    <input type="text" id="electro-nov-descripcion" required placeholder="Ej: Cambio de aceite y filtros de aire">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Observación</label>
+                    <textarea id="electro-nov-observacion" rows="2" placeholder="Ej: Se compraron insumos en lubricentro central"></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-electro-nov">Guardar Novedad</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormElectrogenoNovedad()">Nueva Novedad</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Historial de Novedades</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Observación</th>
+                        <th>Importe ($)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-electrogeno-novedades"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABM: CONTROL DE MATAFUEGOS -->
+    <section id="sec-matafuegos" class="section">
+        <h3>🧯 ABM - Control de Matafuegos</h3>
+        <div class="card-box">
+            <form id="form-matafuegos" onsubmit="guardarMatafuego(event)">
+                <input type="hidden" id="mat-id">
+                
+                <div class="form-group">
+                    <label>Nro. de Matafuego</label>
+                    <input type="text" id="mat-nro" required placeholder="Ej: MF-001">
+                </div>
+
+                <div class="form-group">
+                    <label>¿Dónde está ubicado?</label>
+                    <input type="text" id="mat-ubicacion" required placeholder="Ej: Entrada Dormy 12 / Sector Club House">
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Vencimiento</label>
+                    <input type="date" id="mat-vencimiento" required>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-mat">Guardar Matafuego</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormMatafuegos()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Matafuegos</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Matafuego</th>
+                        <th>Ubicación</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-matafuegos"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABM: TAREAS -->
+    <section id="sec-tareas" class="section">
+        <h3>📋 ABM - Gestión de Tareas</h3>
+        <div class="card-box">
+            <form id="form-tareas" onsubmit="guardarTarea(event)">
+                <input type="hidden" id="tarea-id">
+
+                <div class="form-group">
+                    <label>Nombre de la Tarea</label>
+                    <input type="text" id="tarea-nombre" required placeholder="Ej: Limpieza de canaletas sector A">
+                </div>
+
+                <div class="form-group">
+                    <label>Responsable</label>
+                    <input type="text" id="tarea-responsable" required placeholder="Ej: Carlos Gómez">
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="tarea-categoria" required></select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción</label>
+                    <textarea id="tarea-descripcion" rows="3" placeholder="Ej: Realizar mantenimiento preventivo previo a la temporada de lluvias"></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-tarea">Guardar Tarea</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormTarea()">Nueva Tarea</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Tareas</h3>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="buscar-tarea" placeholder="Filtrar por Nombre, Responsable..." onkeyup="renderTareas()" style="flex: 1; min-width: 200px;">
+            <select id="filtro-categoria-tarea" onchange="renderTareas()" style="min-width: 150px;">
+                <option value="">Todas las Categorías</option>
+            </select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Responsable</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-tareas"></tbody>
+            </table>
+        </div>
+    </section>
+
     <!-- ESTADÍSTICAS -->
     <section id="sec-stats" class="section">
         <h3>Estadísticas del Estado de Techos y Presupuestos</h3>
@@ -522,6 +757,25 @@
                         <button type="button" class="btn-action" style="margin-top: 10px;" onclick="guardarTextoImporteConfig()">Guardar Texto Importe</button>
                     </div>
                 </div>
+
+                <h4>Gestión de Categorías para Tareas</h4>
+                <div class="card-box" style="margin-top: 10px;">
+                    <form id="form-categoria" onsubmit="guardarCategoriaConfig(event)" style="grid-template-columns: 1fr auto;">
+                        <div class="form-group">
+                            <label>Nombre de Categoría</label>
+                            <input type="text" id="cfg-cat-nombre" required placeholder="Ej: Mantenimiento, Electricidad">
+                        </div>
+                        <div class="form-group" style="justify-content: flex-end;">
+                            <button type="submit" class="btn-action" style="height: 38px;">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+                <table style="margin-bottom: 25px;">
+                    <thead>
+                        <tr><th>Categoría</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla-categorias-config"></tbody>
+                </table>
 
                 <h4>Gestión de Estados de Techos y Colores</h4>
                 <div class="card-box" style="margin-top: 10px;">
@@ -831,6 +1085,11 @@
         let dormysData = JSON.parse(localStorage.getItem('dormysData')) || {};
         let novedades = JSON.parse(localStorage.getItem('novedades')) || [];
         let pagos = JSON.parse(localStorage.getItem('pagos')) || [];
+        let electrogenoData = JSON.parse(localStorage.getItem('electrogenoData')) || [];
+        let electrogenoNovedades = JSON.parse(localStorage.getItem('electrogenoNovedades')) || [];
+        let matafuegosData = JSON.parse(localStorage.getItem('matafuegosData')) || [];
+        let tareasData = JSON.parse(localStorage.getItem('tareasData')) || [];
+        let categoriasConfig = JSON.parse(localStorage.getItem('categoriasConfig')) || ['Mantenimiento', 'Jardinería', 'Electricidad', 'Limpieza', 'General'];
         let estadosConfig = JSON.parse(localStorage.getItem('estadosConfig')) || [
             { nombre: 'En espera', color: '#f59e0b' },
             { nombre: 'En reparacion', color: '#3b82f6' },
@@ -997,7 +1256,10 @@
 
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); }
+            if (sectionId === 'electrogeno') { renderElectrogeno(); renderElectrogenoNovedades(); }
+            if (sectionId === 'matafuegos') renderMatafuegos();
+            if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); }
         }
 
         function populateEstadoSelects() {
@@ -1009,6 +1271,60 @@
                 selectNov.innerHTML += `<option value="${est.nombre}">${est.nombre}</option>`;
                 selectFiltro.innerHTML += `<option value="${est.nombre}">${est.nombre}</option>`;
             });
+        }
+
+        function populateCategoriaSelects() {
+            const selectTarea = document.getElementById('tarea-categoria');
+            const selectFiltro = document.getElementById('filtro-categoria-tarea');
+            if (selectTarea) {
+                selectTarea.innerHTML = '';
+                categoriasConfig.forEach(cat => {
+                    selectTarea.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            }
+            if (selectFiltro) {
+                selectFiltro.innerHTML = '<option value="">Todas las Categorías</option>';
+                categoriasConfig.forEach(cat => {
+                    selectFiltro.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            }
+        }
+
+        function renderCategoriasConfig() {
+            const tbody = document.getElementById('tabla-categorias-config');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            categoriasConfig.forEach((cat, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${cat}</strong></td>
+                        <td><button class="btn-delete" onclick="eliminarCategoriaConfig(${idx})">Eliminar</button></td>
+                    </tr>
+                `;
+            });
+            populateCategoriaSelects();
+        }
+
+        function guardarCategoriaConfig(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('cfg-cat-nombre').value.trim();
+            if (!nombre) return;
+            if (categoriasConfig.includes(nombre)) {
+                return alert('La categoría ya existe.');
+            }
+            categoriasConfig.push(nombre);
+            localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig));
+            document.getElementById('form-categoria').reset();
+            renderCategoriasConfig();
+        }
+
+        function eliminarCategoriaConfig(index) {
+            if (categoriasConfig.length <= 1) return alert('Debe haber al menos una categoría.');
+            if (confirm('¿Eliminar esta categoría?')) {
+                categoriasConfig.splice(index, 1);
+                localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig));
+                renderCategoriasConfig();
+            }
         }
 
         function renderEstadosConfig() {
@@ -1588,6 +1904,312 @@
             }
         }
 
+        // --- ABM GRUPO ELECTRÓGENO (CARACTERÍSTICAS) ---
+        function guardarElectrogeno(e) {
+            e.preventDefault();
+            const id = document.getElementById('electro-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                descripcion: document.getElementById('electro-descripcion').value,
+                service: document.getElementById('electro-service').value,
+                combustible: document.getElementById('electro-combustible').value,
+                hrsTotal: parseFloat(document.getElementById('electro-hrs-total').value) || 0,
+                hrsService: parseFloat(document.getElementById('electro-hrs-service').value) || 0,
+                observacion: document.getElementById('electro-observacion').value
+            };
+
+            if (id) {
+                const idx = electrogenoData.findIndex(x => x.id == id);
+                if (idx !== -1) electrogenoData[idx] = item;
+            } else {
+                electrogenoData.push(item);
+            }
+
+            localStorage.setItem('electrogenoData', JSON.stringify(electrogenoData));
+            resetFormElectrogeno();
+            renderElectrogeno();
+            alert('¡Registro del grupo electrógeno guardado!');
+        }
+
+        function resetFormElectrogeno() {
+            document.getElementById('form-electrogeno').reset();
+            document.getElementById('electro-id').value = '';
+            document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
+        }
+
+        function renderElectrogeno() {
+            const tbody = document.getElementById('tabla-electrogeno');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            electrogenoData.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${item.descripcion}</b></td>
+                        <td>${item.service || '-'}</td>
+                        <td>${item.combustible || '-'}</td>
+                        <td>${item.hrsTotal ? item.hrsTotal + ' hs' : '-'}</td>
+                        <td>${item.hrsService ? item.hrsService + ' hs' : '-'}</td>
+                        <td>${item.observacion || '-'}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarElectrogeno(${item.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarElectrogeno(${item.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarElectrogeno(id) {
+            const item = electrogenoData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('electro-id').value = item.id;
+            document.getElementById('electro-descripcion').value = item.descripcion;
+            document.getElementById('electro-service').value = item.service || '';
+            document.getElementById('electro-combustible').value = item.combustible || '';
+            document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
+            document.getElementById('electro-hrs-service').value = item.hrsService || '';
+            document.getElementById('electro-observacion').value = item.observacion || '';
+            document.getElementById('btn-guardar-electro').innerText = 'Actualizar Características';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarElectrogeno(id) {
+            if (confirm('¿Deseas eliminar este registro de Grupo Electrógeno?')) {
+                electrogenoData = electrogenoData.filter(x => x.id !== id);
+                localStorage.setItem('electrogenoData', JSON.stringify(electrogenoData));
+                renderElectrogeno();
+            }
+        }
+
+        // --- ABM NOVEDADES DEL GRUPO ELECTRÓGENO ---
+        function guardarElectrogenoNovedad(e) {
+            e.preventDefault();
+            const id = document.getElementById('electro-nov-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                fecha: document.getElementById('electro-nov-fecha').value,
+                descripcion: document.getElementById('electro-nov-descripcion').value,
+                observacion: document.getElementById('electro-nov-observacion').value,
+                importe: parseFloat(document.getElementById('electro-nov-importe').value) || 0
+            };
+
+            if (id) {
+                const idx = electrogenoNovedades.findIndex(x => x.id == id);
+                if (idx !== -1) electrogenoNovedades[idx] = item;
+            } else {
+                electrogenoNovedades.push(item);
+            }
+
+            localStorage.setItem('electrogenoNovedades', JSON.stringify(electrogenoNovedades));
+            resetFormElectrogenoNovedad();
+            renderElectrogenoNovedades();
+            alert('¡Novedad del Grupo Electrógeno guardada!');
+        }
+
+        function resetFormElectrogenoNovedad() {
+            document.getElementById('form-electro-nov').reset();
+            document.getElementById('electro-nov-id').value = '';
+            document.getElementById('btn-guardar-electro-nov').innerText = 'Guardar Novedad';
+        }
+
+        function renderElectrogenoNovedades() {
+            const tbody = document.getElementById('tabla-electrogeno-novedades');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            electrogenoNovedades.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.fecha}</td>
+                        <td><b>${item.descripcion}</b></td>
+                        <td>${item.observacion || '-'}</td>
+                        <td>${item.importe ? '$' + item.importe.toFixed(2) : '-'}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarElectrogenoNovedad(${item.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarElectrogenoNovedad(${item.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarElectrogenoNovedad(id) {
+            const item = electrogenoNovedades.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('electro-nov-id').value = item.id;
+            document.getElementById('electro-nov-fecha').value = item.fecha;
+            document.getElementById('electro-nov-descripcion').value = item.descripcion;
+            document.getElementById('electro-nov-observacion').value = item.observacion || '';
+            document.getElementById('electro-nov-importe').value = item.importe || '';
+            document.getElementById('btn-guardar-electro-nov').innerText = 'Actualizar Novedad';
+        }
+
+        function eliminarElectrogenoNovedad(id) {
+            if (confirm('¿Deseas eliminar esta novedad del Grupo Electrógeno?')) {
+                electrogenoNovedades = electrogenoNovedades.filter(x => x.id !== id);
+                localStorage.setItem('electrogenoNovedades', JSON.stringify(electrogenoNovedades));
+                renderElectrogenoNovedades();
+            }
+        }
+
+        // --- ABM MATAFUEGOS ---
+        function guardarMatafuego(e) {
+            e.preventDefault();
+            const id = document.getElementById('mat-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                nro: document.getElementById('mat-nro').value,
+                ubicacion: document.getElementById('mat-ubicacion').value,
+                vencimiento: document.getElementById('mat-vencimiento').value
+            };
+
+            if (id) {
+                const idx = matafuegosData.findIndex(x => x.id == id);
+                if (idx !== -1) matafuegosData[idx] = item;
+            } else {
+                matafuegosData.push(item);
+            }
+
+            localStorage.setItem('matafuegosData', JSON.stringify(matafuegosData));
+            resetFormMatafuegos();
+            renderMatafuegos();
+            alert('¡Matafuego registrado correctamente!');
+        }
+
+        function resetFormMatafuegos() {
+            document.getElementById('form-matafuegos').reset();
+            document.getElementById('mat-id').value = '';
+            document.getElementById('btn-guardar-mat').innerText = 'Guardar Matafuego';
+        }
+
+        function renderMatafuegos() {
+            const tbody = document.getElementById('tabla-matafuegos');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const hoy = new Date().toISOString().slice(0, 10);
+
+            matafuegosData.forEach(item => {
+                const estaVencido = item.vencimiento && item.vencimiento < hoy;
+                const badgeEstado = estaVencido
+                    ? `<span class="badge" style="background-color: var(--danger);">Vencido</span>`
+                    : `<span class="badge" style="background-color: var(--success);">Vigente</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${item.nro}</b></td>
+                        <td>${item.ubicacion}</td>
+                        <td>${item.vencimiento || '-'}</td>
+                        <td>${badgeEstado}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarMatafuego(${item.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarMatafuego(${item.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarMatafuego(id) {
+            const item = matafuegosData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('mat-id').value = item.id;
+            document.getElementById('mat-nro').value = item.nro;
+            document.getElementById('mat-ubicacion').value = item.ubicacion;
+            document.getElementById('mat-vencimiento').value = item.vencimiento;
+            document.getElementById('btn-guardar-mat').innerText = 'Actualizar Matafuego';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarMatafuego(id) {
+            if (confirm('¿Deseas eliminar este matafuego?')) {
+                matafuegosData = matafuegosData.filter(x => x.id !== id);
+                localStorage.setItem('matafuegosData', JSON.stringify(matafuegosData));
+                renderMatafuegos();
+            }
+        }
+
+        // --- ABM TAREAS ---
+        function guardarTarea(e) {
+            e.preventDefault();
+            const id = document.getElementById('tarea-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                nombre: document.getElementById('tarea-nombre').value,
+                responsable: document.getElementById('tarea-responsable').value,
+                categoria: document.getElementById('tarea-categoria').value,
+                descripcion: document.getElementById('tarea-descripcion').value
+            };
+
+            if (id) {
+                const idx = tareasData.findIndex(x => x.id == id);
+                if (idx !== -1) tareasData[idx] = item;
+            } else {
+                tareasData.push(item);
+            }
+
+            localStorage.setItem('tareasData', JSON.stringify(tareasData));
+            resetFormTarea();
+            renderTareas();
+            alert('¡Tarea guardada correctamente!');
+        }
+
+        function resetFormTarea() {
+            document.getElementById('form-tareas').reset();
+            document.getElementById('tarea-id').value = '';
+            document.getElementById('btn-guardar-tarea').innerText = 'Guardar Tarea';
+        }
+
+        function renderTareas() {
+            const tbody = document.getElementById('tabla-tareas');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const filtroTexto = (document.getElementById('buscar-tarea')?.value || '').toLowerCase();
+            const filtroCat = document.getElementById('filtro-categoria-tarea')?.value || '';
+
+            const listaFiltrada = tareasData.filter(t => 
+                (t.nombre.toLowerCase().includes(filtroTexto) || t.responsable.toLowerCase().includes(filtroTexto) || t.descripcion.toLowerCase().includes(filtroTexto)) &&
+                (filtroCat === '' || t.categoria === filtroCat)
+            );
+
+            listaFiltrada.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${item.nombre}</b></td>
+                        <td><span class="badge" style="background-color: var(--primary-light);">${item.categoria}</span></td>
+                        <td>${item.responsable}</td>
+                        <td>${item.descripcion || '-'}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarTarea(${item.id})">Editar</button>
+                            <button class="btn-delete" onclick="eliminarTarea(${item.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarTarea(id) {
+            const item = tareasData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('tarea-id').value = item.id;
+            document.getElementById('tarea-nombre').value = item.nombre;
+            document.getElementById('tarea-responsable').value = item.responsable;
+            document.getElementById('tarea-categoria').value = item.categoria;
+            document.getElementById('tarea-descripcion').value = item.descripcion || '';
+            document.getElementById('btn-guardar-tarea').innerText = 'Actualizar Tarea';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarTarea(id) {
+            if (confirm('¿Deseas eliminar esta tarea?')) {
+                tareasData = tareasData.filter(x => x.id !== id);
+                localStorage.setItem('tareasData', JSON.stringify(tareasData));
+                renderTareas();
+            }
+        }
+
         // --- ESTADÍSTICAS ---
         let chartInstance = null;
         function renderCharts() {
@@ -1695,23 +2317,19 @@
         // --- CARGA AUTOMÁTICA DE BACKUP DESDE GITHUB SIN CACHÉ ---
         async function cargarDatosDesdeGitHub() {
             try {
-                // 1. Consultar el repositorio vía API de GitHub para localizar archivos de backup (backup*.json)
                 const apiRes = await fetch(GITHUB_CONTENTS_API + '?t=' + Date.now());
                 let targetFile = 'backup_dormys.json';
                 
                 if (apiRes.ok) {
                     const files = await apiRes.json();
-                    // Buscar si existe algún archivo que empiece con 'backup' y termine en '.json'
                     const backupFiles = files.filter(f => f.name.toLowerCase().startsWith('backup') && f.name.toLowerCase().endsWith('.json'));
                     
                     if (backupFiles.length > 0) {
-                        // Seleccionar el archivo de backup más reciente o modificado
                         backupFiles.sort((a, b) => b.name.localeCompare(a.name));
                         targetFile = backupFiles[0].name;
                     }
                 }
 
-                // 2. Descargar el JSON omitiendo la caché del navegador/CDN
                 const downloadUrl = `${GITHUB_REPO_URL}${targetFile}?nocache=${Date.now()}`;
                 const res = await fetch(downloadUrl);
                 
@@ -1735,6 +2353,11 @@
             if (data.reparacionesData) { reparacionesData = data.reparacionesData; localStorage.setItem('reparacionesData', JSON.stringify(data.reparacionesData)); }
             if (data.novedades) { novedades = data.novedades; localStorage.setItem('novedades', JSON.stringify(data.novedades)); }
             if (data.pagos) { pagos = data.pagos; localStorage.setItem('pagos', JSON.stringify(data.pagos)); }
+            if (data.electrogenoData) { electrogenoData = data.electrogenoData; localStorage.setItem('electrogenoData', JSON.stringify(data.electrogenoData)); }
+            if (data.electrogenoNovedades) { electrogenoNovedades = data.electrogenoNovedades; localStorage.setItem('electrogenoNovedades', JSON.stringify(data.electrogenoNovedades)); }
+            if (data.matafuegosData) { matafuegosData = data.matafuegosData; localStorage.setItem('matafuegosData', JSON.stringify(data.matafuegosData)); }
+            if (data.tareasData) { tareasData = data.tareasData; localStorage.setItem('tareasData', JSON.stringify(data.tareasData)); }
+            if (data.categoriasConfig) { categoriasConfig = data.categoriasConfig; localStorage.setItem('categoriasConfig', JSON.stringify(data.categoriasConfig)); }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
             if (data.textoImporteConfig) { textoImporteConfig = data.textoImporteConfig; localStorage.setItem('textoImporteConfig', data.textoImporteConfig); }
             if (githubToken) localStorage.setItem('githubToken', githubToken);
@@ -1742,13 +2365,17 @@
 
         window.onload = async function() {
             await initDB();
-            // IMPORTACIÓN AUTOMÁTICA DESDE GITHUB AL INICIAR
             await cargarDatosDesdeGitHub();
             
             populateEstadoSelects();
+            populateCategoriaSelects();
             changeUser();
             await renderNovedades();
             await renderPagos();
+            renderElectrogeno();
+            renderElectrogenoNovedades();
+            renderMatafuegos();
+            renderTareas();
             renderGrillaReparaciones();
 
             if (document.getElementById('cfg-texto-importe')) {
@@ -1830,6 +2457,11 @@
                     reparacionesData: JSON.parse(localStorage.getItem('reparacionesData')) || {},
                     novedades: limpiarNovedadesParaBackup(rawNov),
                     pagos: limpiarPagosParaBackup(rawPagos),
+                    electrogenoData: JSON.parse(localStorage.getItem('electrogenoData')) || [],
+                    electrogenoNovedades: JSON.parse(localStorage.getItem('electrogenoNovedades')) || [],
+                    matafuegosData: JSON.parse(localStorage.getItem('matafuegosData')) || [],
+                    tareasData: JSON.parse(localStorage.getItem('tareasData')) || [],
+                    categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
                     textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
                     fechaExportacion: new Date().toISOString()
