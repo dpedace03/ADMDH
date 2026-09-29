@@ -50,7 +50,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 12px; max-width: 1100px; margin: 0 auto; }
+        body { background-color: var(--bg); color: var(--text); padding: 12px; max-width: 100%; margin: 0 auto; transition: background-color 0.3s; }
 
         header {
             background-color: var(--primary);
@@ -63,13 +63,13 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.12);
         }
 
         .header-title-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn-header-icon {
@@ -80,29 +80,37 @@
             font-size: 1.25rem;
             padding: 6px 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+            position: relative;
+            top: 0;
         }
 
         .btn-header-icon:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+            transform: translateY(-1px);
         }
 
-        header h2 { font-size: 1.15rem; font-weight: 700; margin-left: 4px; }
-        .user-control { display: flex; align-items: center; gap: 6px; }
-        .user-control select { padding: 6px 10px; border-radius: 6px; border: none; font-weight: bold; font-size: 0.9rem; background: #ffffff; color: var(--text); }
+        .btn-header-icon:active {
+            top: 2px;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+        }
+
+        header h2 { font-size: 1.15rem; font-weight: 700; }
 
         nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
             margin-bottom: 12px;
             justify-content: center;
         }
+
+        /* EFECTO 3D PARA BOTONES DEL MENÚ PRINCIPAL */
         nav button {
             border: 1px solid var(--border);
             padding: 10px 8px;
@@ -111,14 +119,36 @@
             font-weight: 700;
             font-size: 0.82rem;
             white-space: nowrap;
-            flex: 1 1 110px;
-            min-width: 110px;
+            flex: 1 1 100px;
+            min-width: 100px;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            position: relative;
+            top: 0;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 5px 8px rgba(0,0,0,0.08);
+            user-select: none;
+        }
+
+        nav button:hover {
+            transform: translateY(-2px);
+            filter: brightness(0.97);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15), 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        nav button:active {
+            top: 3px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav button.active {
+            border-width: 2px;
+            font-weight: 800;
+            filter: brightness(0.93);
+            top: 2px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 2px 0 rgba(0, 0, 0, 0.2);
         }
 
         /* Colores pastel por botón del menú principal */
@@ -128,36 +158,24 @@
         #btn-electrogeno { background-color: var(--pastel-purple); color: var(--pastel-purple-dark); border-color: #e9d5ff; }
         #btn-matafuegos { background-color: var(--pastel-red); color: var(--pastel-red-dark); border-color: #fecdd3; }
         #btn-tareas { background-color: var(--pastel-teal); color: var(--pastel-teal-dark); border-color: #99f6e4; }
+        #btn-herramientas { background-color: var(--pastel-yellow); color: var(--pastel-yellow-dark); border-color: #fef08a; }
         #btn-registro { background-color: var(--pastel-indigo); color: var(--pastel-indigo-dark); border-color: #c7d2fe; }
         #btn-cronograma { background-color: var(--pastel-cyan); color: var(--pastel-cyan-dark); border-color: #a5f3fc; }
         #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
 
-        nav button:hover {
-            transform: translateY(-1px);
-            filter: brightness(0.95);
-            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
-        }
-
-        nav button.active {
-            border-width: 2px;
-            font-weight: 800;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            filter: brightness(0.92);
-        }
-
-        .section { display: none; background: var(--card-bg); padding: 16px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .section { display: none; background: var(--card-bg); padding: 16px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.08); transition: background-color 0.3s; }
         .section.active { display: block; }
 
-        .card-box { background: #f8fafc; padding: 14px; border-radius: 10px; margin-bottom: 16px; border: 1px solid var(--border); }
-        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .form-group { display: flex; flex-direction: column; }
+        .card-box { background: var(--card-bg); padding: 14px; border-radius: 10px; margin-bottom: 16px; border: 1px solid var(--border); transition: background-color 0.3s; width: 100%; }
+        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; width: 100%; }
+        .form-group { display: flex; flex-direction: column; width: 100%; }
         .form-group.full-width { grid-column: 1 / -1; }
         label { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; color: #334155; }
         input, select, textarea {
             padding: 10px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             background-color: #ffffff;
             width: 100%;
         }
@@ -172,21 +190,73 @@
             flex: 1;
             background-color: var(--primary);
             color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+            box-shadow: 0 4px 0 #1e3a8a;
+            position: relative;
+            top: 0;
+            transition: all 0.1s;
         }
         button.btn-submit:hover { background-color: var(--primary-light); }
+        button.btn-submit:active { top: 3px; box-shadow: 0 1px 0 #1e3a8a; }
 
         button.btn-reset-form {
             background-color: var(--secondary);
             color: white; border: none; padding: 12px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+            box-shadow: 0 4px 0 #334155;
+            position: relative;
+            top: 0;
+            transition: all 0.1s;
         }
         button.btn-reset-form:hover { background-color: #475569; }
+        button.btn-reset-form:active { top: 3px; box-shadow: 0 1px 0 #334155; }
+
+        /* EFECTO 3D PARA BOTONES DE LA PANTALLA PRINCIPAL (DORMYS) */
+        .home-grid-btn {
+            background: white; 
+            border: 2px solid var(--border); 
+            border-radius: 12px; 
+            padding: 22px 15px; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            box-shadow: 0 5px 0 var(--border), 0 8px 12px rgba(0,0,0,0.08); 
+            transition: all 0.1s ease;
+            position: relative;
+            top: 0;
+            user-select: none;
+        }
+
+        .home-grid-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--border), 0 10px 15px rgba(0,0,0,0.12);
+        }
+
+        .home-grid-btn:active {
+            top: 4px;
+            box-shadow: 0 1px 0 var(--border), 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .home-grid-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 5px 0 #1e3a8a, 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .home-grid-btn.primary:hover {
+            box-shadow: 0 7px 0 #1e3a8a, 0 10px 15px rgba(0,0,0,0.2);
+        }
+
+        .home-grid-btn.primary:active {
+            top: 4px;
+            box-shadow: 0 1px 0 #1e3a8a, 0 2px 4px rgba(0,0,0,0.1);
+        }
 
         table { width: 100%; border-collapse: collapse; margin-top: 12px; table-layout: auto; }
         th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 0.88rem; vertical-align: middle; white-space: nowrap; }
         th { background-color: #f1f5f9; font-weight: 700; color: #1e293b; }
-
-        #sec-novedades table td { white-space: normal; word-break: break-word; }
-        .col-nowrap { white-space: nowrap !important; }
 
         .text-clamp-2 {
             display: -webkit-box;
@@ -237,10 +307,10 @@
             line-height: 1;
             transition: transform 0.15s ease;
         }
-        .btn-edit { margin-right: 4px; }
         .btn-delete:hover, .btn-edit:hover { transform: scale(1.2); }
 
-        .btn-action { background-color: var(--primary-light); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        .btn-action { background-color: var(--primary-light); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; box-shadow: 0 3px 0 #1d4ed8; position: relative; top: 0; transition: all 0.1s; }
+        .btn-action:active { top: 2px; box-shadow: 0 1px 0 #1d4ed8; }
 
         .preview-container { display: flex; gap: 8px; flex-wrap: nowrap; margin-top: 2px; }
         .preview-item { display: flex; flex-direction: column; align-items: center; position: relative; }
@@ -270,30 +340,34 @@
         .reparaciones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 10px; margin-top: 15px; }
         .dormy-cell {
             aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-weight: bold; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.15s, box-shadow 0.15s;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.4); user-select: none; position: relative;
+            font-weight: bold; color: white; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.2); transition: transform 0.15s, box-shadow 0.15s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4); user-select: none; position: relative; top: 0;
         }
-        .dormy-cell:hover { transform: scale(1.08); box-shadow: 0 4px 8px rgba(0,0,0,0.25); z-index: 2; }
+        .dormy-cell:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.2); z-index: 2; }
+        .dormy-cell:active { top: 3px; box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
         .dormy-cell .dormy-num { font-size: 1.1rem; }
         .dormy-cell .dormy-sub { font-size: 0.65rem; opacity: 0.9; font-weight: normal; margin-top: 2px; text-align: center; line-height: 1; }
 
-        .leyenda-container { display: flex; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .leyenda-container { display: flex; flex-wrap: wrap; gap: 12px; background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
         .leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
         .leyenda-color { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
 
         .cronograma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
-        .dia-col { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-height: 250px; display: flex; flex-direction: column; }
+        .dia-col { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-height: 250px; display: flex; flex-direction: column; }
+        
         .dia-header { 
-            background: var(--pastel-green); 
+            background-color: var(--pastel-green); 
             color: var(--pastel-green-dark); 
-            border: 1px solid #bbf7d0; 
+            border: 1px solid #bbf7d0;
             text-align: center; 
             font-weight: bold; 
-            padding: 8px 6px; 
+            padding: 8px; 
             border-radius: 6px; 
             font-size: 0.9rem; 
-            margin-bottom: 8px; 
+            margin-bottom: 8px;
+            box-shadow: 0 3px 0 #86efac;
         }
+
         .tarea-card {
             background: white; border-left: 4px solid var(--primary-light); border-top: 1px solid var(--border); border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 0.82rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;
@@ -303,11 +377,30 @@
         .tarea-card .resp { color: var(--secondary); font-size: 0.75rem; }
         .tarea-card .obs { margin-top: 4px; font-style: italic; color: #475569; font-size: 0.75rem; word-break: break-word; }
 
+        /* FILA ÚNICA QUE OCUPA TODO EL ANCHO DE PANTALLA EN EL GRUPO ELECTRÓGENO */
+        .grid-full-line {
+            display: grid;
+            /* Cada columna mide al menos lo que ocupa su etiqueta en una sola línea */
+            grid-template-columns: repeat(5, minmax(max-content, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+        /* Las etiquetas de este grupo nunca se parten en varias líneas */
+        .grid-full-line label {
+            white-space: nowrap;
+        }
+
+        /* Si no entran las 5 columnas, los campos pasan a la fila siguiente (la etiqueta sigue en una línea) */
+        @media (max-width: 1000px) {
+            .grid-full-line {
+                grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
             body { padding: 8px; }
             header { flex-direction: column; align-items: stretch; text-align: center; }
             .header-title-container { justify-content: center; }
-            .user-control { justify-content: center; }
             .config-grid { grid-template-columns: 1fr; }
             .section { padding: 12px; }
             nav button { flex: 1 1 45%; font-size: 0.8rem; }
@@ -324,13 +417,6 @@
             <button class="btn-header-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
             <h2 id="main-header-title">Administración Dormys</h2>
         </div>
-        <div class="user-control" style="display: none;">
-            <label for="userSelect" style="color:white;">Usuario:</label>
-            <select id="userSelect" onchange="changeUser()">
-                <option value="Ferreyra">Ferreyra (Operador)</option>
-                <option value="comision">Comisión (Admin)</option>
-            </select>
-        </div>
     </header>
 
     <nav>
@@ -340,6 +426,7 @@
         <button id="btn-electrogeno" onclick="showSection('electrogeno')">⚡ Electrógeno</button>
         <button id="btn-matafuegos" onclick="showSection('matafuegos')">🧯 Matafuegos</button>
         <button id="btn-tareas" onclick="showSection('tareas')">📋 Tareas</button>
+        <button id="btn-herramientas" onclick="showSection('herramientas')">🧰 Herramientas</button>
         <button id="btn-registro" onclick="showSection('registro')">📝 Registro</button>
         <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma</button>
         <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
@@ -349,75 +436,125 @@
     <section id="sec-admin-dormys" class="section active" style="text-align: center; padding: 30px 15px;">
         <h2 style="color: var(--primary); margin-bottom: 25px; font-size: 1.5rem;">Administración Dormys</h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 800px; margin: 0 auto 30px auto;">
-            <button onclick="moduloProximamente('Facundo')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 900px; margin: 0 auto 30px auto;">
+            <button class="home-grid-btn" onclick="showSection('facundo')">
                 <span style="font-size: 2.2rem;">👤</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Facundo</span>
             </button>
 
-            <button onclick="moduloProximamente('Casita')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="moduloProximamente('Casita')">
                 <span style="font-size: 2.2rem;">🏡</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Casita</span>
             </button>
 
-            <button onclick="showSection('reparaciones')" style="background: var(--primary); color: white; border: 2px solid var(--primary); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.2s;">
+            <button class="home-grid-btn primary" onclick="showSection('reparaciones')">
                 <span style="font-size: 2.2rem;">🏚️</span>
                 <span style="font-weight: bold; font-size: 1.1rem;">Techos</span>
             </button>
 
-            <button onclick="showSection('presupuestos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('presupuestos')">
                 <span style="font-size: 2.2rem;">📄</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Presupuestos</span>
             </button>
 
-            <button onclick="moduloProximamente('Informes')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="moduloProximamente('Informes')">
                 <span style="font-size: 2.2rem;">📊</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Informes</span>
             </button>
 
-            <button onclick="moduloProximamente('Gastos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="moduloProximamente('Gastos')">
                 <span style="font-size: 2.2rem;">💸</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Gastos</span>
             </button>
 
-            <button onclick="moduloProximamente('Piscina')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="moduloProximamente('Piscina')">
                 <span style="font-size: 2.2rem;">🏊</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Piscina</span>
             </button>
 
-            <button onclick="showSection('electrogeno')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('electrogeno')">
                 <span style="font-size: 2.2rem;">⚡</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Grupo electrógeno</span>
             </button>
 
-            <button onclick="showSection('matafuegos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('matafuegos')">
                 <span style="font-size: 2.2rem;">🧯</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Matafuegos</span>
             </button>
 
-            <button onclick="showSection('tareas')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('tareas')">
                 <span style="font-size: 2.2rem;">📋</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Tareas</span>
             </button>
 
-            <button onclick="showSection('registro')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('herramientas')">
+                <span style="font-size: 2.2rem;">🧰</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Herramientas</span>
+            </button>
+
+            <button class="home-grid-btn" onclick="showSection('registro')">
                 <span style="font-size: 2.2rem;">📝</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Registro</span>
             </button>
 
-            <button onclick="showSection('cronograma')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+            <button class="home-grid-btn" onclick="showSection('cronograma')">
                 <span style="font-size: 2.2rem;">📅</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma</span>
             </button>
         </div>
 
-        <div style="background: #f1f5f9; padding: 18px; border-radius: 12px; max-width: 380px; margin: 0 auto; border: 1px solid var(--border);">
+        <div style="background: var(--card-bg); padding: 18px; border-radius: 12px; max-width: 380px; margin: 0 auto; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--text);">Acceso Rápido por Dormy</label>
             <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
                 <span style="font-weight: bold;">DH n°:</span>
                 <input type="number" id="home-dh-num" min="1" max="99" placeholder="1-99" style="width: 85px; text-align: center; font-size: 1rem; font-weight: bold;" onkeydown="if(event.key==='Enter') ingresarPorDH()">
-                <button onclick="ingresarPorDH()" style="background-color: var(--primary-light); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">Ir</button>
+                <button onclick="ingresarPorDH()" class="btn-action">Ir</button>
             </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN FACUNDO -->
+    <section id="sec-facundo" class="section">
+        <h3>👤 Información de Facundo</h3>
+        <div class="card-box" style="margin-top: 15px;">
+            <form id="form-facundo" onsubmit="guardarFacundoData(event)">
+                <div class="form-group">
+                    <label>Horario de Inicio de Trabajo</label>
+                    <input type="time" id="facundo-hora-inicio">
+                </div>
+
+                <div class="form-group">
+                    <label>Horario de Fin de Trabajo</label>
+                    <input type="time" id="facundo-hora-fin">
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Inicio de Vacaciones</label>
+                    <input type="date" id="facundo-vac-inicio">
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Fin de Vacaciones</label>
+                    <input type="date" id="facundo-vac-fin">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Número de WhatsApp</label>
+                    <input type="tel" id="facundo-whatsapp" placeholder="Ej: +54 9 11 1234-5678">
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit">Guardar Datos de Facundo</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- SECCIÓN HERRAMIENTAS -->
+    <section id="sec-herramientas" class="section">
+        <h3>🧰 Módulo de Herramientas</h3>
+        <div class="card-box" style="margin-top: 15px;">
+            <p style="color: var(--secondary);">Gestión y control del inventario de herramientas de mantenimiento.</p>
         </div>
     </section>
 
@@ -425,7 +562,7 @@
     <section id="sec-reparaciones" class="section">
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
             <h3>Estado de Reparaciones por Dormy (1-99)</h3>
-            <button onclick="showSection('novedades')" style="background-color: var(--pastel-yellow); color: var(--pastel-yellow-dark); border: 1px solid #fef08a; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+            <button onclick="showSection('novedades')" style="background-color: var(--pastel-yellow); color: var(--pastel-yellow-dark); border: 1px solid #fef08a; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 3px 0 #fde047; position: relative; top: 0;" onmousedown="this.style.top='2px'; this.style.boxShadow='0 1px 0 #fde047';" onmouseup="this.style.top='0'; this.style.boxShadow='0 3px 0 #fde047';">
                 📝 Novedades Techos
             </button>
         </div>
@@ -699,39 +836,42 @@
             <form id="form-electrogeno" onsubmit="guardarElectrogeno(event)">
                 <input type="hidden" id="electro-id">
                 
-                <div class="form-group full-width">
-                    <label>Descripción del Grupo</label>
-                    <input type="text" id="electro-descripcion" required placeholder="Ej: Grupo diésel Trifásico 50 KVA marca Generac">
+                <!-- CAMPOS EN UNA SOLA FILA QUE OCUPAN TODO EL ANCHO DE PANTALLA -->
+                <div class="grid-full-line full-width">
+                    <div class="form-group">
+                        <label>Descripción del Grupo</label>
+                        <input type="text" id="electro-descripcion" required placeholder="Ej: Grupo diésel 50 KVA">
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Cuándo pedir Service?</label>
+                        <input type="text" id="electro-service" placeholder="Ej: Cada 200 hs">
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿A quién pedir combustible?</label>
+                        <input type="text" id="electro-combustible" placeholder="Ej: YPF Directo">
+                    </div>
+
+                    <!-- ORDEN INVERTIDO: Horas del último service ANTES que Horas de uso totales -->
+                    <div class="form-group">
+                        <label>Horas del último service</label>
+                        <input type="number" id="electro-hrs-service" step="0.1" placeholder="Ej: 85.0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Horas de uso totales</label>
+                        <input type="number" id="electro-hrs-total" step="0.1" placeholder="Ej: 1450.5">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>¿Cuándo pedir Service?</label>
-                    <input type="text" id="electro-service" placeholder="Ej: Cada 200 hs o en Octubre 2026">
-                </div>
-
-                <div class="form-group">
-                    <label>¿A quién pedir combustible?</label>
-                    <input type="text" id="electro-combustible" placeholder="Ej: YPF Directo - Proveedor Juan Perez">
-                </div>
-
-                <div class="form-group">
-                    <label>Horas de uso totales</label>
-                    <input type="number" id="electro-hrs-total" step="0.1" placeholder="Ej: 1450.5">
-                </div>
-
-                <div class="form-group">
-                    <label>Horas desde el último service</label>
-                    <input type="number" id="electro-hrs-service" step="0.1" placeholder="Ej: 85.0">
-                </div>
-
-                <div class="form-group full-width">
+                <div class="form-group full-width" style="margin-top: 10px;">
                     <label>Observación</label>
-                    <textarea id="electro-observacion" rows="2" placeholder="Ej: Funciona en óptimas condiciones. Filtro de aire cambiado recientemente."></textarea>
+                    <textarea id="electro-observacion" rows="2" placeholder="Ej: Funciona en óptimas condiciones."></textarea>
                 </div>
 
                 <div class="btn-group-form">
                     <button type="submit" class="btn-submit" id="btn-guardar-electro">Guardar Características</button>
-                    <button type="button" class="btn-reset-form" onclick="resetFormElectrogeno()">Nuevo</button>
                 </div>
             </form>
         </div>
@@ -1038,6 +1178,22 @@
         <h3>Configuración General y Copia de Seguridad</h3>
         <br>
 
+        <!-- SELECTOR DE COLOR DE FONDO DE PANTALLA Y TARJETAS -->
+        <div class="card-box" style="border: 2px solid var(--primary-light); background: #f0f9ff; margin-bottom: 25px;">
+            <h4 style="color: var(--primary); margin-bottom: 12px;">🎨 Personalización de Colores de Interfaz</h4>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label for="cfg-bg-color" style="font-weight: bold; margin: 0;">Fondo de Pantalla:</label>
+                    <input type="color" id="cfg-bg-color" value="#f1f5f9" style="height: 38px; width: 50px; padding: 2px; cursor: pointer;">
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label for="cfg-card-bg-color" style="font-weight: bold; margin: 0;">Fondo de Tarjetas (Card):</label>
+                    <input type="color" id="cfg-card-bg-color" value="#ffffff" style="height: 38px; width: 50px; padding: 2px; cursor: pointer;">
+                </div>
+                <button type="button" class="btn-action" onclick="guardarColorTemaConfig()">Guardar Colores</button>
+            </div>
+        </div>
+
         <!-- TOKEN DE GITHUB -->
         <div class="card-box" style="border: 2px solid var(--primary-light); background: #f0f9ff; margin-bottom: 25px;">
             <h4 style="color: var(--primary); margin-bottom: 8px;">🐙 Integración con GitHub (Sincronización Automática)</h4>
@@ -1200,9 +1356,13 @@
         let githubToken = localStorage.getItem('githubToken') || '';
 
         let textoImporteConfig = localStorage.getItem('textoImporteConfig') || 'Importe Total: $';
+        let appBgColor = localStorage.getItem('appBgColor') || '#f1f5f9';
+        let appCardBgColor = localStorage.getItem('appCardBgColor') || '#ffffff';
 
         const titulosSecciones = {
             'admin-dormys': 'Administración Dormys',
+            'facundo': 'Información de Facundo',
+            'herramientas': 'Gestión de Herramientas',
             'reparaciones': 'Administración de Techos - Dormys (1-99)',
             'presupuestos': 'Gestión de Presupuestos',
             'novedades': 'Novedades Techos',
@@ -1215,6 +1375,23 @@
             'stats': 'Estadísticas del Sistema',
             'config': 'Configuración General'
         };
+
+        function aplicarColorTema(colorBg, colorCard) {
+            document.documentElement.style.setProperty('--bg', colorBg);
+            document.body.style.backgroundColor = colorBg;
+            document.documentElement.style.setProperty('--card-bg', colorCard);
+        }
+
+        function guardarColorTemaConfig() {
+            const valBg = document.getElementById('cfg-bg-color').value;
+            const valCard = document.getElementById('cfg-card-bg-color').value;
+            appBgColor = valBg;
+            appCardBgColor = valCard;
+            localStorage.setItem('appBgColor', valBg);
+            localStorage.setItem('appCardBgColor', valCard);
+            aplicarColorTema(valBg, valCard);
+            alert('Colores guardados correctamente.');
+        }
 
         function guardarTextoImporteConfig() {
             const val = document.getElementById('cfg-texto-importe').value;
@@ -1305,7 +1482,6 @@
                 }
 
                 if (!fullText.trim()) {
-                    console.log('PDF sin texto embebido. Iniciando OCR con Tesseract...');
                     const url = await readFileAsBase64(file);
                     const result = await Tesseract.recognize(url, 'spa');
                     fullText = result.data.text;
@@ -1446,6 +1622,7 @@
         let registrosData = JSON.parse(localStorage.getItem('registrosData')) || [];
         let cronogramaData = JSON.parse(localStorage.getItem('cronogramaData')) || [];
         let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
+        let facundoData = JSON.parse(localStorage.getItem('facundoData')) || {};
         
         let categoriasConfigRaw = JSON.parse(localStorage.getItem('categoriasConfig')) || [
             { nombre: 'Mantenimiento', color: '#3b82f6' },
@@ -1607,14 +1784,9 @@
             alert(`Reparación guardada para el Dormy N° ${dormyId}.`);
         }
 
-        let currentUser = "Ferreyra";
         let tempFilesNov = [];
         let tempFilesPago = [];
         let tempFilesPres = [];
-
-        function changeUser() {
-            currentUser = document.getElementById('userSelect').value;
-        }
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
@@ -1632,12 +1804,47 @@
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
             if (sectionId === 'presupuestos') renderPresupuestos();
-            if (sectionId === 'electrogeno') { renderElectrogeno(); renderElectrogenoNovedades(); }
+            if (sectionId === 'electrogeno') { CargarCamposElectrogeno(); renderElectrogenoNovedades(); }
+            if (sectionId === 'facundo') cargarDatosFacundoForm();
             if (sectionId === 'matafuegos') renderMatafuegos();
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
             if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); }
+        }
+
+        function guardarFacundoData(e) {
+            e.preventDefault();
+            facundoData = {
+                horaInicio: document.getElementById('facundo-hora-inicio').value,
+                horaFin: document.getElementById('facundo-hora-fin').value,
+                vacInicio: document.getElementById('facundo-vac-inicio').value,
+                vacFin: document.getElementById('facundo-vac-fin').value,
+                whatsapp: document.getElementById('facundo-whatsapp').value
+            };
+            localStorage.setItem('facundoData', JSON.stringify(facundoData));
+            alert('¡Datos de Facundo guardados correctamente!');
+        }
+
+        function cargarDatosFacundoForm() {
+            document.getElementById('facundo-hora-inicio').value = facundoData.horaInicio || '';
+            document.getElementById('facundo-hora-fin').value = facundoData.horaFin || '';
+            document.getElementById('facundo-vac-inicio').value = facundoData.vacInicio || '';
+            document.getElementById('facundo-vac-fin').value = facundoData.vacFin || '';
+            document.getElementById('facundo-whatsapp').value = facundoData.whatsapp || '';
+        }
+
+        function CargarCamposElectrogeno() {
+            if (electrogenoData.length > 0) {
+                const item = electrogenoData[0];
+                document.getElementById('electro-id').value = item.id || '';
+                document.getElementById('electro-descripcion').value = item.descripcion || '';
+                document.getElementById('electro-service').value = item.service || '';
+                document.getElementById('electro-combustible').value = item.combustible || '';
+                document.getElementById('electro-hrs-service').value = item.hrsService || '';
+                document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
+                document.getElementById('electro-observacion').value = item.observacion || '';
+            }
         }
 
         function populateEstadoSelects() {
@@ -2533,7 +2740,7 @@
             }
         }
 
-        // --- GRUPO ELECTRÓGENO (CARACTERÍSTICAS) ---
+        // --- CARACTERÍSTICAS DEL GRUPO ELECTRÓGENO ---
         function guardarElectrogeno(e) {
             e.preventDefault();
             const id = document.getElementById('electro-id').value;
@@ -2542,65 +2749,15 @@
                 descripcion: document.getElementById('electro-descripcion').value,
                 service: document.getElementById('electro-service').value,
                 combustible: document.getElementById('electro-combustible').value,
-                hrsTotal: parseFloat(document.getElementById('electro-hrs-total').value) || 0,
                 hrsService: parseFloat(document.getElementById('electro-hrs-service').value) || 0,
+                hrsTotal: parseFloat(document.getElementById('electro-hrs-total').value) || 0,
                 observacion: document.getElementById('electro-observacion').value
             };
 
-            if (id) {
-                const idx = electrogenoData.findIndex(x => x.id == id);
-                if (idx !== -1) electrogenoData[idx] = item;
-            } else {
-                electrogenoData.push(item);
-            }
+            electrogenoData = [item];
 
             localStorage.setItem('electrogenoData', JSON.stringify(electrogenoData));
-            resetFormElectrogeno();
-            renderElectrogeno();
-            alert('¡Registro del grupo electrógeno guardado!');
-        }
-
-        function resetFormElectrogeno() {
-            document.getElementById('form-electrogeno').reset();
-            document.getElementById('electro-id').value = '';
-            document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
-        }
-
-        function renderElectrogeno() {
-            if (electrogenoData && electrogenoData.length > 0) {
-                const item = electrogenoData[0];
-                document.getElementById('electro-id').value = item.id;
-                document.getElementById('electro-descripcion').value = item.descripcion || '';
-                document.getElementById('electro-service').value = item.service || '';
-                document.getElementById('electro-combustible').value = item.combustible || '';
-                document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
-                document.getElementById('electro-hrs-service').value = item.hrsService || '';
-                document.getElementById('electro-observacion').value = item.observacion || '';
-                document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
-            }
-        }
-
-        function editarElectrogeno(id) {
-            const item = electrogenoData.find(x => x.id === id);
-            if (!item) return;
-            document.getElementById('electro-id').value = item.id;
-            document.getElementById('electro-descripcion').value = item.descripcion;
-            document.getElementById('electro-service').value = item.service || '';
-            document.getElementById('electro-combustible').value = item.combustible || '';
-            document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
-            document.getElementById('electro-hrs-service').value = item.hrsService || '';
-            document.getElementById('electro-observacion').value = item.observacion || '';
-            document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function eliminarElectrogeno(id) {
-            if (confirm('¿Deseas eliminar este registro de Grupo Electrógeno?')) {
-                electrogenoData = electrogenoData.filter(x => x.id !== id);
-                localStorage.setItem('electrogenoData', JSON.stringify(electrogenoData));
-                resetFormElectrogeno();
-                renderElectrogeno();
-            }
+            alert('¡Características del Grupo Electrógeno guardadas!');
         }
 
         // --- NOVEDADES DEL GRUPO ELECTRÓGENO ---
@@ -2874,7 +3031,7 @@
             }
         }
 
-        // --- LÓGICA DE REGISTRO ---
+        // --- REGISTRO ---
         function guardarRegistro(e) {
             e.preventDefault();
             const id = document.getElementById('reg-id').value;
@@ -2961,7 +3118,7 @@
             }
         }
 
-        // --- LÓGICA DE CRONOGRAMA ---
+        // --- CRONOGRAMA ---
         function guardarCronogramaTarea(e) {
             e.preventDefault();
             const id = document.getElementById('crono-id').value;
@@ -3155,7 +3312,7 @@
             });
         }
 
-        // --- CARGA AUTOMÁTICA DE BACKUP DESDE GITHUB SIN CACHÉ ---
+        // --- CARGA AUTOMÁTICA DE BACKUP DESDE GITHUB ---
         async function cargarDatosDesdeGitHub() {
             try {
                 const apiRes = await fetch(GITHUB_CONTENTS_API + '?t=' + Date.now());
@@ -3178,11 +3335,9 @@
                     const data = await res.json();
                     aplicarDatosBackup(data);
                     console.log(`✅ Datos sincronizados automáticamente desde GitHub (${targetFile})`);
-                } else {
-                    console.warn(`No se pudo obtener ${targetFile} desde GitHub. Estado: ${res.status}`);
                 }
             } catch (err) {
-                console.error('Error al sincronizar automáticamente desde GitHub:', err);
+                console.error('Error al sincronizar desde GitHub:', err);
             }
         }
 
@@ -3201,26 +3356,29 @@
             if (data.registrosData) { registrosData = data.registrosData; localStorage.setItem('registrosData', JSON.stringify(data.registrosData)); }
             if (data.cronogramaData) { cronogramaData = data.cronogramaData; localStorage.setItem('cronogramaData', JSON.stringify(data.cronogramaData)); }
             if (data.presupuestosData) { presupuestosData = data.presupuestosData; localStorage.setItem('presupuestosData', JSON.stringify(data.presupuestosData)); }
+            if (data.facundoData) { facundoData = data.facundoData; localStorage.setItem('facundoData', JSON.stringify(data.facundoData)); }
             if (data.categoriasConfig) { 
                 categoriasConfig = data.categoriasConfig.map(c => (typeof c === 'string') ? { nombre: c, color: '#3b82f6' } : c); 
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
             }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
             if (data.textoImporteConfig) { textoImporteConfig = data.textoImporteConfig; localStorage.setItem('textoImporteConfig', data.textoImporteConfig); }
+            if (data.appBgColor) { appBgColor = data.appBgColor; localStorage.setItem('appBgColor', data.appBgColor); }
+            if (data.appCardBgColor) { appCardBgColor = data.appCardBgColor; localStorage.setItem('appCardBgColor', data.appCardBgColor); }
             if (githubToken) localStorage.setItem('githubToken', githubToken);
         }
 
         window.onload = async function() {
+            aplicarColorTema(appBgColor, appCardBgColor);
             await initDB();
             await cargarDatosDesdeGitHub();
             
             populateEstadoSelects();
             populateCategoriaSelects();
-            changeUser();
             await renderNovedades();
             await renderPagos();
             await renderPresupuestos();
-            renderElectrogeno();
+            CargarCamposElectrogeno();
             renderElectrogenoNovedades();
             renderMatafuegos();
             renderTareas();
@@ -3230,6 +3388,12 @@
 
             if (document.getElementById('cfg-texto-importe')) {
                 document.getElementById('cfg-texto-importe').value = textoImporteConfig;
+            }
+            if (document.getElementById('cfg-bg-color')) {
+                document.getElementById('cfg-bg-color').value = appBgColor;
+            }
+            if (document.getElementById('cfg-card-bg-color')) {
+                document.getElementById('cfg-card-bg-color').value = appCardBgColor;
             }
             if (document.getElementById('cfg-github-token')) {
                 document.getElementById('cfg-github-token').value = githubToken;
@@ -3323,9 +3487,12 @@
                     registrosData: JSON.parse(localStorage.getItem('registrosData')) || [],
                     cronogramaData: JSON.parse(localStorage.getItem('cronogramaData')) || [],
                     presupuestosData: limpiarPresupuestosParaBackup(rawPres),
+                    facundoData: JSON.parse(localStorage.getItem('facundoData')) || {},
                     categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
                     textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
+                    appBgColor: localStorage.getItem('appBgColor') || '#f1f5f9',
+                    appCardBgColor: localStorage.getItem('appCardBgColor') || '#ffffff',
                     fechaExportacion: new Date().toISOString()
                 };
 
@@ -3335,7 +3502,7 @@
                         alert("✅ ¡Backup actualizado y subido correctamente a GitHub!");
                         return;
                     } else {
-                        alert("⚠️ No se pudo actualizar en GitHub automáticamente. Se procederá con la descarga local.");
+                        alert("⚠️️ No se pudo actualizar en GitHub automáticamente. Se procederá con la descarga local.");
                     }
                 }
 
