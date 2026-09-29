@@ -66,6 +66,32 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
 
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-home-icon {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .btn-home-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
         header h2 { font-size: 1.15rem; font-weight: 700; }
         .user-control { display: flex; align-items: center; gap: 6px; }
         .user-control select { padding: 6px 10px; border-radius: 6px; border: none; font-weight: bold; font-size: 0.9rem; background: #ffffff; color: var(--text); }
@@ -96,7 +122,6 @@
         }
 
         /* Colores pastel por botón del menú principal */
-        #btn-admin-dormys { background-color: var(--pastel-blue); color: var(--pastel-blue-dark); border-color: #bfdbfe; }
         #btn-reparaciones { background-color: var(--pastel-orange); color: var(--pastel-orange-dark); border-color: #fed7aa; }
         #btn-presupuestos { background-color: var(--pastel-emerald); color: var(--pastel-emerald-dark); border-color: #a7f3d0; }
         #btn-pagos { background-color: var(--pastel-green); color: var(--pastel-green-dark); border-color: #bbf7d0; }
@@ -280,6 +305,7 @@
         @media (max-width: 768px) {
             body { padding: 8px; }
             header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-title-container { justify-content: center; }
             .user-control { justify-content: center; }
             .config-grid { grid-template-columns: 1fr; }
             .section { padding: 12px; }
@@ -293,7 +319,10 @@
 <body>
 
     <header>
-        <h2 id="main-header-title">Administración Dormys</h2>
+        <div class="header-title-container">
+            <button class="btn-home-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
+            <h2 id="main-header-title">Administración Dormys</h2>
+        </div>
         <div class="user-control">
             <label for="userSelect" style="color:white;">Usuario:</label>
             <select id="userSelect" onchange="changeUser()">
@@ -304,7 +333,6 @@
     </header>
 
     <nav>
-        <button id="btn-admin-dormys" class="active" onclick="showSection('admin-dormys')">🏢 Admin Dormys</button>
         <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Techos</button>
         <button id="btn-presupuestos" onclick="showSection('presupuestos')">📄 Presupuestos</button>
         <button id="btn-pagos" onclick="showSection('pagos')">💳 Pagos</button>
@@ -416,7 +444,7 @@
         <div id="grilla-dormys" class="reparaciones-grid"></div>
     </section>
 
-    <!-- NUEVO MÓDULO: PRESUPUESTOS (ABM) -->
+    <!-- PRESUPUESTOS (ABM) -->
     <section id="sec-presupuestos" class="section">
         <h3>📄 ABM - Gestión de Presupuestos</h3>
         <div class="card-box">
