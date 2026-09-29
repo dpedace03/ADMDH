@@ -41,6 +41,12 @@
             --pastel-pink-dark: #9d174d;
             --pastel-gray: #f1f5f9;
             --pastel-gray-dark: #334155;
+            --pastel-indigo: #e0e7ff;
+            --pastel-indigo-dark: #3730a3;
+            --pastel-cyan: #cffafe;
+            --pastel-cyan-dark: #155e75;
+            --pastel-emerald: #d1fae5;
+            --pastel-emerald-dark: #065f46;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
@@ -79,8 +85,8 @@
             font-weight: 700;
             font-size: 0.82rem;
             white-space: nowrap;
-            flex: 1 1 130px;
-            min-width: 125px;
+            flex: 1 1 110px;
+            min-width: 110px;
             text-align: center;
             transition: all 0.2s ease;
             display: flex;
@@ -92,10 +98,13 @@
         /* Colores pastel por botón del menú principal */
         #btn-admin-dormys { background-color: var(--pastel-blue); color: var(--pastel-blue-dark); border-color: #bfdbfe; }
         #btn-reparaciones { background-color: var(--pastel-orange); color: var(--pastel-orange-dark); border-color: #fed7aa; }
+        #btn-presupuestos { background-color: var(--pastel-emerald); color: var(--pastel-emerald-dark); border-color: #a7f3d0; }
         #btn-pagos { background-color: var(--pastel-green); color: var(--pastel-green-dark); border-color: #bbf7d0; }
         #btn-electrogeno { background-color: var(--pastel-purple); color: var(--pastel-purple-dark); border-color: #e9d5ff; }
         #btn-matafuegos { background-color: var(--pastel-red); color: var(--pastel-red-dark); border-color: #fecdd3; }
         #btn-tareas { background-color: var(--pastel-teal); color: var(--pastel-teal-dark); border-color: #99f6e4; }
+        #btn-registro { background-color: var(--pastel-indigo); color: var(--pastel-indigo-dark); border-color: #c7d2fe; }
+        #btn-cronograma { background-color: var(--pastel-cyan); color: var(--pastel-cyan-dark); border-color: #a5f3fc; }
         #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
         #btn-config { 
             background-color: var(--pastel-gray); 
@@ -160,15 +169,8 @@
         th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 0.88rem; vertical-align: middle; white-space: nowrap; }
         th { background-color: #f1f5f9; font-weight: 700; color: #1e293b; }
 
-        /* Estilo para Novedades Techos */
-        #sec-novedades table td {
-            white-space: normal;
-            word-break: break-word;
-        }
-        
-        .col-nowrap {
-            white-space: nowrap !important;
-        }
+        #sec-novedades table td { white-space: normal; word-break: break-word; }
+        .col-nowrap { white-space: nowrap !important; }
 
         .text-clamp-2 {
             display: -webkit-box;
@@ -206,10 +208,7 @@
             transition: transform 0.15s ease, background 0.15s ease;
             flex-shrink: 0;
         }
-        .btn-lupa:hover {
-            transform: scale(1.2);
-            background: #e2e8f0;
-        }
+        .btn-lupa:hover { transform: scale(1.2); background: #e2e8f0; }
 
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: white; font-weight: bold; display: inline-block; white-space: nowrap; }
         
@@ -223,9 +222,7 @@
             transition: transform 0.15s ease;
         }
         .btn-edit { margin-right: 4px; }
-        .btn-delete:hover, .btn-edit:hover {
-            transform: scale(1.2);
-        }
+        .btn-delete:hover, .btn-edit:hover { transform: scale(1.2); }
 
         .btn-action { background-color: var(--primary-light); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
 
@@ -254,48 +251,31 @@
         .excel-params { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 12px; text-align: left; }
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-        .reparaciones-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
+        .reparaciones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 10px; margin-top: 15px; }
         .dormy-cell {
-            aspect-ratio: 1;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            transition: transform 0.15s, box-shadow 0.15s;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-            user-select: none;
-            position: relative;
+            aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: bold; color: white; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.15s, box-shadow 0.15s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4); user-select: none; position: relative;
         }
-        .dormy-cell:hover {
-            transform: scale(1.08);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
-            z-index: 2;
-        }
+        .dormy-cell:hover { transform: scale(1.08); box-shadow: 0 4px 8px rgba(0,0,0,0.25); z-index: 2; }
         .dormy-cell .dormy-num { font-size: 1.1rem; }
         .dormy-cell .dormy-sub { font-size: 0.65rem; opacity: 0.9; font-weight: normal; margin-top: 2px; text-align: center; line-height: 1; }
 
-        .leyenda-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 15px;
-        }
+        .leyenda-container { display: flex; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
         .leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
         .leyenda-color { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
+
+        .cronograma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
+        .dia-col { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-height: 250px; display: flex; flex-direction: column; }
+        .dia-header { background: var(--primary); color: white; text-align: center; font-weight: bold; padding: 6px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 8px; }
+        .tarea-card {
+            background: white; border-left: 4px solid var(--primary-light); border-top: 1px solid var(--border); border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 0.82rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;
+        }
+        .tarea-card .time { font-weight: bold; color: var(--primary); font-size: 0.75rem; }
+        .tarea-card .title { font-weight: 700; margin: 2px 0; font-size: 0.85rem; word-break: break-word; }
+        .tarea-card .resp { color: var(--secondary); font-size: 0.75rem; }
+        .tarea-card .obs { margin-top: 4px; font-style: italic; color: #475569; font-size: 0.75rem; word-break: break-word; }
 
         @media (max-width: 768px) {
             body { padding: 8px; }
@@ -306,6 +286,7 @@
             nav button { flex: 1 1 45%; font-size: 0.8rem; }
             #btn-config { flex: 0 0 40px; min-width: 40px; }
             form { grid-template-columns: 1fr; }
+            .cronograma-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -325,10 +306,13 @@
     <nav>
         <button id="btn-admin-dormys" class="active" onclick="showSection('admin-dormys')">🏢 Admin Dormys</button>
         <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Techos</button>
+        <button id="btn-presupuestos" onclick="showSection('presupuestos')">📄 Presupuestos</button>
         <button id="btn-pagos" onclick="showSection('pagos')">💳 Pagos</button>
         <button id="btn-electrogeno" onclick="showSection('electrogeno')">⚡ Electrógeno</button>
         <button id="btn-matafuegos" onclick="showSection('matafuegos')">🧯 Matafuegos</button>
         <button id="btn-tareas" onclick="showSection('tareas')">📋 Tareas</button>
+        <button id="btn-registro" onclick="showSection('registro')">📝 Registro</button>
+        <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma</button>
         <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
         <button id="btn-config" onclick="showSection('config')" title="Configuración">⚙️</button>
     </nav>
@@ -337,7 +321,7 @@
     <section id="sec-admin-dormys" class="section active" style="text-align: center; padding: 30px 15px;">
         <h2 style="color: var(--primary); margin-bottom: 25px; font-size: 1.5rem;">Administración Dormys</h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 750px; margin: 0 auto 30px auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 800px; margin: 0 auto 30px auto;">
             <button onclick="moduloProximamente('Facundo')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
                 <span style="font-size: 2.2rem;">👤</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Facundo</span>
@@ -351,6 +335,11 @@
             <button onclick="showSection('reparaciones')" style="background: var(--primary); color: white; border: 2px solid var(--primary); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: transform 0.2s;">
                 <span style="font-size: 2.2rem;">🏚️</span>
                 <span style="font-weight: bold; font-size: 1.1rem;">Techos</span>
+            </button>
+
+            <button onclick="showSection('presupuestos')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">📄</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Presupuestos</span>
             </button>
 
             <button onclick="moduloProximamente('Informes')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
@@ -381,6 +370,16 @@
             <button onclick="showSection('tareas')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
                 <span style="font-size: 2.2rem;">📋</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Tareas</span>
+            </button>
+
+            <button onclick="showSection('registro')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">📝</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Registro</span>
+            </button>
+
+            <button onclick="showSection('cronograma')" style="background: white; border: 2px solid var(--border); border-radius: 12px; padding: 22px 15px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;">
+                <span style="font-size: 2.2rem;">📅</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma</span>
             </button>
         </div>
 
@@ -415,6 +414,83 @@
         </div>
 
         <div id="grilla-dormys" class="reparaciones-grid"></div>
+    </section>
+
+    <!-- NUEVO MÓDULO: PRESUPUESTOS (ABM) -->
+    <section id="sec-presupuestos" class="section">
+        <h3>📄 ABM - Gestión de Presupuestos</h3>
+        <div class="card-box">
+            <form id="form-presupuesto" onsubmit="guardarPresupuesto(event)">
+                <input type="hidden" id="pres-id">
+
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="pres-fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Autor / Proveedor</label>
+                    <input type="text" id="pres-autor" required placeholder="Ej: Arq. Juan Pérez / Techista Gómez">
+                </div>
+
+                <div class="form-group">
+                    <label>Importe ($)</label>
+                    <input type="number" id="pres-importe" min="0" step="0.01" required placeholder="Ej: 250000">
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="pres-estado" required>
+                        <option value="Pendiente">🟡 Pendiente</option>
+                        <option value="Aprobado">🟢 Aprobado</option>
+                        <option value="Rechazado">🔴 Rechazado</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción / Detalle</label>
+                    <textarea id="pres-descripcion" rows="2" required placeholder="Ej: Reparación integral de membrana y canaleta en Dormy 14"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Archivos Adjuntos (PDF / Imágenes)</label>
+                    <input type="file" id="pres-adjunto" multiple accept="image/*,application/pdf" onchange="previewNuevosAdjuntosPres(event)">
+                    <div id="pres-adjuntos-existentes" class="preview-container"></div>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-pres">Guardar Presupuesto</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormPresupuesto()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Presupuestos</h3>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="buscar-presupuesto" placeholder="Buscar por autor, descripción, fecha o importe..." onkeyup="renderPresupuestos()" style="flex: 1; min-width: 200px;">
+            <select id="filtro-estado-presupuesto" onchange="renderPresupuestos()" style="min-width: 150px;">
+                <option value="">Todos los Estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Rechazado">Rechazado</option>
+            </select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-nowrap">Fecha</th>
+                        <th>Autor</th>
+                        <th>Descripción</th>
+                        <th class="col-nowrap">Importe ($)</th>
+                        <th class="col-nowrap">Estado</th>
+                        <th>Adjuntos</th>
+                        <th class="col-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-presupuestos"></tbody>
+            </table>
+        </div>
     </section>
 
     <!-- MODAL DE EDICIÓN DE REPARACIÓN -->
@@ -814,6 +890,111 @@
         </div>
     </section>
 
+    <!-- REGISTRO DE TAREAS Y ACTIVIDADES -->
+    <section id="sec-registro" class="section">
+        <h3>📝 Registro de Actividades y Novedades</h3>
+        <div class="card-box">
+            <form id="form-registro" onsubmit="guardarRegistro(event)">
+                <input type="hidden" id="reg-id">
+
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="reg-fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tarea / Actividad</label>
+                    <input type="text" id="reg-tarea" required placeholder="Ej: Inspección visual de tanques">
+                </div>
+
+                <div class="form-group">
+                    <label>Responsable</label>
+                    <input type="text" id="reg-responsable" required placeholder="Ej: Juan Pérez">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Observación</label>
+                    <textarea id="reg-observacion" rows="3" placeholder="Ej: Se detectó una fisura menor en la base. Requiere sellado."></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-reg">Guardar Registro</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormRegistro()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Historial de Registros</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscar-registro" placeholder="Buscar por fecha, tarea, responsable u observación..." onkeyup="renderRegistros()" style="width: 100%;">
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-nowrap">Fecha</th>
+                        <th>Tarea</th>
+                        <th>Responsable</th>
+                        <th>Observación</th>
+                        <th class="col-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-registros"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- CRONOGRAMA SEMANAL -->
+    <section id="sec-cronograma" class="section">
+        <h3>📅 Cronograma Semanal de Tareas</h3>
+        
+        <div class="card-box">
+            <form id="form-cronograma" onsubmit="guardarCronogramaTarea(event)">
+                <input type="hidden" id="crono-id">
+
+                <div class="form-group">
+                    <label>Día de la Semana</label>
+                    <select id="crono-dia" required>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Horario / Turno</label>
+                    <input type="text" id="crono-horario" placeholder="Ej: 08:00 - 12:00 / Mañana">
+                </div>
+
+                <div class="form-group">
+                    <label>Tarea a Realizar</label>
+                    <input type="text" id="crono-tarea" required placeholder="Ej: Corte de césped y desmalezado">
+                </div>
+
+                <div class="form-group">
+                    <label>Responsable</label>
+                    <input type="text" id="crono-responsable" required placeholder="Ej: Equipo de Mantenimiento">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Observación / Notas</label>
+                    <input type="text" id="crono-observacion" placeholder="Ej: Traer herramientas de mano y nafta para la cortadora">
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-crono">Asignar al Cronograma</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormCronograma()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="cronograma-grid" id="grilla-cronograma"></div>
+    </section>
+
     <!-- ESTADÍSTICAS -->
     <section id="sec-stats" class="section">
         <h3>Estadísticas del Estado de Techos y Presupuestos</h3>
@@ -1016,11 +1197,14 @@
         const titulosSecciones = {
             'admin-dormys': 'Administración Dormys',
             'reparaciones': 'Administración de Techos - Dormys (1-99)',
+            'presupuestos': 'Gestión de Presupuestos',
             'novedades': 'Novedades Techos',
             'pagos': 'Pagos realizados',
             'electrogeno': 'Grupo Electrógeno',
             'matafuegos': 'Control de Matafuegos',
             'tareas': 'Gestión de Tareas',
+            'registro': 'Registro de Actividades',
+            'cronograma': 'Cronograma Semanal',
             'stats': 'Estadísticas del Sistema',
             'config': 'Configuración General'
         };
@@ -1252,6 +1436,9 @@
         let electrogenoNovedades = JSON.parse(localStorage.getItem('electrogenoNovedades')) || [];
         let matafuegosData = JSON.parse(localStorage.getItem('matafuegosData')) || [];
         let tareasData = JSON.parse(localStorage.getItem('tareasData')) || [];
+        let registrosData = JSON.parse(localStorage.getItem('registrosData')) || [];
+        let cronogramaData = JSON.parse(localStorage.getItem('cronogramaData')) || [];
+        let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
         
         let categoriasConfigRaw = JSON.parse(localStorage.getItem('categoriasConfig')) || [
             { nombre: 'Mantenimiento', color: '#3b82f6' },
@@ -1416,6 +1603,7 @@
         let currentUser = "Ferreyra";
         let tempFilesNov = [];
         let tempFilesPago = [];
+        let tempFilesPres = [];
 
         function changeUser() {
             currentUser = document.getElementById('userSelect').value;
@@ -1438,9 +1626,12 @@
 
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
+            if (sectionId === 'presupuestos') renderPresupuestos();
             if (sectionId === 'electrogeno') { renderElectrogeno(); renderElectrogenoNovedades(); }
             if (sectionId === 'matafuegos') renderMatafuegos();
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
+            if (sectionId === 'registro') renderRegistros();
+            if (sectionId === 'cronograma') renderCronograma();
             if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); }
         }
 
@@ -1790,6 +1981,9 @@
             } else if (type === 'pago') {
                 tempFilesPago.splice(idx, 1);
                 renderTempFilesPago();
+            } else if (type === 'pres') {
+                tempFilesPres.splice(idx, 1);
+                renderTempFilesPres();
             }
         }
 
@@ -1861,6 +2055,171 @@
 
         function renderTempFilesPago() {
             document.getElementById('pago-facturas-existentes').innerHTML = generarThumbnailsHTML(tempFilesPago, true, 'pago');
+        }
+
+        async function previewNuevosAdjuntosPres(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                for (let file of files) {
+                    const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                    const url = await readFileAsBase64(file);
+                    await guardarArchivoIDB(fileId, file.name, url);
+                    tempFilesPres.push({ id: fileId, name: file.name, url: url });
+                }
+                document.getElementById('pres-adjunto').value = '';
+                renderTempFilesPres();
+            }
+        }
+
+        function renderTempFilesPres() {
+            document.getElementById('pres-adjuntos-existentes').innerHTML = generarThumbnailsHTML(tempFilesPres, true, 'pres');
+        }
+
+        // --- PRESUPUESTOS (ABM) ---
+        async function guardarPresupuesto(e) {
+            e.preventDefault();
+            try {
+                const id = document.getElementById('pres-id').value;
+                const fileInput = document.getElementById('pres-adjunto');
+
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    for (let file of fileInput.files) {
+                        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        const url = await readFileAsBase64(file);
+                        await guardarArchivoIDB(fileId, file.name, url);
+                        tempFilesPres.push({ id: fileId, name: file.name, url: url });
+                    }
+                    fileInput.value = '';
+                }
+
+                const adjuntosLigeros = tempFilesPres.map(f => ({ id: f.id, name: f.name }));
+
+                const item = {
+                    id: id ? parseInt(id) : Date.now(),
+                    fecha: document.getElementById('pres-fecha').value,
+                    autor: document.getElementById('pres-autor').value,
+                    importe: parseFloat(document.getElementById('pres-importe').value) || 0,
+                    estado: document.getElementById('pres-estado').value,
+                    descripcion: document.getElementById('pres-descripcion').value,
+                    adjuntos: adjuntosLigeros
+                };
+
+                if (id) {
+                    const index = presupuestosData.findIndex(p => p.id == id);
+                    if (index !== -1) presupuestosData[index] = item;
+                    else presupuestosData.push(item);
+                } else {
+                    presupuestosData.push(item);
+                }
+
+                localStorage.setItem('presupuestosData', JSON.stringify(presupuestosData));
+                resetFormPresupuesto();
+                await renderPresupuestos();
+                alert('¡Presupuesto guardado correctamente!');
+            } catch (err) {
+                console.error("Error guardando presupuesto:", err);
+                alert("Error al guardar presupuesto: " + err.message);
+            }
+        }
+
+        function resetFormPresupuesto() {
+            document.getElementById('form-presupuesto').reset();
+            document.getElementById('pres-id').value = '';
+            document.getElementById('pres-adjuntos-existentes').innerHTML = '';
+            tempFilesPres = [];
+            document.getElementById('btn-guardar-pres').innerText = 'Guardar Presupuesto';
+        }
+
+        async function renderPresupuestos() {
+            const tbody = document.getElementById('tabla-presupuestos');
+            if (!tbody) return;
+            const filtroTexto = (document.getElementById('buscar-presupuesto')?.value || '').toLowerCase().trim();
+            const filtroEstado = document.getElementById('filtro-estado-presupuesto')?.value || '';
+            tbody.innerHTML = '';
+
+            const listaFiltrada = presupuestosData.filter(p => {
+                const fechaStr = (p.fecha || '').toLowerCase();
+                const autorStr = (p.autor || '').toLowerCase();
+                const descStr = (p.descripcion || '').toLowerCase();
+                const impStr = (p.importe || '').toString().toLowerCase();
+                const estadoStr = (p.estado || '').toLowerCase();
+
+                const coincideTexto = !filtroTexto || 
+                    fechaStr.includes(filtroTexto) || 
+                    autorStr.includes(filtroTexto) || 
+                    descStr.includes(filtroTexto) || 
+                    impStr.includes(filtroTexto) || 
+                    estadoStr.includes(filtroTexto);
+
+                const coincideEstado = (filtroEstado === '' || p.estado === filtroEstado);
+
+                return coincideTexto && coincideEstado;
+            });
+
+            const coloresEstadoPres = {
+                'Pendiente': 'var(--warning)',
+                'Aprobado': 'var(--success)',
+                'Rechazado': 'var(--danger)'
+            };
+
+            for (let p of listaFiltrada) {
+                if (!p._cacheAdjuntos && p.adjuntos) {
+                    p._cacheAdjuntos = [];
+                    for (let f of p.adjuntos) {
+                        const url = f.url || await obtenerArchivoIDB(f.id);
+                        p._cacheAdjuntos.push({ id: f.id, name: f.name, url: url || '' });
+                    }
+                }
+
+                const colorBadge = coloresEstadoPres[p.estado] || '#64748b';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="col-nowrap">${p.fecha}</td>
+                        <td><b>${p.autor}</b></td>
+                        <td>${renderCellWithLupa(p.descripcion, 'Descripción del Presupuesto', 2)}</td>
+                        <td class="col-nowrap">$${p.importe.toFixed(2)}</td>
+                        <td class="col-nowrap"><span class="badge" style="background-color: ${colorBadge};">${p.estado}</span></td>
+                        <td>${generarThumbnailsHTML(p._cacheAdjuntos || p.adjuntos)}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarPresupuesto(${p.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarPresupuesto(${p.id})">❌</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function editarPresupuesto(id) {
+            const p = presupuestosData.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('pres-id').value = p.id;
+            document.getElementById('pres-fecha').value = p.fecha;
+            document.getElementById('pres-autor').value = p.autor;
+            document.getElementById('pres-importe').value = p.importe;
+            document.getElementById('pres-estado').value = p.estado;
+            document.getElementById('pres-descripcion').value = p.descripcion;
+
+            if (!p._cacheAdjuntos && p.adjuntos) {
+                p._cacheAdjuntos = [];
+                for (let f of p.adjuntos) {
+                    const url = f.url || await obtenerArchivoIDB(f.id);
+                    p._cacheAdjuntos.push({ id: f.id, name: f.name, url: url || '' });
+                }
+            }
+
+            tempFilesPres = [...(p._cacheAdjuntos || [])];
+            renderTempFilesPres();
+            document.getElementById('btn-guardar-pres').innerText = 'Actualizar Presupuesto';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarPresupuesto(id) {
+            if (confirm('¿Eliminar este presupuesto?')) {
+                presupuestosData = presupuestosData.filter(p => p.id !== id);
+                localStorage.setItem('presupuestosData', JSON.stringify(presupuestosData));
+                renderPresupuestos();
+            }
         }
 
         // --- NOVEDADES TECHOS ---
@@ -2536,6 +2895,183 @@
             }
         }
 
+        // --- LÓGICA DE REGISTRO ---
+        function guardarRegistro(e) {
+            e.preventDefault();
+            const id = document.getElementById('reg-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                fecha: document.getElementById('reg-fecha').value,
+                tarea: document.getElementById('reg-tarea').value,
+                responsable: document.getElementById('reg-responsable').value,
+                observacion: document.getElementById('reg-observacion').value
+            };
+
+            if (id) {
+                const idx = registrosData.findIndex(x => x.id == id);
+                if (idx !== -1) registrosData[idx] = item;
+            } else {
+                registrosData.push(item);
+            }
+
+            localStorage.setItem('registrosData', JSON.stringify(registrosData));
+            resetFormRegistro();
+            renderRegistros();
+            alert('¡Registro guardado correctamente!');
+        }
+
+        function resetFormRegistro() {
+            document.getElementById('form-registro').reset();
+            document.getElementById('reg-id').value = '';
+            document.getElementById('btn-guardar-reg').innerText = 'Guardar Registro';
+        }
+
+        function renderRegistros() {
+            const tbody = document.getElementById('tabla-registros');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const filtroTexto = (document.getElementById('buscar-registro')?.value || '').toLowerCase().trim();
+
+            const listaFiltrada = registrosData.filter(r => {
+                if (!filtroTexto) return true;
+                const fechaStr = (r.fecha || '').toLowerCase();
+                const tareaStr = (r.tarea || '').toLowerCase();
+                const respStr = (r.responsable || '').toLowerCase();
+                const obsStr = (r.observacion || '').toLowerCase();
+
+                return fechaStr.includes(filtroTexto) || 
+                       tareaStr.includes(filtroTexto) || 
+                       respStr.includes(filtroTexto) || 
+                       obsStr.includes(filtroTexto);
+            });
+
+            listaFiltrada.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="col-nowrap">${item.fecha}</td>
+                        <td><b>${item.tarea}</b></td>
+                        <td>${item.responsable}</td>
+                        <td>${renderCellWithLupa(item.observacion, 'Observaciones del Registro', 2)}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarRegistro(${item.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarRegistro(${item.id})">❌</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editarRegistro(id) {
+            const item = registrosData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('reg-id').value = item.id;
+            document.getElementById('reg-fecha').value = item.fecha;
+            document.getElementById('reg-tarea').value = item.tarea;
+            document.getElementById('reg-responsable').value = item.responsable;
+            document.getElementById('reg-observacion').value = item.observacion || '';
+            document.getElementById('btn-guardar-reg').innerText = 'Actualizar Registro';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('¿Deseas eliminar este registro?')) {
+                registrosData = registrosData.filter(x => x.id !== id);
+                localStorage.setItem('registrosData', JSON.stringify(registrosData));
+                renderRegistros();
+            }
+        }
+
+        // --- LÓGICA DE CRONOGRAMA ---
+        function guardarCronogramaTarea(e) {
+            e.preventDefault();
+            const id = document.getElementById('crono-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                dia: document.getElementById('crono-dia').value,
+                horario: document.getElementById('crono-horario').value,
+                tarea: document.getElementById('crono-tarea').value,
+                responsable: document.getElementById('crono-responsable').value,
+                observacion: document.getElementById('crono-observacion').value
+            };
+
+            if (id) {
+                const idx = cronogramaData.findIndex(x => x.id == id);
+                if (idx !== -1) cronogramaData[idx] = item;
+            } else {
+                cronogramaData.push(item);
+            }
+
+            localStorage.setItem('cronogramaData', JSON.stringify(cronogramaData));
+            resetFormCronograma();
+            renderCronograma();
+            alert('¡Tarea asignada al cronograma!');
+        }
+
+        function resetFormCronograma() {
+            document.getElementById('form-cronograma').reset();
+            document.getElementById('crono-id').value = '';
+            document.getElementById('btn-guardar-crono').innerText = 'Asignar al Cronograma';
+        }
+
+        function renderCronograma() {
+            const container = document.getElementById('grilla-cronograma');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+            diasSemana.forEach(dia => {
+                const tareasDelDia = cronogramaData.filter(c => c.dia === dia);
+                let htmlTareas = '';
+
+                tareasDelDia.forEach(t => {
+                    htmlTareas += `
+                        <div class="tarea-card">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <span class="time">${t.horario || 'Sin horario'}</span>
+                                <div>
+                                    <button class="btn-edit" title="Editar" onclick="editarCronograma(${t.id})" style="font-size: 0.8rem; padding: 0;">✏️</button>
+                                    <button class="btn-delete" title="Eliminar" onclick="eliminarCronograma(${t.id})" style="font-size: 0.8rem; padding: 0;">❌</button>
+                                </div>
+                            </div>
+                            <div class="title">${t.tarea}</div>
+                            <div class="resp">👤 ${t.responsable}</div>
+                            ${t.observacion ? `<div class="obs">📌 ${t.observacion}</div>` : ''}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="dia-col">
+                        <div class="dia-header">${dia}</div>
+                        ${htmlTareas || '<div style="text-align:center; color:#94a3b8; font-size:0.75rem; margin-top:20px;">Sin tareas</div>'}
+                    </div>
+                `;
+            });
+        }
+
+        function editarCronograma(id) {
+            const item = cronogramaData.find(x => x.id === id);
+            if (!item) return;
+            document.getElementById('crono-id').value = item.id;
+            document.getElementById('crono-dia').value = item.dia;
+            document.getElementById('crono-horario').value = item.horario || '';
+            document.getElementById('crono-tarea').value = item.tarea;
+            document.getElementById('crono-responsable').value = item.responsable;
+            document.getElementById('crono-observacion').value = item.observacion || '';
+            document.getElementById('btn-guardar-crono').innerText = 'Actualizar en Cronograma';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarCronograma(id) {
+            if (confirm('¿Deseas eliminar esta tarea del cronograma?')) {
+                cronogramaData = cronogramaData.filter(x => x.id !== id);
+                localStorage.setItem('cronogramaData', JSON.stringify(cronogramaData));
+                renderCronograma();
+            }
+        }
+
         // --- ESTADÍSTICAS ---
         let chartInstance = null;
         function renderCharts() {
@@ -2683,6 +3219,9 @@
             if (data.electrogenoNovedades) { electrogenoNovedades = data.electrogenoNovedades; localStorage.setItem('electrogenoNovedades', JSON.stringify(data.electrogenoNovedades)); }
             if (data.matafuegosData) { matafuegosData = data.matafuegosData; localStorage.setItem('matafuegosData', JSON.stringify(data.matafuegosData)); }
             if (data.tareasData) { tareasData = data.tareasData; localStorage.setItem('tareasData', JSON.stringify(data.tareasData)); }
+            if (data.registrosData) { registrosData = data.registrosData; localStorage.setItem('registrosData', JSON.stringify(data.registrosData)); }
+            if (data.cronogramaData) { cronogramaData = data.cronogramaData; localStorage.setItem('cronogramaData', JSON.stringify(data.cronogramaData)); }
+            if (data.presupuestosData) { presupuestosData = data.presupuestosData; localStorage.setItem('presupuestosData', JSON.stringify(data.presupuestosData)); }
             if (data.categoriasConfig) { 
                 categoriasConfig = data.categoriasConfig.map(c => (typeof c === 'string') ? { nombre: c, color: '#3b82f6' } : c); 
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
@@ -2701,10 +3240,13 @@
             changeUser();
             await renderNovedades();
             await renderPagos();
+            await renderPresupuestos();
             renderElectrogeno();
             renderElectrogenoNovedades();
             renderMatafuegos();
             renderTareas();
+            renderRegistros();
+            renderCronograma();
             renderGrillaReparaciones();
 
             if (document.getElementById('cfg-texto-importe')) {
@@ -2727,6 +3269,14 @@
             return pagosList.map(p => {
                 const copia = { ...p };
                 delete copia._cacheFacturas;
+                return copia;
+            });
+        }
+
+        function limpiarPresupuestosParaBackup(presList) {
+            return presList.map(p => {
+                const copia = { ...p };
+                delete copia._cacheAdjuntos;
                 return copia;
             });
         }
@@ -2780,6 +3330,7 @@
             try {
                 const rawNov = JSON.parse(localStorage.getItem('novedades')) || [];
                 const rawPagos = JSON.parse(localStorage.getItem('pagos')) || [];
+                const rawPres = JSON.parse(localStorage.getItem('presupuestosData')) || [];
 
                 const dataToExport = {
                     dormysData: JSON.parse(localStorage.getItem('dormysData')) || {},
@@ -2790,6 +3341,9 @@
                     electrogenoNovedades: JSON.parse(localStorage.getItem('electrogenoNovedades')) || [],
                     matafuegosData: JSON.parse(localStorage.getItem('matafuegosData')) || [],
                     tareasData: JSON.parse(localStorage.getItem('tareasData')) || [],
+                    registrosData: JSON.parse(localStorage.getItem('registrosData')) || [],
+                    cronogramaData: JSON.parse(localStorage.getItem('cronogramaData')) || [],
+                    presupuestosData: limpiarPresupuestosParaBackup(rawPres),
                     categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
                     textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
