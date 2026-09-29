@@ -890,6 +890,96 @@
     }
   ],
   "matafuegosData": [],
+  "tareasData": [
+    {
+      "id": 1790652315058,
+      "nombre": "Corte de pasto parte trasera",
+      "responsable": "Facundo",
+      "categoria": "Jardinería",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652347127,
+      "nombre": "Junta de hojas",
+      "responsable": "Facundo - Vacante",
+      "categoria": "Jardinería",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652364794,
+      "nombre": "Limpieza de parrillas",
+      "responsable": "Facundo",
+      "categoria": "Limpieza",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652381145,
+      "nombre": "Limpieza de galerias",
+      "responsable": "Facundo",
+      "categoria": "Limpieza",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652397762,
+      "nombre": "Limpieza Casita",
+      "responsable": "Facundo",
+      "categoria": "Limpieza",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652453860,
+      "nombre": "Control de Matafuegos",
+      "responsable": "Club",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652506860,
+      "nombre": "Control de grupo electrogeno",
+      "responsable": "Facundo",
+      "categoria": "Grupo electrogeno",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652671141,
+      "nombre": "Corte de pasto ",
+      "responsable": "Club",
+      "categoria": "Jardinería",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652697142,
+      "nombre": "Controlar buen funcionamiento del riego",
+      "responsable": "Facundo",
+      "categoria": "Riego",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652719627,
+      "nombre": "Limpieza articulos de pileta",
+      "responsable": "Facundo",
+      "categoria": "Pileta",
+      "descripcion": ""
+    },
+    {
+      "id": 1790652795543,
+      "nombre": "Arreglo del piso de pileta",
+      "responsable": "A cotizar",
+      "categoria": "Pileta",
+      "descripcion": "Arreglo y pintura del piso de la pileta"
+    }
+  ],
+  "categoriasConfig": [
+    "Mantenimiento",
+    "Jardinería",
+    "Electricidad",
+    "Limpieza",
+    "General",
+    "Grupo electrogeno",
+    "Casita",
+    "Pileta",
+    "Riego"
+  ],
   "estadosConfig": [
     {
       "nombre": "En espera",
@@ -905,5 +995,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T03:18:52.750Z"
+  "fechaExportacion": "2026-09-29T03:33:48.542Z"
 }
