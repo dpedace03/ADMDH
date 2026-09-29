@@ -21,10 +21,30 @@
             --danger: #ef4444;
             --success: #10b981;
             --warning: #f59e0b;
+
+            /* Paleta de Colores Pastel */
+            --pastel-blue: #dbeafe;
+            --pastel-blue-dark: #1e40af;
+            --pastel-green: #dcfce7;
+            --pastel-green-dark: #166534;
+            --pastel-yellow: #fef9c3;
+            --pastel-yellow-dark: #854d0e;
+            --pastel-purple: #f3e8ff;
+            --pastel-purple-dark: #6b21a8;
+            --pastel-orange: #ffedd5;
+            --pastel-orange-dark: #9a3412;
+            --pastel-red: #ffe4e6;
+            --pastel-red-dark: #9f1239;
+            --pastel-teal: #ccfbf1;
+            --pastel-teal-dark: #115e59;
+            --pastel-pink: #fce7f3;
+            --pastel-pink-dark: #9d174d;
+            --pastel-gray: #f1f5f9;
+            --pastel-gray-dark: #334155;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 12px; max-width: 1000px; margin: 0 auto; }
+        body { background-color: var(--bg); color: var(--text); padding: 12px; max-width: 1100px; margin: 0 auto; }
 
         header {
             background-color: var(--primary);
@@ -46,26 +66,59 @@
 
         nav {
             display: flex;
+            flex-wrap: wrap;
             gap: 6px;
             margin-bottom: 12px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            -webkit-overflow-scrolling: touch;
+            justify-content: center;
         }
         nav button {
-            background-color: var(--card-bg);
             border: 1px solid var(--border);
-            padding: 10px 14px;
+            padding: 10px 8px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text);
+            font-weight: 700;
+            font-size: 0.82rem;
             white-space: nowrap;
-            flex-shrink: 0;
-            transition: all 0.2s;
+            flex: 1 1 130px;
+            min-width: 125px;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
-        nav button:hover, nav button.active { background-color: var(--primary-light); color: white; border-color: var(--primary-light); }
+
+        /* Colores pastel por botón del menú principal */
+        #btn-admin-dormys { background-color: var(--pastel-blue); color: var(--pastel-blue-dark); border-color: #bfdbfe; }
+        #btn-reparaciones { background-color: var(--pastel-orange); color: var(--pastel-orange-dark); border-color: #fed7aa; }
+        #btn-pagos { background-color: var(--pastel-green); color: var(--pastel-green-dark); border-color: #bbf7d0; }
+        #btn-electrogeno { background-color: var(--pastel-purple); color: var(--pastel-purple-dark); border-color: #e9d5ff; }
+        #btn-matafuegos { background-color: var(--pastel-red); color: var(--pastel-red-dark); border-color: #fecdd3; }
+        #btn-tareas { background-color: var(--pastel-teal); color: var(--pastel-teal-dark); border-color: #99f6e4; }
+        #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
+        #btn-config { 
+            background-color: var(--pastel-gray); 
+            color: var(--pastel-gray-dark); 
+            border-color: #e2e8f0; 
+            flex: 0 0 45px; 
+            min-width: 45px; 
+            font-size: 1.1rem;
+            padding: 10px 0;
+        }
+
+        nav button:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.95);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        }
+
+        nav button.active {
+            border-width: 2px;
+            font-weight: 800;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            filter: brightness(0.92);
+        }
 
         .section { display: none; background: var(--card-bg); padding: 16px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .section.active { display: block; }
@@ -103,26 +156,90 @@
         }
         button.btn-reset-form:hover { background-color: #475569; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; min-width: 600px; }
-        th, td { border: 1px solid var(--border); padding: 10px; text-align: left; font-size: 0.88rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; table-layout: auto; }
+        th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 0.88rem; vertical-align: middle; white-space: nowrap; }
         th { background-color: #f1f5f9; font-weight: 700; color: #1e293b; }
 
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: white; font-weight: bold; display: inline-block; }
-        .btn-delete { background-color: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
-        .btn-edit { background-color: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; margin-right: 4px; font-size: 0.85rem; }
+        /* Estilo para Novedades Techos */
+        #sec-novedades table td {
+            white-space: normal;
+            word-break: break-word;
+        }
+        
+        .col-nowrap {
+            white-space: nowrap !important;
+        }
+
+        .text-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+            max-height: 2.6em;
+            word-break: break-word;
+        }
+
+        .text-clamp-1 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+            display: block;
+        }
+
+        .cell-with-lupa {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .btn-lupa {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: transform 0.15s ease, background 0.15s ease;
+            flex-shrink: 0;
+        }
+        .btn-lupa:hover {
+            transform: scale(1.2);
+            background: #e2e8f0;
+        }
+
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: white; font-weight: bold; display: inline-block; white-space: nowrap; }
+        
+        .btn-delete, .btn-edit {
+            background: transparent;
+            border: none;
+            padding: 4px 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            transition: transform 0.15s ease;
+        }
+        .btn-edit { margin-right: 4px; }
+        .btn-delete:hover, .btn-edit:hover {
+            transform: scale(1.2);
+        }
+
         .btn-action { background-color: var(--primary-light); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
 
-        .preview-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+        .preview-container { display: flex; gap: 8px; flex-wrap: nowrap; margin-top: 2px; }
         .preview-item { display: flex; flex-direction: column; align-items: center; position: relative; }
         .preview-thumb {
-            width: 52px; height: 52px; border-radius: 8px; border: 1px solid var(--border); object-fit: cover; cursor: pointer; background: #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; text-align: center; color: var(--primary);
+            width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; cursor: pointer; background: #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; text-align: center; color: var(--primary);
             overflow: hidden; text-decoration: none;
         }
         .preview-thumb:hover { transform: scale(1.05); }
         .remove-file-btn {
             position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none;
-            border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; font-weight: bold;
+            border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; font-weight: bold;
             display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
@@ -186,7 +303,8 @@
             .user-control { justify-content: center; }
             .config-grid { grid-template-columns: 1fr; }
             .section { padding: 12px; }
-            nav button { padding: 10px 12px; font-size: 0.85rem; }
+            nav button { flex: 1 1 45%; font-size: 0.8rem; }
+            #btn-config { flex: 0 0 40px; min-width: 40px; }
             form { grid-template-columns: 1fr; }
         }
     </style>
@@ -194,7 +312,7 @@
 <body>
 
     <header>
-        <h2>Administración de Techos - Dormys (1-99)</h2>
+        <h2 id="main-header-title">Administración Dormys</h2>
         <div class="user-control">
             <label for="userSelect" style="color:white;">Usuario:</label>
             <select id="userSelect" onchange="changeUser()">
@@ -205,15 +323,14 @@
     </header>
 
     <nav>
-        <button id="btn-admin-dormys" class="active" onclick="showSection('admin-dormys')">🏢 Administración Dormys</button>
-        <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Reparaciones Techos</button>
-        <button id="btn-novedades" onclick="showSection('novedades')">Novedades</button>
-        <button id="btn-pagos" onclick="showSection('pagos')">Pagos Responsables</button>
-        <button id="btn-electrogeno" onclick="showSection('electrogeno')">⚡ Grupo Electrógeno</button>
+        <button id="btn-admin-dormys" class="active" onclick="showSection('admin-dormys')">🏢 Admin Dormys</button>
+        <button id="btn-reparaciones" onclick="showSection('reparaciones')">🛠️ Techos</button>
+        <button id="btn-pagos" onclick="showSection('pagos')">💳 Pagos</button>
+        <button id="btn-electrogeno" onclick="showSection('electrogeno')">⚡ Electrógeno</button>
         <button id="btn-matafuegos" onclick="showSection('matafuegos')">🧯 Matafuegos</button>
         <button id="btn-tareas" onclick="showSection('tareas')">📋 Tareas</button>
-        <button id="btn-stats" onclick="showSection('stats')">Estadísticas</button>
-        <button id="btn-config" onclick="showSection('config')">Configuración</button>
+        <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
+        <button id="btn-config" onclick="showSection('config')" title="Configuración">⚙️</button>
     </nav>
 
     <!-- PANTALLA PRINCIPAL: ADMINISTRACIÓN DORMYS -->
@@ -279,7 +396,12 @@
 
     <!-- REPARACIONES (GRILLA 1-99) -->
     <section id="sec-reparaciones" class="section">
-        <h3>Estado de Reparaciones por Dormy (1-99)</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+            <h3>Estado de Reparaciones por Dormy (1-99)</h3>
+            <button onclick="showSection('novedades')" style="background-color: var(--pastel-yellow); color: var(--pastel-yellow-dark); border: 1px solid #fef08a; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+                📝 Novedades Techos
+            </button>
+        </div>
         <p style="color: var(--secondary); font-size: 0.9rem; margin-bottom: 15px;">Haga clic en el número de Dormy para ver detalles, cambiar el estado o registrar un presupuesto.</p>
 
         <div class="leyenda-container">
@@ -341,9 +463,9 @@
         </div>
     </div>
 
-    <!-- NOVEDADES -->
+    <!-- NOVEDADES TECHOS -->
     <section id="sec-novedades" class="section">
-        <h3>Cargar / Modificar Novedad</h3>
+        <h3>Cargar / Modificar Novedad Techos</h3>
         <div class="card-box">
             <form id="form-novedad" onsubmit="guardarNovedad(event)">
                 <input type="hidden" id="nov-id">
@@ -384,9 +506,9 @@
             </form>
         </div>
 
-        <h3>Consultar Novedades</h3>
+        <h3>Consultar Novedades Techos</h3>
         <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="buscar-nov" placeholder="Filtrar por Dormy o Descripción..." onkeyup="renderNovedades()" style="flex: 1; min-width: 200px;">
+            <input type="text" id="buscar-nov" placeholder="Buscar por cualquier campo (Dormy, Fecha, Dueño, Descripción...)" onkeyup="renderNovedades()" style="flex: 1; min-width: 200px;">
             <select id="filtro-estado-nov" onchange="renderNovedades()" style="min-width: 150px;">
                 <option value="">Todos los Estados</option>
             </select>
@@ -395,15 +517,15 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Fecha</th>
-                        <th>Dormy</th>
+                        <th class="col-nowrap">Fecha</th>
+                        <th class="col-nowrap">Dormy</th>
                         <th>Dueño</th>
-                        <th>Importe ($)</th>
+                        <th class="col-nowrap">Importe ($)</th>
                         <th>Descripción</th>
                         <th>Observación</th>
-                        <th>Estado</th>
+                        <th class="col-nowrap">Estado</th>
                         <th>Adjuntos</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-novedades"></tbody>
@@ -413,7 +535,7 @@
 
     <!-- PAGOS RESPONSABLES -->
     <section id="sec-pagos" class="section">
-        <h3>Gestionar Pagos al Responsable de Techos</h3>
+        <h3>Pagos realizados</h3>
         <div class="card-box">
             <form id="form-pago" onsubmit="guardarPago(event)">
                 <input type="hidden" id="pago-id">
@@ -446,16 +568,19 @@
         </div>
 
         <h3>Historial de Pagos</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscar-pago" placeholder="Buscar por cualquier campo (Responsable, Concepto, Fecha, Monto...)" onkeyup="renderPagos()" style="width: 100%;">
+        </div>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th class="col-nowrap">Fecha</th>
                         <th>Responsable</th>
                         <th>Concepto</th>
-                        <th>Monto</th>
+                        <th class="col-nowrap">Monto</th>
                         <th>Facturas</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-pagos"></tbody>
@@ -508,6 +633,9 @@
         </div>
 
         <h3>Registros del Grupo Electrógeno</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscar-electro" placeholder="Buscar por cualquier campo (Descripción, Service, Combustible, Horas...)" onkeyup="renderElectrogeno()" style="width: 100%;">
+        </div>
         <div style="overflow-x: auto; margin-bottom: 30px;">
             <table>
                 <thead>
@@ -515,10 +643,10 @@
                         <th>Descripción</th>
                         <th>Pedir Service</th>
                         <th>Pedir Combustible</th>
-                        <th>Horas Totales</th>
-                        <th>Horas d/Service</th>
+                        <th class="col-nowrap">Horas Totales</th>
+                        <th class="col-nowrap">Horas d/Service</th>
                         <th>Observación</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-electrogeno"></tbody>
@@ -543,7 +671,7 @@
                     <input type="number" id="electro-nov-importe" step="0.01" min="0" placeholder="Ej: 45000">
                 </div>
 
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Descripción</label>
                     <input type="text" id="electro-nov-descripcion" required placeholder="Ej: Cambio de aceite y filtros de aire">
                 </div>
@@ -561,15 +689,18 @@
         </div>
 
         <h3>Historial de Novedades</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscar-electro-nov" placeholder="Buscar por cualquier campo (Fecha, Descripción, Observación, Importe...)" onkeyup="renderElectrogenoNovedades()" style="width: 100%;">
+        </div>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th class="col-nowrap">Fecha</th>
                         <th>Descripción</th>
                         <th>Observación</th>
-                        <th>Importe ($)</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Importe ($)</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-electrogeno-novedades"></tbody>
@@ -607,15 +738,18 @@
         </div>
 
         <h3>Listado de Matafuegos</h3>
+        <div style="margin-bottom: 10px;">
+            <input type="text" id="buscar-matafuegos" placeholder="Buscar por cualquier campo (N° Matafuego, Ubicación, Vencimiento, Estado...)" onkeyup="renderMatafuegos()" style="width: 100%;">
+        </div>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>N° Matafuego</th>
+                        <th class="col-nowrap">N° Matafuego</th>
                         <th>Ubicación</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Fecha de Vencimiento</th>
+                        <th class="col-nowrap">Estado</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-matafuegos"></tbody>
@@ -659,7 +793,7 @@
 
         <h3>Listado de Tareas</h3>
         <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="buscar-tarea" placeholder="Filtrar por Nombre, Responsable..." onkeyup="renderTareas()" style="flex: 1; min-width: 200px;">
+            <input type="text" id="buscar-tarea" placeholder="Buscar por cualquier campo (Nombre, Categoría, Responsable, Descripción...)" onkeyup="renderTareas()" style="flex: 1; min-width: 200px;">
             <select id="filtro-categoria-tarea" onchange="renderTareas()" style="min-width: 150px;">
                 <option value="">Todas las Categorías</option>
             </select>
@@ -669,10 +803,10 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Categoría</th>
+                        <th class="col-nowrap">Categoría</th>
                         <th>Responsable</th>
                         <th>Descripción</th>
-                        <th>Acciones</th>
+                        <th class="col-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-tareas"></tbody>
@@ -701,9 +835,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th>N° Dormy</th>
+                        <th class="col-nowrap">N° Dormy</th>
                         <th>Dueño</th>
-                        <th>Total Presupuestado ($)</th>
+                        <th class="col-nowrap">Total Presupuestado ($)</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-stats-presupuestos"></tbody>
@@ -758,12 +892,17 @@
                     </div>
                 </div>
 
+                <!-- CATEGORÍAS CON COLOR -->
                 <h4>Gestión de Categorías para Tareas</h4>
                 <div class="card-box" style="margin-top: 10px;">
-                    <form id="form-categoria" onsubmit="guardarCategoriaConfig(event)" style="grid-template-columns: 1fr auto;">
+                    <form id="form-categoria" onsubmit="guardarCategoriaConfig(event)" style="grid-template-columns: 1fr auto auto;">
                         <div class="form-group">
                             <label>Nombre de Categoría</label>
                             <input type="text" id="cfg-cat-nombre" required placeholder="Ej: Mantenimiento, Electricidad">
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="color" id="cfg-cat-color" value="#3b82f6" style="height: 38px; padding: 2px;">
                         </div>
                         <div class="form-group" style="justify-content: flex-end;">
                             <button type="submit" class="btn-action" style="height: 38px;">Agregar</button>
@@ -772,7 +911,7 @@
                 </div>
                 <table style="margin-bottom: 25px;">
                     <thead>
-                        <tr><th>Categoría</th><th>Acciones</th></tr>
+                        <tr><th>Categoría</th><th>Color</th><th>Muestra</th><th class="col-nowrap">Acciones</th></tr>
                     </thead>
                     <tbody id="tabla-categorias-config"></tbody>
                 </table>
@@ -795,7 +934,7 @@
                 </div>
                 <table>
                     <thead>
-                        <tr><th>Estado</th><th>Color</th><th>Muestra</th><th>Acciones</th></tr>
+                        <tr><th>Estado</th><th>Color</th><th>Muestra</th><th class="col-nowrap">Acciones</th></tr>
                     </thead>
                     <tbody id="tabla-estados-config"></tbody>
                 </table>
@@ -832,7 +971,7 @@
                 <div style="max-height: 350px; overflow-y: auto;">
                     <table>
                         <thead>
-                            <tr><th>Nro. Dormy</th><th>Nombre del Dueño</th><th>Acción</th></tr>
+                            <tr><th class="col-nowrap">Nro. Dormy</th><th>Nombre del Dueño</th><th class="col-nowrap">Acción</th></tr>
                         </thead>
                         <tbody id="tabla-config"></tbody>
                     </table>
@@ -841,7 +980,19 @@
         </div>
     </section>
 
-    <!-- MODAL DE VISUALIZACIÓN / ZOOM -->
+    <!-- MODAL PARA VER DETALLE COMPLETO (LUPA) -->
+    <div id="modalTextoDetalle" class="modal">
+        <div class="modal-content-wrapper" style="background: white; padding: 22px; border-radius: 12px; max-width: 550px; width: 90%; color: var(--text);">
+            <span class="close-modal" onclick="cerrarModalTextoDetalle()" style="color: #333; top: 10px; right: 15px;">&times;</span>
+            <h3 id="modal-detalle-titulo" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Detalle</h3>
+            <div id="modal-detalle-cuerpo" style="font-size: 1rem; line-height: 1.5; white-space: pre-wrap; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border); max-height: 60vh; overflow-y: auto;"></div>
+            <div style="margin-top: 15px; text-align: right;">
+                <button type="button" class="btn-action" onclick="cerrarModalTextoDetalle()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VISUALIZACIÓN DE ARCHIVOS / ZOOM -->
     <div id="modalViewer" class="modal">
         <div class="modal-content-wrapper">
             <span class="close-modal" onclick="cerrarModal()">&times;</span>
@@ -861,6 +1012,18 @@
         let githubToken = localStorage.getItem('githubToken') || '';
 
         let textoImporteConfig = localStorage.getItem('textoImporteConfig') || 'Importe Total: $';
+
+        const titulosSecciones = {
+            'admin-dormys': 'Administración Dormys',
+            'reparaciones': 'Administración de Techos - Dormys (1-99)',
+            'novedades': 'Novedades Techos',
+            'pagos': 'Pagos realizados',
+            'electrogeno': 'Grupo Electrógeno',
+            'matafuegos': 'Control de Matafuegos',
+            'tareas': 'Gestión de Tareas',
+            'stats': 'Estadísticas del Sistema',
+            'config': 'Configuración General'
+        };
 
         function guardarTextoImporteConfig() {
             const val = document.getElementById('cfg-texto-importe').value;
@@ -1089,7 +1252,20 @@
         let electrogenoNovedades = JSON.parse(localStorage.getItem('electrogenoNovedades')) || [];
         let matafuegosData = JSON.parse(localStorage.getItem('matafuegosData')) || [];
         let tareasData = JSON.parse(localStorage.getItem('tareasData')) || [];
-        let categoriasConfig = JSON.parse(localStorage.getItem('categoriasConfig')) || ['Mantenimiento', 'Jardinería', 'Electricidad', 'Limpieza', 'General'];
+        
+        let categoriasConfigRaw = JSON.parse(localStorage.getItem('categoriasConfig')) || [
+            { nombre: 'Mantenimiento', color: '#3b82f6' },
+            { nombre: 'Jardinería', color: '#10b981' },
+            { nombre: 'Electricidad', color: '#f59e0b' },
+            { nombre: 'Limpieza', color: '#8b5cf6' },
+            { nombre: 'General', color: '#64748b' }
+        ];
+
+        let categoriasConfig = categoriasConfigRaw.map(c => {
+            if (typeof c === 'string') return { nombre: c, color: '#3b82f6' };
+            return c;
+        });
+
         let estadosConfig = JSON.parse(localStorage.getItem('estadosConfig')) || [
             { nombre: 'En espera', color: '#f59e0b' },
             { nombre: 'En reparacion', color: '#3b82f6' },
@@ -1252,7 +1428,13 @@
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(`sec-${sectionId}`).classList.add('active');
-            document.getElementById(`btn-${sectionId}`).classList.add('active');
+            const btnNav = document.getElementById(`btn-${sectionId}`);
+            if (btnNav) btnNav.classList.add('active');
+
+            const headerTitle = document.getElementById('main-header-title');
+            if (headerTitle && titulosSecciones[sectionId]) {
+                headerTitle.innerText = titulosSecciones[sectionId];
+            }
 
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
@@ -1279,15 +1461,39 @@
             if (selectTarea) {
                 selectTarea.innerHTML = '';
                 categoriasConfig.forEach(cat => {
-                    selectTarea.innerHTML += `<option value="${cat}">${cat}</option>`;
+                    selectTarea.innerHTML += `<option value="${cat.nombre}">${cat.nombre}</option>`;
                 });
             }
             if (selectFiltro) {
                 selectFiltro.innerHTML = '<option value="">Todas las Categorías</option>';
                 categoriasConfig.forEach(cat => {
-                    selectFiltro.innerHTML += `<option value="${cat}">${cat}</option>`;
+                    selectFiltro.innerHTML += `<option value="${cat.nombre}">${cat.nombre}</option>`;
                 });
             }
+        }
+
+        function renderCellWithLupa(texto, tituloModal = 'Detalle', maxLineas = 1) {
+            if (!texto || texto.trim() === '-' || texto.trim() === '') {
+                return '-';
+            }
+            const safeTextoEscaped = texto.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+            const clampClass = maxLineas === 2 ? 'text-clamp-2' : 'text-clamp-1';
+            return `
+                <div class="cell-with-lupa">
+                    <span class="${clampClass}" title="${safeTextoEscaped}">${texto}</span>
+                    <button type="button" class="btn-lupa" title="Ver detalle completo" onclick="abrirModalTextoDetalle('${tituloModal}', \`${safeTextoEscaped}\`)">🔍</button>
+                </div>
+            `;
+        }
+
+        function abrirModalTextoDetalle(titulo, texto) {
+            document.getElementById('modal-detalle-titulo').innerText = titulo;
+            document.getElementById('modal-detalle-cuerpo').innerText = texto;
+            document.getElementById('modalTextoDetalle').style.display = 'flex';
+        }
+
+        function cerrarModalTextoDetalle() {
+            document.getElementById('modalTextoDetalle').style.display = 'none';
         }
 
         function renderCategoriasConfig() {
@@ -1297,8 +1503,10 @@
             categoriasConfig.forEach((cat, idx) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${cat}</strong></td>
-                        <td><button class="btn-delete" onclick="eliminarCategoriaConfig(${idx})">Eliminar</button></td>
+                        <td><strong>${cat.nombre}</strong></td>
+                        <td><input type="color" value="${cat.color || '#3b82f6'}" onchange="actualizarColorCategoria(${idx}, this.value)"></td>
+                        <td><span class="badge" style="background-color: ${cat.color || '#3b82f6'};">${cat.nombre}</span></td>
+                        <td class="col-nowrap"><button class="btn-delete" title="Eliminar" onclick="eliminarCategoriaConfig(${idx})">❌</button></td>
                     </tr>
                 `;
             });
@@ -1308,14 +1516,27 @@
         function guardarCategoriaConfig(e) {
             e.preventDefault();
             const nombre = document.getElementById('cfg-cat-nombre').value.trim();
+            const color = document.getElementById('cfg-cat-color').value;
             if (!nombre) return;
-            if (categoriasConfig.includes(nombre)) {
+            if (categoriasConfig.some(c => c.nombre.toLowerCase() === nombre.toLowerCase())) {
                 return alert('La categoría ya existe.');
             }
-            categoriasConfig.push(nombre);
+            categoriasConfig.push({ nombre, color });
             localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig));
             document.getElementById('form-categoria').reset();
             renderCategoriasConfig();
+            if (document.getElementById('sec-tareas').classList.contains('active')) {
+                renderTareas();
+            }
+        }
+
+        function actualizarColorCategoria(index, nuevoColor) {
+            categoriasConfig[index].color = nuevoColor;
+            localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig));
+            renderCategoriasConfig();
+            if (document.getElementById('sec-tareas').classList.contains('active')) {
+                renderTareas();
+            }
         }
 
         function eliminarCategoriaConfig(index) {
@@ -1324,7 +1545,15 @@
                 categoriasConfig.splice(index, 1);
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig));
                 renderCategoriasConfig();
+                if (document.getElementById('sec-tareas').classList.contains('active')) {
+                    renderTareas();
+                }
             }
+        }
+
+        function getColorDeCategoria(nombreCat) {
+            const cat = categoriasConfig.find(c => c.nombre === nombreCat);
+            return cat ? (cat.color || '#3b82f6') : '#3b82f6';
         }
 
         function renderEstadosConfig() {
@@ -1336,7 +1565,7 @@
                         <td><strong>${est.nombre}</strong></td>
                         <td><input type="color" value="${est.color}" onchange="actualizarColorEstado(${idx}, this.value)"></td>
                         <td><span class="badge" style="background-color: ${est.color};">${est.nombre}</span></td>
-                        <td><button class="btn-delete" onclick="eliminarEstadoConfig(${idx})">Eliminar</button></td>
+                        <td class="col-nowrap"><button class="btn-delete" title="Eliminar" onclick="eliminarEstadoConfig(${idx})">❌</button></td>
                     </tr>
                 `;
             });
@@ -1459,9 +1688,9 @@
             for (let i = 1; i <= 99; i++) {
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>Dormy ${i}</strong></td>
+                        <td class="col-nowrap"><strong>Dormy ${i}</strong></td>
                         <td><input type="text" id="duenio-${i}" value="${dormysData[i].duenio}"></td>
-                        <td><button class="btn-edit" onclick="guardarDuenio(${i})">Guardar</button></td>
+                        <td class="col-nowrap"><button class="btn-edit" title="Guardar" onclick="guardarDuenio(${i})">💾</button></td>
                     </tr>
                 `;
             }
@@ -1634,7 +1863,7 @@
             document.getElementById('pago-facturas-existentes').innerHTML = generarThumbnailsHTML(tempFilesPago, true, 'pago');
         }
 
-        // --- NOVEDADES ---
+        // --- NOVEDADES TECHOS ---
         async function guardarNovedad(e) {
             e.preventDefault();
             try {
@@ -1692,11 +1921,32 @@
 
         async function renderNovedades() {
             const tbody = document.getElementById('tabla-novedades');
-            const filtroTexto = document.getElementById('buscar-nov').value.toLowerCase();
-            const filtroEstado = document.getElementById('filtro-estado-nov').value;
+            const filtroTexto = (document.getElementById('buscar-nov')?.value || '').toLowerCase().trim();
+            const filtroEstado = document.getElementById('filtro-estado-nov')?.value || '';
             tbody.innerHTML = '';
 
-            const listaFiltrada = novedades.filter(n => (n.dormy.toString().includes(filtroTexto) || n.descripcion.toLowerCase().includes(filtroTexto)) && (filtroEstado === '' || n.estado === filtroEstado));
+            const listaFiltrada = novedades.filter(n => {
+                const duenio = (dormysData[n.dormy] ? dormysData[n.dormy].duenio : '').toLowerCase();
+                const dormyStr = (n.dormy || '').toString().toLowerCase();
+                const fechaStr = (n.fecha || '').toLowerCase();
+                const montoStr = (n.monto || '').toString().toLowerCase();
+                const descStr = (n.descripcion || '').toLowerCase();
+                const obsStr = (n.observacion || '').toLowerCase();
+                const estadoStr = (n.estado || '').toLowerCase();
+
+                const coincideTexto = !filtroTexto || 
+                    dormyStr.includes(filtroTexto) || 
+                    duenio.includes(filtroTexto) || 
+                    fechaStr.includes(filtroTexto) || 
+                    montoStr.includes(filtroTexto) || 
+                    descStr.includes(filtroTexto) || 
+                    obsStr.includes(filtroTexto) || 
+                    estadoStr.includes(filtroTexto);
+
+                const coincideEstado = (filtroEstado === '' || n.estado === filtroEstado);
+
+                return coincideTexto && coincideEstado;
+            });
 
             for (let n of listaFiltrada) {
                 const duenio = dormysData[n.dormy] ? dormysData[n.dormy].duenio : 'Desconocido';
@@ -1711,17 +1961,17 @@
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${n.fecha}</td>
-                        <td><b>Dormy ${n.dormy}</b></td>
+                        <td class="col-nowrap">${n.fecha}</td>
+                        <td class="col-nowrap"><b>${n.dormy}</b></td>
                         <td>${duenio}</td>
-                        <td>${n.monto ? '$' + n.monto.toFixed(2) : '-'}</td>
-                        <td>${n.descripcion}</td>
-                        <td>${n.observacion || '-'}</td>
-                        <td><span class="badge" style="background-color: ${getColorDeEstado(n.estado)};">${n.estado}</span></td>
+                        <td class="col-nowrap">${n.monto ? '$' + n.monto.toFixed(2) : '-'}</td>
+                        <td>${n.descripcion || '-'}</td>
+                        <td>${renderCellWithLupa(n.observacion, 'Observación de Novedad', 2)}</td>
+                        <td class="col-nowrap"><span class="badge" style="background-color: ${getColorDeEstado(n.estado)};">${n.estado}</span></td>
                         <td>${generarThumbnailsHTML(n._cacheArchivos || n.archivos)}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarNovedad(${n.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarNovedad(${n.id})">Eliminar</button>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarNovedad(${n.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarNovedad(${n.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -1847,8 +2097,23 @@
 
         async function renderPagos() {
             const tbody = document.getElementById('tabla-pagos');
+            const filtroTexto = (document.getElementById('buscar-pago')?.value || '').toLowerCase().trim();
             tbody.innerHTML = '';
-            for (let p of pagos) {
+
+            const listaFiltrada = pagos.filter(p => {
+                if (!filtroTexto) return true;
+                const fechaStr = (p.fecha || '').toLowerCase();
+                const respStr = (p.responsable || '').toLowerCase();
+                const concStr = (p.concepto || '').toLowerCase();
+                const montoStr = (p.monto || '').toString().toLowerCase();
+
+                return fechaStr.includes(filtroTexto) || 
+                       respStr.includes(filtroTexto) || 
+                       concStr.includes(filtroTexto) || 
+                       montoStr.includes(filtroTexto);
+            });
+
+            for (let p of listaFiltrada) {
                 if (!p._cacheFacturas && p.facturas) {
                     p._cacheFacturas = [];
                     for (let f of p.facturas) {
@@ -1859,14 +2124,14 @@
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${p.fecha}</td>
+                        <td class="col-nowrap">${p.fecha}</td>
                         <td>${p.responsable}</td>
-                        <td>${p.concepto}</td>
-                        <td>$${p.monto.toFixed(2)}</td>
+                        <td>${renderCellWithLupa(p.concepto, 'Concepto de Pago')}</td>
+                        <td class="col-nowrap">$${p.monto.toFixed(2)}</td>
                         <td>${generarThumbnailsHTML(p._cacheFacturas || p.facturas)}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarPago(${p.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarPago(${p.id})">Eliminar</button>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarPago(${p.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarPago(${p.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -1940,20 +2205,38 @@
         function renderElectrogeno() {
             const tbody = document.getElementById('tabla-electrogeno');
             if (!tbody) return;
+            const filtroTexto = (document.getElementById('buscar-electro')?.value || '').toLowerCase().trim();
             tbody.innerHTML = '';
 
-            electrogenoData.forEach(item => {
+            const listaFiltrada = electrogenoData.filter(item => {
+                if (!filtroTexto) return true;
+                const descStr = (item.descripcion || '').toLowerCase();
+                const servStr = (item.service || '').toLowerCase();
+                const combStr = (item.combustible || '').toLowerCase();
+                const hrsTotStr = (item.hrsTotal || '').toString().toLowerCase();
+                const hrsServStr = (item.hrsService || '').toString().toLowerCase();
+                const obsStr = (item.observacion || '').toLowerCase();
+
+                return descStr.includes(filtroTexto) || 
+                       servStr.includes(filtroTexto) || 
+                       combStr.includes(filtroTexto) || 
+                       hrsTotStr.includes(filtroTexto) || 
+                       hrsServStr.includes(filtroTexto) || 
+                       obsStr.includes(filtroTexto);
+            });
+
+            listaFiltrada.forEach(item => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>${item.descripcion}</b></td>
+                        <td>${renderCellWithLupa(item.descripcion, 'Descripción de Grupo')}</td>
                         <td>${item.service || '-'}</td>
                         <td>${item.combustible || '-'}</td>
-                        <td>${item.hrsTotal ? item.hrsTotal + ' hs' : '-'}</td>
-                        <td>${item.hrsService ? item.hrsService + ' hs' : '-'}</td>
-                        <td>${item.observacion || '-'}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarElectrogeno(${item.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarElectrogeno(${item.id})">Eliminar</button>
+                        <td class="col-nowrap">${item.hrsTotal ? item.hrsTotal + ' hs' : '-'}</td>
+                        <td class="col-nowrap">${item.hrsService ? item.hrsService + ' hs' : '-'}</td>
+                        <td>${renderCellWithLupa(item.observacion, 'Observación de Grupo')}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarElectrogeno(${item.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarElectrogeno(${item.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -2016,18 +2299,32 @@
         function renderElectrogenoNovedades() {
             const tbody = document.getElementById('tabla-electrogeno-novedades');
             if (!tbody) return;
+            const filtroTexto = (document.getElementById('buscar-electro-nov')?.value || '').toLowerCase().trim();
             tbody.innerHTML = '';
 
-            electrogenoNovedades.forEach(item => {
+            const listaFiltrada = electrogenoNovedades.filter(item => {
+                if (!filtroTexto) return true;
+                const fechaStr = (item.fecha || '').toLowerCase();
+                const descStr = (item.descripcion || '').toLowerCase();
+                const obsStr = (item.observacion || '').toLowerCase();
+                const impStr = (item.importe || '').toString().toLowerCase();
+
+                return fechaStr.includes(filtroTexto) || 
+                       descStr.includes(filtroTexto) || 
+                       obsStr.includes(filtroTexto) || 
+                       impStr.includes(filtroTexto);
+            });
+
+            listaFiltrada.forEach(item => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${item.fecha}</td>
-                        <td><b>${item.descripcion}</b></td>
-                        <td>${item.observacion || '-'}</td>
-                        <td>${item.importe ? '$' + item.importe.toFixed(2) : '-'}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarElectrogenoNovedad(${item.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarElectrogenoNovedad(${item.id})">Eliminar</button>
+                        <td class="col-nowrap">${item.fecha}</td>
+                        <td>${renderCellWithLupa(item.descripcion, 'Descripción de Novedad GE')}</td>
+                        <td>${renderCellWithLupa(item.observacion, 'Observación de Novedad GE')}</td>
+                        <td class="col-nowrap">${item.importe ? '$' + item.importe.toFixed(2) : '-'}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarElectrogenoNovedad(${item.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarElectrogenoNovedad(${item.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -2086,11 +2383,27 @@
         function renderMatafuegos() {
             const tbody = document.getElementById('tabla-matafuegos');
             if (!tbody) return;
+            const filtroTexto = (document.getElementById('buscar-matafuegos')?.value || '').toLowerCase().trim();
             tbody.innerHTML = '';
 
             const hoy = new Date().toISOString().slice(0, 10);
 
-            matafuegosData.forEach(item => {
+            const listaFiltrada = matafuegosData.filter(item => {
+                if (!filtroTexto) return true;
+                const estaVencido = item.vencimiento && item.vencimiento < hoy;
+                const estadoTxt = estaVencido ? 'vencido' : 'vigente';
+
+                const nroStr = (item.nro || '').toLowerCase();
+                const ubicStr = (item.ubicacion || '').toLowerCase();
+                const vencStr = (item.vencimiento || '').toLowerCase();
+
+                return nroStr.includes(filtroTexto) || 
+                       ubicStr.includes(filtroTexto) || 
+                       vencStr.includes(filtroTexto) || 
+                       estadoTxt.includes(filtroTexto);
+            });
+
+            listaFiltrada.forEach(item => {
                 const estaVencido = item.vencimiento && item.vencimiento < hoy;
                 const badgeEstado = estaVencido
                     ? `<span class="badge" style="background-color: var(--danger);">Vencido</span>`
@@ -2098,13 +2411,13 @@
 
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>${item.nro}</b></td>
-                        <td>${item.ubicacion}</td>
-                        <td>${item.vencimiento || '-'}</td>
-                        <td>${badgeEstado}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarMatafuego(${item.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarMatafuego(${item.id})">Eliminar</button>
+                        <td class="col-nowrap"><b>${item.nro}</b></td>
+                        <td>${renderCellWithLupa(item.ubicacion, 'Ubicación Matafuego')}</td>
+                        <td class="col-nowrap">${item.vencimiento || '-'}</td>
+                        <td class="col-nowrap">${badgeEstado}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarMatafuego(${item.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarMatafuego(${item.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -2166,24 +2479,37 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const filtroTexto = (document.getElementById('buscar-tarea')?.value || '').toLowerCase();
+            const filtroTexto = (document.getElementById('buscar-tarea')?.value || '').toLowerCase().trim();
             const filtroCat = document.getElementById('filtro-categoria-tarea')?.value || '';
 
-            const listaFiltrada = tareasData.filter(t => 
-                (t.nombre.toLowerCase().includes(filtroTexto) || t.responsable.toLowerCase().includes(filtroTexto) || t.descripcion.toLowerCase().includes(filtroTexto)) &&
-                (filtroCat === '' || t.categoria === filtroCat)
-            );
+            const listaFiltrada = tareasData.filter(t => {
+                const nombreStr = (t.nombre || '').toLowerCase();
+                const respStr = (t.responsable || '').toLowerCase();
+                const catStr = (t.categoria || '').toLowerCase();
+                const descStr = (t.descripcion || '').toLowerCase();
+
+                const coincideTexto = !filtroTexto || 
+                    nombreStr.includes(filtroTexto) || 
+                    respStr.includes(filtroTexto) || 
+                    catStr.includes(filtroTexto) || 
+                    descStr.includes(filtroTexto);
+
+                const coincideCat = (filtroCat === '' || t.categoria === filtroCat);
+
+                return coincideTexto && coincideCat;
+            });
 
             listaFiltrada.forEach(item => {
+                const colorCat = getColorDeCategoria(item.categoria);
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${item.nombre}</b></td>
-                        <td><span class="badge" style="background-color: var(--primary-light);">${item.categoria}</span></td>
+                        <td class="col-nowrap"><span class="badge" style="background-color: ${colorCat};">${item.categoria}</span></td>
                         <td>${item.responsable}</td>
-                        <td>${item.descripcion || '-'}</td>
-                        <td>
-                            <button class="btn-edit" onclick="editarTarea(${item.id})">Editar</button>
-                            <button class="btn-delete" onclick="eliminarTarea(${item.id})">Eliminar</button>
+                        <td>${renderCellWithLupa(item.descripcion, 'Descripción de la Tarea')}</td>
+                        <td class="col-nowrap">
+                            <button class="btn-edit" title="Editar" onclick="editarTarea(${item.id})">✏️</button>
+                            <button class="btn-delete" title="Eliminar" onclick="eliminarTarea(${item.id})">❌</button>
                         </td>
                     </tr>
                 `;
@@ -2281,9 +2607,9 @@
                     const totalDormy = presupuestosPorDormy[i];
                     tbodyPresupuestos.innerHTML += `
                         <tr>
-                            <td><b>Dormy ${i}</b></td>
+                            <td class="col-nowrap"><b>Dormy ${i}</b></td>
                             <td>${duenio}</td>
-                            <td>${totalDormy > 0 ? '<strong>$' + totalDormy.toFixed(2) + '</strong>' : '-'}</td>
+                            <td class="col-nowrap">${totalDormy > 0 ? '<strong>$' + totalDormy.toFixed(2) + '</strong>' : '-'}</td>
                         </tr>
                     `;
                 }
@@ -2357,7 +2683,10 @@
             if (data.electrogenoNovedades) { electrogenoNovedades = data.electrogenoNovedades; localStorage.setItem('electrogenoNovedades', JSON.stringify(data.electrogenoNovedades)); }
             if (data.matafuegosData) { matafuegosData = data.matafuegosData; localStorage.setItem('matafuegosData', JSON.stringify(data.matafuegosData)); }
             if (data.tareasData) { tareasData = data.tareasData; localStorage.setItem('tareasData', JSON.stringify(data.tareasData)); }
-            if (data.categoriasConfig) { categoriasConfig = data.categoriasConfig; localStorage.setItem('categoriasConfig', JSON.stringify(data.categoriasConfig)); }
+            if (data.categoriasConfig) { 
+                categoriasConfig = data.categoriasConfig.map(c => (typeof c === 'string') ? { nombre: c, color: '#3b82f6' } : c); 
+                localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
+            }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
             if (data.textoImporteConfig) { textoImporteConfig = data.textoImporteConfig; localStorage.setItem('textoImporteConfig', data.textoImporteConfig); }
             if (githubToken) localStorage.setItem('githubToken', githubToken);
