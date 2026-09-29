@@ -974,6 +974,13 @@
       "responsable": "A cotizar",
       "categoria": "Mantenimiento",
       "descripcion": ""
+    },
+    {
+      "id": 1790666616057,
+      "nombre": "Cortar el cerco",
+      "responsable": "Facundo",
+      "categoria": "Jardinería",
+      "descripcion": ""
     }
   ],
   "registrosData": [],
@@ -1032,5 +1039,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T07:21:13.975Z"
+  "fechaExportacion": "2026-09-29T07:24:34.583Z"
 }
