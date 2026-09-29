@@ -981,6 +981,13 @@
       "responsable": "Facundo",
       "categoria": "Jardinería",
       "descripcion": ""
+    },
+    {
+      "id": 1790667000885,
+      "nombre": "Limpieza del verdin ",
+      "responsable": "Facundo",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
     }
   ],
   "registrosData": [],
@@ -1039,5 +1046,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T07:27:20.638Z"
+  "fechaExportacion": "2026-09-29T07:30:19.747Z"
 }
