@@ -1000,6 +1000,7 @@
   "registrosData": [],
   "cronogramaData": [],
   "presupuestosData": [],
+  "facundoData": {},
   "categoriasConfig": [
     {
       "nombre": "Mantenimiento",
@@ -1053,5 +1054,7 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T07:33:38.099Z"
+  "appBgColor": "#f1f5f9",
+  "appCardBgColor": "#ffffff",
+  "fechaExportacion": "2026-09-29T14:44:25.054Z"
 }
