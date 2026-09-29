@@ -988,6 +988,13 @@
       "responsable": "Facundo",
       "categoria": "Mantenimiento",
       "descripcion": ""
+    },
+    {
+      "id": 1790667207085,
+      "nombre": "Control de lamparas quemadas",
+      "responsable": "Facundo",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
     }
   ],
   "registrosData": [],
@@ -1046,5 +1053,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T07:30:19.747Z"
+  "fechaExportacion": "2026-09-29T07:33:38.099Z"
 }
