@@ -1010,7 +1010,7 @@
     {
       "id": 1790714215885,
       "fecha": "2026-09-29",
-      "autor": "Mauricio",
+      "autor": "Mauricio Sanchez",
       "importe": 1200000,
       "estado": "Pendiente",
       "descripcion": "Presupuesto pintura de techo de madera\nLimpieza de tirantes y maChimbres\nLijada fina\n2 manos de Cetol \nPresupuesto mano de obra\n1.200.000 IVA incluido",
@@ -1019,10 +1019,19 @@
     {
       "id": 1790714268088,
       "fecha": "2026-09-29",
-      "autor": "Mauricio",
+      "autor": "Mauricio Sanchez",
       "importe": 800000,
       "estado": "Pendiente",
       "descripcion": "Presupuesto techo de chapa\n\nBirutiar óxido de chapa\nLimpiaza completa con diluyente\nPintura completa en sintético negro\nPresupuesto mano de obra \n800.000 IVA incluido",
+      "adjuntos": []
+    },
+    {
+      "id": 1790721681866,
+      "fecha": "2026-09-25",
+      "autor": "Mauricio Sanchez",
+      "importe": 5700000,
+      "estado": "Pendiente",
+      "descripcion": "Presupuesto reparación de pileta dormys\n\nCortar Linia recta una y 3 diagonales como junta de dilatación\nSellar juntas\nRetirar carpeta hueca y reparar\nPintura completa de pileta\nTrabajo terminado $ 5.700.000 mano de obra",
       "adjuntos": []
     }
   ],
@@ -1125,6 +1134,6 @@
   "textoWhatsappPresupuesto": "Hola {proveedor}, ¿cómo estás? Te escribimos de Administración Dormys para pedirte un presupuesto del siguiente trabajo:",
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
-  "appCardBgColor": "#ffffff",
-  "fechaExportacion": "2026-09-29T20:50:24.705Z"
+  "appCardBgColor": "#c5e0e2",
+  "fechaExportacion": "2026-09-29T22:42:24.295Z"
 }
