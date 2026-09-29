@@ -889,7 +889,14 @@
       "importe": 0
     }
   ],
-  "matafuegosData": [],
+  "matafuegosData": [
+    {
+      "id": 1790709320967,
+      "nro": "todos",
+      "ubicacion": "Galerias dormys",
+      "vencimiento": "2027-09-01"
+    }
+  ],
   "tareasData": [
     {
       "id": 1790652315058,
@@ -1000,7 +1007,13 @@
   "registrosData": [],
   "cronogramaData": [],
   "presupuestosData": [],
-  "facundoData": {},
+  "facundoData": {
+    "horaInicio": "07:00",
+    "horaFin": "16:00",
+    "vacInicio": "2026-10-29",
+    "vacFin": "2026-11-09",
+    "whatsapp": "+54 9 11 2177-3900"
+  },
   "categoriasConfig": [
     {
       "nombre": "Mantenimiento",
@@ -1056,5 +1069,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#ffffff",
-  "fechaExportacion": "2026-09-29T16:56:39.434Z"
+  "fechaExportacion": "2026-09-29T19:15:44.507Z"
 }
