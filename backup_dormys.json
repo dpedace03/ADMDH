@@ -967,8 +967,18 @@
       "responsable": "A cotizar",
       "categoria": "Pileta",
       "descripcion": "Arreglo y pintura del piso de la pileta"
+    },
+    {
+      "id": 1790665870878,
+      "nombre": "Pintar techito 74-75",
+      "responsable": "A cotizar",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
     }
   ],
+  "registrosData": [],
+  "cronogramaData": [],
+  "presupuestosData": [],
   "categoriasConfig": [
     {
       "nombre": "Mantenimiento",
@@ -1022,5 +1032,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T04:59:47.368Z"
+  "fechaExportacion": "2026-09-29T07:17:25.160Z"
 }
