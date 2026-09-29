@@ -1085,6 +1085,9 @@
       "color": "#10b981"
     }
   ],
+  "cronogramaAnualData": {
+    "2027-09": "Matafuegos"
+  },
   "proveedoresData": [
     {
       "id": 1790710608742,
@@ -1123,5 +1126,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#ffffff",
-  "fechaExportacion": "2026-09-29T20:42:55.900Z"
+  "fechaExportacion": "2026-09-29T20:50:24.705Z"
 }
