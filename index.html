@@ -324,7 +324,7 @@
             <button class="btn-header-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
             <h2 id="main-header-title">Administración Dormys</h2>
         </div>
-        <div class="user-control">
+        <div class="user-control" style="display: none;">
             <label for="userSelect" style="color:white;">Usuario:</label>
             <select id="userSelect" onchange="changeUser()">
                 <option value="Ferreyra">Ferreyra (Operador)</option>
@@ -694,7 +694,7 @@
 
     <!-- GRUPO ELECTRÓGENO -->
     <section id="sec-electrogeno" class="section">
-        <h3>⚡ Grupo electrogenos -  Caracteristicas.</h3>
+        <h3>⚡ Grupo electrógeno</h3>
         <div class="card-box">
             <form id="form-electrogeno" onsubmit="guardarElectrogeno(event)">
                 <input type="hidden" id="electro-id">
@@ -734,27 +734,6 @@
                     <button type="button" class="btn-reset-form" onclick="resetFormElectrogeno()">Nuevo</button>
                 </div>
             </form>
-        </div>
-
-        <h3>Registros del Grupo Electrógeno</h3>
-        <div style="margin-bottom: 10px;">
-            <input type="text" id="buscar-electro" placeholder="Buscar por cualquier campo (Descripción, Service, Combustible, Horas...)" onkeyup="renderElectrogeno()" style="width: 100%;">
-        </div>
-        <div style="overflow-x: auto; margin-bottom: 30px;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Pedir Service</th>
-                        <th>Pedir Combustible</th>
-                        <th class="col-nowrap">Horas Totales</th>
-                        <th class="col-nowrap">Horas d/Service</th>
-                        <th>Observación</th>
-                        <th class="col-nowrap">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-electrogeno"></tbody>
-            </table>
         </div>
 
         <!-- NOVEDADES DEL GRUPO ELECTRÓGENO -->
@@ -2588,44 +2567,17 @@
         }
 
         function renderElectrogeno() {
-            const tbody = document.getElementById('tabla-electrogeno');
-            if (!tbody) return;
-            const filtroTexto = (document.getElementById('buscar-electro')?.value || '').toLowerCase().trim();
-            tbody.innerHTML = '';
-
-            const listaFiltrada = electrogenoData.filter(item => {
-                if (!filtroTexto) return true;
-                const descStr = (item.descripcion || '').toLowerCase();
-                const servStr = (item.service || '').toLowerCase();
-                const combStr = (item.combustible || '').toLowerCase();
-                const hrsTotStr = (item.hrsTotal || '').toString().toLowerCase();
-                const hrsServStr = (item.hrsService || '').toString().toLowerCase();
-                const obsStr = (item.observacion || '').toLowerCase();
-
-                return descStr.includes(filtroTexto) || 
-                       servStr.includes(filtroTexto) || 
-                       combStr.includes(filtroTexto) || 
-                       hrsTotStr.includes(filtroTexto) || 
-                       hrsServStr.includes(filtroTexto) || 
-                       obsStr.includes(filtroTexto);
-            });
-
-            listaFiltrada.forEach(item => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${renderCellWithLupa(item.descripcion, 'Descripción de Grupo')}</td>
-                        <td>${item.service || '-'}</td>
-                        <td>${item.combustible || '-'}</td>
-                        <td class="col-nowrap">${item.hrsTotal ? item.hrsTotal + ' hs' : '-'}</td>
-                        <td class="col-nowrap">${item.hrsService ? item.hrsService + ' hs' : '-'}</td>
-                        <td>${renderCellWithLupa(item.observacion, 'Observación de Grupo')}</td>
-                        <td class="col-nowrap">
-                            <button class="btn-edit" title="Editar" onclick="editarElectrogeno(${item.id})">✏️</button>
-                            <button class="btn-delete" title="Eliminar" onclick="eliminarElectrogeno(${item.id})">❌</button>
-                        </td>
-                    </tr>
-                `;
-            });
+            if (electrogenoData && electrogenoData.length > 0) {
+                const item = electrogenoData[0];
+                document.getElementById('electro-id').value = item.id;
+                document.getElementById('electro-descripcion').value = item.descripcion || '';
+                document.getElementById('electro-service').value = item.service || '';
+                document.getElementById('electro-combustible').value = item.combustible || '';
+                document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
+                document.getElementById('electro-hrs-service').value = item.hrsService || '';
+                document.getElementById('electro-observacion').value = item.observacion || '';
+                document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
+            }
         }
 
         function editarElectrogeno(id) {
@@ -2638,7 +2590,7 @@
             document.getElementById('electro-hrs-total').value = item.hrsTotal || '';
             document.getElementById('electro-hrs-service').value = item.hrsService || '';
             document.getElementById('electro-observacion').value = item.observacion || '';
-            document.getElementById('btn-guardar-electro').innerText = 'Actualizar Características';
+            document.getElementById('btn-guardar-electro').innerText = 'Guardar Características';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2646,6 +2598,7 @@
             if (confirm('¿Deseas eliminar este registro de Grupo Electrógeno?')) {
                 electrogenoData = electrogenoData.filter(x => x.id !== id);
                 localStorage.setItem('electrogenoData', JSON.stringify(electrogenoData));
+                resetFormElectrogeno();
                 renderElectrogeno();
             }
         }
