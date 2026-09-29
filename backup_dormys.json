@@ -869,6 +869,27 @@
       ]
     }
   ],
+  "electrogenoData": [
+    {
+      "id": 1790649615623,
+      "descripcion": "Fenk 11-4971-5896",
+      "service": "cada 250 hs",
+      "combustible": "pañol",
+      "hrsTotal": 1802,
+      "hrsService": 1758,
+      "observacion": ""
+    }
+  ],
+  "electrogenoNovedades": [
+    {
+      "id": 1790650552046,
+      "fecha": "2025-06-30",
+      "descripcion": "Service ",
+      "observacion": "Se hizo el service con 1758 hs, proximo service 2000 hs.",
+      "importe": 0
+    }
+  ],
+  "matafuegosData": [],
   "estadosConfig": [
     {
       "nombre": "En espera",
@@ -884,5 +905,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T02:08:38.242Z"
+  "fechaExportacion": "2026-09-29T02:58:13.093Z"
 }
