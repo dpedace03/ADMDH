@@ -69,10 +69,10 @@
         .header-title-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .btn-home-icon {
+        .btn-header-icon {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
@@ -87,12 +87,12 @@
             line-height: 1;
         }
 
-        .btn-home-icon:hover {
+        .btn-header-icon:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
         }
 
-        header h2 { font-size: 1.15rem; font-weight: 700; }
+        header h2 { font-size: 1.15rem; font-weight: 700; margin-left: 4px; }
         .user-control { display: flex; align-items: center; gap: 6px; }
         .user-control select { padding: 6px 10px; border-radius: 6px; border: none; font-weight: bold; font-size: 0.9rem; background: #ffffff; color: var(--text); }
 
@@ -131,15 +131,6 @@
         #btn-registro { background-color: var(--pastel-indigo); color: var(--pastel-indigo-dark); border-color: #c7d2fe; }
         #btn-cronograma { background-color: var(--pastel-cyan); color: var(--pastel-cyan-dark); border-color: #a5f3fc; }
         #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
-        #btn-config { 
-            background-color: var(--pastel-gray); 
-            color: var(--pastel-gray-dark); 
-            border-color: #e2e8f0; 
-            flex: 0 0 45px; 
-            min-width: 45px; 
-            font-size: 1.1rem;
-            padding: 10px 0;
-        }
 
         nav button:hover {
             transform: translateY(-1px);
@@ -292,7 +283,17 @@
 
         .cronograma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
         .dia-col { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-height: 250px; display: flex; flex-direction: column; }
-        .dia-header { background: var(--primary); color: white; text-align: center; font-weight: bold; padding: 6px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 8px; }
+        .dia-header { 
+            background: var(--pastel-green); 
+            color: var(--pastel-green-dark); 
+            border: 1px solid #bbf7d0; 
+            text-align: center; 
+            font-weight: bold; 
+            padding: 8px 6px; 
+            border-radius: 6px; 
+            font-size: 0.9rem; 
+            margin-bottom: 8px; 
+        }
         .tarea-card {
             background: white; border-left: 4px solid var(--primary-light); border-top: 1px solid var(--border); border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 0.82rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;
@@ -310,7 +311,6 @@
             .config-grid { grid-template-columns: 1fr; }
             .section { padding: 12px; }
             nav button { flex: 1 1 45%; font-size: 0.8rem; }
-            #btn-config { flex: 0 0 40px; min-width: 40px; }
             form { grid-template-columns: 1fr; }
             .cronograma-grid { grid-template-columns: 1fr; }
         }
@@ -320,7 +320,8 @@
 
     <header>
         <div class="header-title-container">
-            <button class="btn-home-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
+            <button class="btn-header-icon" onclick="showSection('config')" title="Configuración">⚙️</button>
+            <button class="btn-header-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
             <h2 id="main-header-title">Administración Dormys</h2>
         </div>
         <div class="user-control">
@@ -342,7 +343,6 @@
         <button id="btn-registro" onclick="showSection('registro')">📝 Registro</button>
         <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma</button>
         <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
-        <button id="btn-config" onclick="showSection('config')" title="Configuración">⚙️</button>
     </nav>
 
     <!-- PANTALLA PRINCIPAL: ADMINISTRACIÓN DORMYS -->
@@ -444,9 +444,9 @@
         <div id="grilla-dormys" class="reparaciones-grid"></div>
     </section>
 
-    <!-- PRESUPUESTOS (ABM) -->
+    <!-- PRESUPUESTOS -->
     <section id="sec-presupuestos" class="section">
-        <h3>📄 ABM - Gestión de Presupuestos</h3>
+        <h3>📄 Gestión de Presupuestos</h3>
         <div class="card-box">
             <form id="form-presupuesto" onsubmit="guardarPresupuesto(event)">
                 <input type="hidden" id="pres-id">
@@ -692,7 +692,7 @@
         </div>
     </section>
 
-    <!-- ABM: GRUPO ELECTRÓGENO -->
+    <!-- GRUPO ELECTRÓGENO -->
     <section id="sec-electrogeno" class="section">
         <h3>⚡ Grupo electrogenos -  Caracteristicas.</h3>
         <div class="card-box">
@@ -757,7 +757,7 @@
             </table>
         </div>
 
-        <!-- ABM DE NOVEDADES DEL GRUPO ELECTRÓGENO -->
+        <!-- NOVEDADES DEL GRUPO ELECTRÓGENO -->
         <hr style="margin: 25px 0; border: 0; border-top: 1px solid var(--border);">
         <h3 style="color: var(--primary);">📝 Novedades del Grupo Electrógeno</h3>
         
@@ -812,9 +812,9 @@
         </div>
     </section>
 
-    <!-- ABM: CONTROL DE MATAFUEGOS -->
+    <!-- CONTROL DE MATAFUEGOS -->
     <section id="sec-matafuegos" class="section">
-        <h3>🧯 ABM - Control de Matafuegos</h3>
+        <h3>🧯 Control de Matafuegos</h3>
         <div class="card-box">
             <form id="form-matafuegos" onsubmit="guardarMatafuego(event)">
                 <input type="hidden" id="mat-id">
@@ -861,9 +861,9 @@
         </div>
     </section>
 
-    <!-- ABM: TAREAS -->
+    <!-- TAREAS -->
     <section id="sec-tareas" class="section">
-        <h3>📋 ABM - Gestión de Tareas</h3>
+        <h3>📋 Gestión de Tareas</h3>
         <div class="card-box">
             <form id="form-tareas" onsubmit="guardarTarea(event)">
                 <input type="hidden" id="tarea-id">
@@ -1635,8 +1635,6 @@
 
         function changeUser() {
             currentUser = document.getElementById('userSelect').value;
-            const btnConfig = document.getElementById('btn-config');
-            if (btnConfig) btnConfig.style.display = 'inline-block';
         }
 
         function showSection(sectionId) {
@@ -2103,7 +2101,7 @@
             document.getElementById('pres-adjuntos-existentes').innerHTML = generarThumbnailsHTML(tempFilesPres, true, 'pres');
         }
 
-        // --- PRESUPUESTOS (ABM) ---
+        // --- PRESUPUESTOS ---
         async function guardarPresupuesto(e) {
             e.preventDefault();
             try {
@@ -2556,7 +2554,7 @@
             }
         }
 
-        // --- ABM GRUPO ELECTRÓGENO (CARACTERÍSTICAS) ---
+        // --- GRUPO ELECTRÓGENO (CARACTERÍSTICAS) ---
         function guardarElectrogeno(e) {
             e.preventDefault();
             const id = document.getElementById('electro-id').value;
@@ -2652,7 +2650,7 @@
             }
         }
 
-        // --- ABM NOVEDADES DEL GRUPO ELECTRÓGENO ---
+        // --- NOVEDADES DEL GRUPO ELECTRÓGENO ---
         function guardarElectrogenoNovedad(e) {
             e.preventDefault();
             const id = document.getElementById('electro-nov-id').value;
@@ -2737,7 +2735,7 @@
             }
         }
 
-        // --- ABM MATAFUEGOS ---
+        // --- MATAFUEGOS ---
         function guardarMatafuego(e) {
             e.preventDefault();
             const id = document.getElementById('mat-id').value;
@@ -2830,7 +2828,7 @@
             }
         }
 
-        // --- ABM TAREAS ---
+        // --- TAREAS ---
         function guardarTarea(e) {
             e.preventDefault();
             const id = document.getElementById('tarea-id').value;
