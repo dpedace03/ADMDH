@@ -120,7 +120,7 @@
             font-size: 0.82rem;
             white-space: nowrap;
             flex: 1 1 100px;
-            min-width: 100px;
+            min-width: max-content;   /* el botón crece lo necesario para que el texto entre completo */
             text-align: center;
             transition: all 0.1s ease;
             display: flex;
@@ -162,6 +162,7 @@
         #btn-registro { background-color: var(--pastel-indigo); color: var(--pastel-indigo-dark); border-color: #c7d2fe; }
         #btn-cronograma { background-color: var(--pastel-cyan); color: var(--pastel-cyan-dark); border-color: #a5f3fc; }
         #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
+        #btn-cronograma-anual { background-color: var(--pastel-emerald); color: #065f46; border-color: #a7f3d0; }
         #btn-proveedores { background-color: var(--pastel-orange); color: #9a3412; border-color: #fed7aa; }
 
         /* WhatsApp */
@@ -380,6 +381,29 @@
         .leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
         .leyenda-color { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
 
+        /* CRONOGRAMA ANUAL */
+        .anual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
+        .mes-card {
+            background: #fff; border: 2px solid var(--border); border-radius: 12px; padding: 10px 12px;
+            cursor: pointer; text-align: left; font: inherit; color: var(--text); display: flex; flex-direction: column; gap: 6px;
+            box-shadow: 0 3px 0 #cbd5e1; position: relative; top: 0; transition: all 0.1s;
+        }
+        .mes-card:hover { border-color: var(--primary-light); }
+        .mes-card:active { top: 2px; box-shadow: 0 1px 0 #cbd5e1; }
+        .mes-card.mes-actual { border-color: var(--primary-light); background: #eff6ff; }
+        .mes-card.mes-con-texto { border-color: #86efac; }
+        .mes-card.mes-actual.mes-con-texto { border-color: var(--primary-light); }
+        .mes-nombre { font-weight: 800; font-size: 1rem; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .mes-nombre .mes-pin { font-size: 0.85rem; }
+        .mini-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; text-align: center; font-size: 0.7rem; }
+        .mini-cal .dow { font-weight: 700; color: var(--secondary); padding-bottom: 2px; }
+        .mini-cal .dia { padding: 2px 0; border-radius: 4px; color: #334155; }
+        .mini-cal .dia.hoy { background: var(--primary-light); color: #fff; font-weight: 800; }
+        .mes-nota { font-size: 0.78rem; color: #14532d; background: #f0fdf4; border-radius: 6px; padding: 5px 7px; white-space: pre-wrap; word-break: break-word; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .mes-nota.vacia { background: transparent; color: var(--secondary); font-style: italic; }
+        .anio-nav { display: flex; align-items: center; gap: 8px; }
+        .anio-nav strong { font-size: 1.3rem; min-width: 60px; text-align: center; color: var(--primary); }
+
         .cronograma-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
         .dia-col { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-height: 250px; display: flex; flex-direction: column; }
         
@@ -456,7 +480,8 @@
         <button id="btn-tareas" onclick="showSection('tareas')">📋 Tareas</button>
         <button id="btn-herramientas" onclick="showSection('herramientas')">🧰 Herramientas</button>
         <button id="btn-registro" onclick="showSection('registro')">📝 Registro</button>
-        <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma</button>
+        <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma semanal</button>
+        <button id="btn-cronograma-anual" onclick="showSection('cronograma-anual')">🗓️ Cronograma anual</button>
         <button id="btn-proveedores" onclick="showSection('proveedores')">👷 Proveedores</button>
         <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
     </nav>
@@ -533,7 +558,12 @@
 
             <button class="home-grid-btn" onclick="showSection('cronograma')">
                 <span style="font-size: 2.2rem;">📅</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma semanal</span>
+            </button>
+
+            <button class="home-grid-btn" onclick="showSection('cronograma-anual')">
+                <span style="font-size: 2.2rem;">🗓️</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma anual</span>
             </button>
         </div>
 
@@ -1289,6 +1319,40 @@
         <div class="cronograma-grid" id="grilla-cronograma"></div>
     </section>
 
+    <!-- CRONOGRAMA ANUAL -->
+    <section id="sec-cronograma-anual" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+            <h3 style="margin: 0;">🗓️ Cronograma Anual</h3>
+            <div class="anio-nav">
+                <button type="button" class="btn-action" onclick="cambiarAnioAnual(-1)" title="Año anterior">◀</button>
+                <strong id="anual-anio">2026</strong>
+                <button type="button" class="btn-action" onclick="cambiarAnioAnual(1)" title="Año siguiente">▶</button>
+                <button type="button" class="btn-reset-form" style="padding: 8px 12px; font-size: 0.85rem;" onclick="irAnioActualAnual()">Hoy</button>
+            </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 6px;">Hacé clic en un mes para agregar o editar su texto.</p>
+        <div class="anual-grid" id="grilla-anual"></div>
+    </section>
+
+    <!-- MODAL: TEXTO DE UN MES (CRONOGRAMA ANUAL) -->
+    <div id="modalMesAnual" class="modal">
+        <div class="modal-content-wrapper" style="background: white; padding: 20px; border-radius: 12px; max-width: 480px; width: 90%;">
+            <span class="close-modal" onclick="cerrarModalMesAnual()" style="color: #333; top: 10px; right: 15px;">&times;</span>
+            <h3 id="modal-mes-titulo" style="color: var(--primary); margin-bottom: 12px;">Mes</h3>
+            <form onsubmit="guardarMesAnual(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" id="modal-mes-clave">
+                <div class="form-group">
+                    <label>Texto del mes</label>
+                    <textarea id="modal-mes-texto" rows="6" placeholder="Ej: Revisión general de techos. Service del grupo electrógeno. Vencen matafuegos."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="submit" class="btn-submit" style="flex: 1;">Guardar</button>
+                    <button type="button" class="btn-reset-form" onclick="borrarMesAnual()">Borrar texto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ESTADÍSTICAS -->
     <section id="sec-stats" class="section">
         <h3>Estadísticas del Estado de Techos y Presupuestos</h3>
@@ -1555,6 +1619,7 @@
             'tareas': 'Gestión de Tareas',
             'registro': 'Registro de Actividades',
             'cronograma': 'Cronograma Semanal',
+            'cronograma-anual': 'Cronograma Anual',
             'stats': 'Estadísticas del Sistema',
             'config': 'Configuración General'
         };
@@ -1807,6 +1872,11 @@
         let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
         let facundoData = JSON.parse(localStorage.getItem('facundoData')) || {};
 
+        // --- CRONOGRAMA ANUAL ---
+        const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        let cronogramaAnualData = JSON.parse(localStorage.getItem('cronogramaAnualData')) || {};   // { "2026-09": "texto" }
+        let anioAnualActual = new Date().getFullYear();
+
         // --- PROVEEDORES ---
         const TEXTO_WHATSAPP_DEFAULT = 'Hola {proveedor}, ¿cómo estás? Te escribimos de Administración Dormys para pedirte un presupuesto del siguiente trabajo:';
         const TAREAS_PROVEEDOR_DEFAULT = ['Albañil', 'Pintura', 'Jardinería', 'Techos', 'Electricidad', 'Plomería'];
@@ -2002,6 +2072,7 @@
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
+            if (sectionId === 'cronograma-anual') renderCronogramaAnual();
             if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); cargarConfigProveedores(); }
         }
 
@@ -3554,6 +3625,7 @@
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
             }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
+            if (data.cronogramaAnualData) { cronogramaAnualData = data.cronogramaAnualData; localStorage.setItem('cronogramaAnualData', JSON.stringify(data.cronogramaAnualData)); }
             if (data.proveedoresData) { proveedoresData = data.proveedoresData; localStorage.setItem('proveedoresData', JSON.stringify(data.proveedoresData)); }
             if (data.tareasProveedorConfig) { tareasProveedorConfig = data.tareasProveedorConfig; localStorage.setItem('tareasProveedorConfig', JSON.stringify(data.tareasProveedorConfig)); }
             if (data.textoWhatsappPresupuesto) { textoWhatsappPresupuesto = data.textoWhatsappPresupuesto; localStorage.setItem('textoWhatsappPresupuesto', data.textoWhatsappPresupuesto); }
@@ -3849,6 +3921,90 @@
             abrirWhatsApp(prov.whatsapp, armarMensajePedido());
         }
 
+
+        // =====================================================================
+        //  CRONOGRAMA ANUAL
+        // =====================================================================
+        function claveMesAnual(anio, mes) {
+            return `${anio}-${String(mes + 1).padStart(2, '0')}`;
+        }
+
+        function renderCronogramaAnual() {
+            const grilla = document.getElementById('grilla-anual');
+            if (!grilla) return;
+            document.getElementById('anual-anio').innerText = anioAnualActual;
+
+            const hoy = new Date();
+            const dow = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+            let html = '';
+
+            for (let mes = 0; mes < 12; mes++) {
+                const primerDia = (new Date(anioAnualActual, mes, 1).getDay() + 6) % 7;   // semana desde el lunes
+                const diasMes = new Date(anioAnualActual, mes + 1, 0).getDate();
+                const esMesActual = hoy.getFullYear() === anioAnualActual && hoy.getMonth() === mes;
+                const texto = (cronogramaAnualData[claveMesAnual(anioAnualActual, mes)] || '').trim();
+
+                let celdas = dow.map(d => `<span class="dow">${d}</span>`).join('');
+                for (let i = 0; i < primerDia; i++) celdas += '<span></span>';
+                for (let d = 1; d <= diasMes; d++) {
+                    const esHoy = esMesActual && hoy.getDate() === d;
+                    celdas += `<span class="dia${esHoy ? ' hoy' : ''}">${d}</span>`;
+                }
+
+                html += `
+                    <button type="button" class="mes-card${esMesActual ? ' mes-actual' : ''}${texto ? ' mes-con-texto' : ''}" onclick="abrirModalMesAnual(${mes})">
+                        <div class="mes-nombre"><span>${MESES_ES[mes]}</span><span class="mes-pin">${texto ? '📝' : '➕'}</span></div>
+                        <div class="mini-cal">${celdas}</div>
+                        <div class="mes-nota${texto ? '' : ' vacia'}">${texto ? escHtml(texto) : 'Sin texto'}</div>
+                    </button>`;
+            }
+            grilla.innerHTML = html;
+        }
+
+        function cambiarAnioAnual(delta) {
+            anioAnualActual += delta;
+            renderCronogramaAnual();
+        }
+
+        function irAnioActualAnual() {
+            anioAnualActual = new Date().getFullYear();
+            renderCronogramaAnual();
+        }
+
+        function abrirModalMesAnual(mes) {
+            const clave = claveMesAnual(anioAnualActual, mes);
+            document.getElementById('modal-mes-clave').value = clave;
+            document.getElementById('modal-mes-titulo').innerText = `${MESES_ES[mes]} ${anioAnualActual}`;
+            document.getElementById('modal-mes-texto').value = cronogramaAnualData[clave] || '';
+            document.getElementById('modalMesAnual').style.display = 'flex';
+            document.getElementById('modal-mes-texto').focus();
+        }
+
+        function cerrarModalMesAnual() {
+            document.getElementById('modalMesAnual').style.display = 'none';
+        }
+
+        function guardarMesAnual(e) {
+            e.preventDefault();
+            const clave = document.getElementById('modal-mes-clave').value;
+            const texto = document.getElementById('modal-mes-texto').value.trim();
+            if (texto) cronogramaAnualData[clave] = texto;
+            else delete cronogramaAnualData[clave];
+            localStorage.setItem('cronogramaAnualData', JSON.stringify(cronogramaAnualData));
+            cerrarModalMesAnual();
+            renderCronogramaAnual();
+        }
+
+        function borrarMesAnual() {
+            const clave = document.getElementById('modal-mes-clave').value;
+            if (!cronogramaAnualData[clave]) return cerrarModalMesAnual();
+            if (!confirm('¿Borrar el texto de este mes?')) return;
+            delete cronogramaAnualData[clave];
+            localStorage.setItem('cronogramaAnualData', JSON.stringify(cronogramaAnualData));
+            cerrarModalMesAnual();
+            renderCronogramaAnual();
+        }
+
         window.onload = async function() {
             aplicarColorTema(appBgColor, appCardBgColor);
             await initDB();
@@ -3971,6 +4127,7 @@
                     facundoData: JSON.parse(localStorage.getItem('facundoData')) || {},
                     categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
+                    cronogramaAnualData: JSON.parse(localStorage.getItem('cronogramaAnualData')) || {},
                     proveedoresData: JSON.parse(localStorage.getItem('proveedoresData')) || [],
                     tareasProveedorConfig: JSON.parse(localStorage.getItem('tareasProveedorConfig')) || [...TAREAS_PROVEEDOR_DEFAULT],
                     textoWhatsappPresupuesto: localStorage.getItem('textoWhatsappPresupuesto') || TEXTO_WHATSAPP_DEFAULT,
