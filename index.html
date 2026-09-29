@@ -672,11 +672,7 @@
 
                 <div class="form-group">
                     <label>Estado</label>
-                    <select id="pres-estado" required>
-                        <option value="Pendiente">🟡 Pendiente</option>
-                        <option value="Aprobado">🟢 Aprobado</option>
-                        <option value="Rechazado">🔴 Rechazado</option>
-                    </select>
+                    <select id="pres-estado" required></select>
                 </div>
 
                 <div class="form-group full-width">
@@ -702,9 +698,6 @@
             <input type="text" id="buscar-presupuesto" placeholder="Buscar por autor, descripción, fecha o importe..." onkeyup="renderPresupuestos()" style="flex: 1; min-width: 200px;">
             <select id="filtro-estado-presupuesto" onchange="renderPresupuestos()" style="min-width: 150px;">
                 <option value="">Todos los Estados</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Aprobado">Aprobado</option>
-                <option value="Rechazado">Rechazado</option>
             </select>
         </div>
         <div style="overflow-x: auto;">
@@ -1494,6 +1487,30 @@
                     <tbody id="tabla-estados-config"></tbody>
                 </table>
 
+                <!-- ESTADOS DE PRESUPUESTOS -->
+                <h4 style="margin-top: 25px;">Estados de Presupuestos y Colores</h4>
+                <div class="card-box" style="margin-top: 10px;">
+                    <form id="form-estado-pres" onsubmit="guardarEstadoPresConfig(event)" style="grid-template-columns: 1fr auto auto;">
+                        <div class="form-group">
+                            <label>Nombre del Estado</label>
+                            <input type="text" id="cfg-estado-pres-nombre" required placeholder="Ej: En revisión">
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="color" id="cfg-estado-pres-color" value="#3b82f6" style="height: 38px; padding: 2px;">
+                        </div>
+                        <div class="form-group" style="justify-content: flex-end;">
+                            <button type="submit" class="btn-action" style="height: 38px;">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+                <table style="margin-bottom: 25px;">
+                    <thead>
+                        <tr><th>Estado</th><th>Color</th><th>Muestra</th><th class="col-nowrap">Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla-estados-pres-config"></tbody>
+                </table>
+
                 <!-- TAREAS DE PROVEEDORES -->
                 <h4 style="margin-top: 25px;">Tareas de Proveedores (rubros)</h4>
                 <div class="card-box" style="margin-top: 10px;">
@@ -1872,6 +1889,17 @@
         let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
         let facundoData = JSON.parse(localStorage.getItem('facundoData')) || {};
 
+        // --- ESTADOS DE PRESUPUESTOS ---
+        const ESTADOS_PRES_DEFAULT = [
+            { nombre: 'Solicitado', color: '#3b82f6' },
+            { nombre: 'Pendiente',  color: '#f59e0b' },
+            { nombre: 'Aprobado',   color: '#10b981' },
+            { nombre: 'Rechazado',  color: '#ef4444' }
+        ];
+        let estadosPresupuestoConfig = JSON.parse(localStorage.getItem('estadosPresupuestoConfig')) || ESTADOS_PRES_DEFAULT.map(e => ({ ...e }));
+        // "Solicitado" es el estado que asigna el botón "Pedir presupuesto": siempre debe existir
+        if (!estadosPresupuestoConfig.some(e => e.nombre === 'Solicitado')) estadosPresupuestoConfig.unshift({ ...ESTADOS_PRES_DEFAULT[0] });
+
         // --- CRONOGRAMA ANUAL ---
         const MESES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         let cronogramaAnualData = JSON.parse(localStorage.getItem('cronogramaAnualData')) || {};   // { "2026-09": "texto" }
@@ -2063,7 +2091,7 @@
 
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
-            if (sectionId === 'presupuestos') renderPresupuestos();
+            if (sectionId === 'presupuestos') { populateEstadoPresSelects(); renderPresupuestos(); }
             if (sectionId === 'proveedores') { renderChecksTareasProveedor(); renderProveedores(); }
             if (sectionId === 'pedir-presupuesto') initPedirPresupuesto();
             if (sectionId === 'electrogeno') { CargarCamposElectrogeno(); renderElectrogenoNovedades(); }
@@ -2073,7 +2101,7 @@
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
             if (sectionId === 'cronograma-anual') renderCronogramaAnual();
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); cargarConfigProveedores(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); }
         }
 
         function guardarFacundoData(e) {
@@ -2631,12 +2659,6 @@
                 return coincideTexto && coincideEstado;
             });
 
-            const coloresEstadoPres = {
-                'Pendiente': 'var(--warning)',
-                'Aprobado': 'var(--success)',
-                'Rechazado': 'var(--danger)'
-            };
-
             for (let p of listaFiltrada) {
                 if (!p._cacheAdjuntos && p.adjuntos) {
                     p._cacheAdjuntos = [];
@@ -2646,15 +2668,15 @@
                     }
                 }
 
-                const colorBadge = coloresEstadoPres[p.estado] || '#64748b';
+                const colorBadge = getColorEstadoPres(p.estado);
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="col-nowrap">${p.fecha}</td>
                         <td><b>${p.autor}</b></td>
                         <td>${renderCellWithLupa(p.descripcion, 'Descripción del Presupuesto', 2)}</td>
-                        <td class="col-nowrap">$${p.importe.toFixed(2)}</td>
-                        <td class="col-nowrap"><span class="badge" style="background-color: ${colorBadge};">${p.estado}</span></td>
+                        <td class="col-nowrap">${(p.estado === 'Solicitado' && !p.importe) ? '<span style="color: var(--secondary);">—</span>' : '$' + p.importe.toFixed(2)}</td>
+                        <td class="col-nowrap"><span class="badge" style="background-color: ${colorBadge};">${escHtml(p.estado)}</span></td>
                         <td>${generarThumbnailsHTML(p._cacheAdjuntos || p.adjuntos)}</td>
                         <td class="col-nowrap">
                             <button class="btn-edit" title="Editar" onclick="editarPresupuesto(${p.id})">✏️</button>
@@ -2672,7 +2694,9 @@
             document.getElementById('pres-fecha').value = p.fecha;
             document.getElementById('pres-autor').value = p.autor;
             document.getElementById('pres-importe').value = p.importe;
-            document.getElementById('pres-estado').value = p.estado;
+            const selEstPres = document.getElementById('pres-estado');
+            if (![...selEstPres.options].some(o => o.value === p.estado)) selEstPres.add(new Option(p.estado, p.estado));   // estado que ya no está en Config
+            selEstPres.value = p.estado;
             document.getElementById('pres-descripcion').value = p.descripcion;
 
             if (!p._cacheAdjuntos && p.adjuntos) {
@@ -3625,6 +3649,7 @@
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
             }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
+            if (data.estadosPresupuestoConfig) { estadosPresupuestoConfig = data.estadosPresupuestoConfig; localStorage.setItem('estadosPresupuestoConfig', JSON.stringify(data.estadosPresupuestoConfig)); }
             if (data.cronogramaAnualData) { cronogramaAnualData = data.cronogramaAnualData; localStorage.setItem('cronogramaAnualData', JSON.stringify(data.cronogramaAnualData)); }
             if (data.proveedoresData) { proveedoresData = data.proveedoresData; localStorage.setItem('proveedoresData', JSON.stringify(data.proveedoresData)); }
             if (data.tareasProveedorConfig) { tareasProveedorConfig = data.tareasProveedorConfig; localStorage.setItem('tareasProveedorConfig', JSON.stringify(data.tareasProveedorConfig)); }
@@ -3918,7 +3943,26 @@
             e.preventDefault();
             const prov = proveedoresData.find(p => String(p.id) === document.getElementById('ppr-proveedor').value);
             if (!prov) return alert('Elegí un proveedor para enviar el WhatsApp.');
-            abrirWhatsApp(prov.whatsapp, armarMensajePedido());
+
+            const v = id => document.getElementById(id).value.trim();
+            const mensaje = armarMensajePedido();
+            if (!abrirWhatsApp(prov.whatsapp, mensaje)) return;   // número inválido: no se registra nada
+
+            // Queda registrado en el Listado de Presupuestos con estado "Solicitado"
+            const libre = v('ppr-texto-libre');
+            presupuestosData.push({
+                id: Date.now(),
+                fecha: v('ppr-fecha'),
+                autor: `${prov.nombre} ${prov.apellido}`,
+                importe: 0,
+                estado: 'Solicitado',
+                descripcion: `${v('ppr-tarea')} — ${v('ppr-descripcion')} (${v('ppr-categoria')})` + (libre ? `\nNota: ${libre}` : ''),
+                adjuntos: []
+            });
+            localStorage.setItem('presupuestosData', JSON.stringify(presupuestosData));
+
+            document.getElementById('form-pedir-presupuesto').reset();
+            showSection('presupuestos');
         }
 
 
@@ -4005,12 +4049,87 @@
             renderCronogramaAnual();
         }
 
+
+        // =====================================================================
+        //  ESTADOS DE PRESUPUESTOS (Configuración)
+        // =====================================================================
+        function getColorEstadoPres(nombre) {
+            const est = estadosPresupuestoConfig.find(e => e.nombre === nombre);
+            return est ? est.color : '#64748b';
+        }
+
+        function populateEstadoPresSelects() {
+            const selForm = document.getElementById('pres-estado');
+            const selFiltro = document.getElementById('filtro-estado-presupuesto');
+            if (selForm) {
+                const actual = selForm.value;
+                selForm.innerHTML = estadosPresupuestoConfig.map(e =>
+                    `<option value="${escHtml(e.nombre)}"${e.nombre === 'Pendiente' ? ' selected' : ''}>${escHtml(e.nombre)}</option>`).join('');
+                if (actual && estadosPresupuestoConfig.some(e => e.nombre === actual)) selForm.value = actual;
+            }
+            if (selFiltro) {
+                const actual = selFiltro.value;
+                selFiltro.innerHTML = '<option value="">Todos los Estados</option>' + estadosPresupuestoConfig.map(e =>
+                    `<option value="${escHtml(e.nombre)}">${escHtml(e.nombre)}</option>`).join('');
+                selFiltro.value = estadosPresupuestoConfig.some(e => e.nombre === actual) ? actual : '';
+            }
+        }
+
+        function renderEstadosPresConfig() {
+            const tbody = document.getElementById('tabla-estados-pres-config');
+            if (!tbody) return;
+            tbody.innerHTML = estadosPresupuestoConfig.map((est, idx) => `
+                <tr>
+                    <td><strong>${escHtml(est.nombre)}</strong></td>
+                    <td><input type="color" value="${est.color}" onchange="actualizarColorEstadoPres(${idx}, this.value)"></td>
+                    <td><span class="badge" style="background-color: ${est.color};">${escHtml(est.nombre)}</span></td>
+                    <td class="col-nowrap">${est.nombre === 'Solicitado'
+                        ? '<span title="Lo asigna el botón Pedir presupuesto" style="color: var(--secondary); font-size: 0.8rem;">🔒 fijo</span>'
+                        : `<button class="btn-delete" title="Eliminar" onclick="eliminarEstadoPresConfig(${idx})">❌</button>`}</td>
+                </tr>`).join('');
+            populateEstadoPresSelects();
+        }
+
+        function guardarEstadoPresConfig(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('cfg-estado-pres-nombre').value.trim();
+            const color = document.getElementById('cfg-estado-pres-color').value;
+            if (!nombre) return;
+            if (estadosPresupuestoConfig.some(x => x.nombre.toLowerCase() === nombre.toLowerCase())) {
+                return alert('Ese estado ya existe.');
+            }
+            estadosPresupuestoConfig.push({ nombre, color });
+            localStorage.setItem('estadosPresupuestoConfig', JSON.stringify(estadosPresupuestoConfig));
+            document.getElementById('form-estado-pres').reset();
+            renderEstadosPresConfig();
+        }
+
+        function actualizarColorEstadoPres(idx, nuevoColor) {
+            estadosPresupuestoConfig[idx].color = nuevoColor;
+            localStorage.setItem('estadosPresupuestoConfig', JSON.stringify(estadosPresupuestoConfig));
+            renderEstadosPresConfig();
+        }
+
+        function eliminarEstadoPresConfig(idx) {
+            const nombre = estadosPresupuestoConfig[idx].nombre;
+            if (nombre === 'Solicitado') return alert('"Solicitado" no se puede eliminar: lo usa el botón Pedir presupuesto.');
+            const enUso = presupuestosData.filter(p => p.estado === nombre).length;
+            const aviso = enUso
+                ? `El estado "${nombre}" lo tienen ${enUso} presupuesto(s), que quedarán con el color gris. ¿Eliminarlo?`
+                : `¿Eliminar el estado "${nombre}"?`;
+            if (!confirm(aviso)) return;
+            estadosPresupuestoConfig.splice(idx, 1);
+            localStorage.setItem('estadosPresupuestoConfig', JSON.stringify(estadosPresupuestoConfig));
+            renderEstadosPresConfig();
+        }
+
         window.onload = async function() {
             aplicarColorTema(appBgColor, appCardBgColor);
             await initDB();
             await cargarDatosDesdeGitHub();
             
             populateEstadoSelects();
+            populateEstadoPresSelects();
             populateCategoriaSelects();
             await renderNovedades();
             await renderPagos();
@@ -4127,6 +4246,7 @@
                     facundoData: JSON.parse(localStorage.getItem('facundoData')) || {},
                     categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
+                    estadosPresupuestoConfig: JSON.parse(localStorage.getItem('estadosPresupuestoConfig')) || ESTADOS_PRES_DEFAULT.map(e => ({ ...e })),
                     cronogramaAnualData: JSON.parse(localStorage.getItem('cronogramaAnualData')) || {},
                     proveedoresData: JSON.parse(localStorage.getItem('proveedoresData')) || [],
                     tareasProveedorConfig: JSON.parse(localStorage.getItem('tareasProveedorConfig')) || [...TAREAS_PROVEEDOR_DEFAULT],
