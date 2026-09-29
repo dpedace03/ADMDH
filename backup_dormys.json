@@ -842,6 +842,16 @@
       "descripcion": "Arreglo urgente",
       "observacion": "30 listones de 4 m Dos y medio rollos de membrana por espuma 1 rollo de ruberoy 70 m yesero Una cenefa de 4 metros 1 x 8 Machimbre media por cinco Clavo de distintas medidas Cal arena y cemento Total de materiales 1.520.000 $ Y de mano de obra Por bajar las Tejas cambiar cobertura y listones en mal estado por todo nuevo , cambiar tirantes y machimbre en mal estado poner cenefa de una por ocho y volver a colocar de vuelta las Tejas 1.970.000 $ Total del trabajo 3.590.000 $",
       "archivos": []
+    },
+    {
+      "id": 1790647466532,
+      "dormy": "19",
+      "fecha": "2026-09-28",
+      "estado": "En espera",
+      "monto": 864,
+      "descripcion": "Zingueria tira de DH del 19 al 27",
+      "observacion": "La zinguería por 2 dormis sería:\n \n5 tramos zinguería tipo americana \n11 soportes \nDos cierres \nDos boquetas 3 * 4 \nOcho caños tres por cuatro \nDos conectores 3 por 4 \nOcho granpas tres por cuatro \nUn sellador para zinguerías \nTornillos varios de distintas maneras \nTotal de materiales \n432.000\nMano de obra puedo recortar y colocar la singuería \n432.000\nTotal del trabajo \n864.000 \n",
+      "archivos": []
     }
   ],
   "pagos": [
@@ -874,5 +884,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T02:02:21.880Z"
+  "fechaExportacion": "2026-09-29T02:05:07.241Z"
 }
