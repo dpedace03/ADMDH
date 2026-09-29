@@ -460,7 +460,7 @@
       "presupuesto": ""
     },
     "41": {
-      "estado": "Reparación media",
+      "estado": "Reparación urgente",
       "presupuesto": "",
       "orden": "1",
       "fecha": "2026-09-28"
@@ -874,5 +874,5 @@
     }
   ],
   "textoImporteConfig": "Importe Total: $",
-  "fechaExportacion": "2026-09-29T01:53:29.971Z"
+  "fechaExportacion": "2026-09-29T02:02:21.880Z"
 }
