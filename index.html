@@ -162,6 +162,34 @@
         #btn-registro { background-color: var(--pastel-indigo); color: var(--pastel-indigo-dark); border-color: #c7d2fe; }
         #btn-cronograma { background-color: var(--pastel-cyan); color: var(--pastel-cyan-dark); border-color: #a5f3fc; }
         #btn-stats { background-color: var(--pastel-pink); color: var(--pastel-pink-dark); border-color: #fbcfe8; }
+        #btn-proveedores { background-color: var(--pastel-orange); color: #9a3412; border-color: #fed7aa; }
+
+        /* WhatsApp */
+        .btn-whatsapp {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background-color: #25D366; color: #fff; border: none; border-radius: 8px;
+            padding: 10px 18px; font-weight: bold; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 4px 0 #128C7E; position: relative; top: 0; transition: all 0.1s;
+        }
+        .btn-whatsapp:hover { background-color: #20bd5a; }
+        .btn-whatsapp:active { top: 3px; box-shadow: 0 1px 0 #128C7E; }
+        .btn-whatsapp svg { width: 22px; height: 22px; fill: currentColor; }
+        .link-whatsapp { display: inline-flex; align-items: center; color: #25D366; text-decoration: none; padding: 2px 4px; }
+        .link-whatsapp svg { width: 22px; height: 22px; fill: currentColor; }
+        .link-whatsapp:hover { transform: scale(1.15); }
+
+        /* Selector de tareas del proveedor (checkboxes) */
+        .chk-tareas { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chk-tareas label {
+            display: inline-flex; align-items: center; gap: 6px; margin: 0; cursor: pointer;
+            background: #f8fafc; border: 1px solid var(--border); border-radius: 20px;
+            padding: 6px 12px; font-size: 0.85rem; font-weight: 600;
+        }
+        .chk-tareas input[type=checkbox] { width: auto; margin: 0; padding: 0; }
+        .msg-preview {
+            white-space: pre-wrap; background: #f0fdf4; border: 1px dashed #86efac; border-radius: 8px;
+            padding: 10px 12px; font-size: 0.9rem; line-height: 1.45; color: #14532d;
+        }
 
         .section { display: none; background: var(--card-bg); padding: 16px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.08); transition: background-color 0.3s; }
         .section.active { display: block; }
@@ -429,6 +457,7 @@
         <button id="btn-herramientas" onclick="showSection('herramientas')">🧰 Herramientas</button>
         <button id="btn-registro" onclick="showSection('registro')">📝 Registro</button>
         <button id="btn-cronograma" onclick="showSection('cronograma')">📅 Cronograma</button>
+        <button id="btn-proveedores" onclick="showSection('proveedores')">👷 Proveedores</button>
         <button id="btn-stats" onclick="showSection('stats')">📊 Estadísticas</button>
     </nav>
 
@@ -455,6 +484,11 @@
             <button class="home-grid-btn" onclick="showSection('presupuestos')">
                 <span style="font-size: 2.2rem;">📄</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Presupuestos</span>
+            </button>
+
+            <button class="home-grid-btn" onclick="showSection('proveedores')">
+                <span style="font-size: 2.2rem;">👷</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Proveedores</span>
             </button>
 
             <button class="home-grid-btn" onclick="moduloProximamente('Informes')">
@@ -583,7 +617,10 @@
 
     <!-- PRESUPUESTOS -->
     <section id="sec-presupuestos" class="section">
-        <h3>📄 Gestión de Presupuestos</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+            <h3 style="margin: 0;">📄 Gestión de Presupuestos</h3>
+            <button type="button" class="btn-action" onclick="showSection('pedir-presupuesto')">📨 Pedir presupuesto</button>
+        </div>
         <div class="card-box">
             <form id="form-presupuesto" onsubmit="guardarPresupuesto(event)">
                 <input type="hidden" id="pres-id">
@@ -655,6 +692,116 @@
                 </thead>
                 <tbody id="tabla-presupuestos"></tbody>
             </table>
+        </div>
+    </section>
+
+    <!-- PROVEEDORES (ABM) -->
+    <section id="sec-proveedores" class="section">
+        <h3>👷 Gestión de Proveedores</h3>
+        <div class="card-box">
+            <form id="form-proveedor" onsubmit="guardarProveedor(event)">
+                <input type="hidden" id="prov-id">
+
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="prov-nombre" required placeholder="Ej: Juan">
+                </div>
+
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" id="prov-apellido" required placeholder="Ej: Pérez">
+                </div>
+
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" id="prov-dni" inputmode="numeric" required placeholder="Ej: 30123456">
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp</label>
+                    <input type="tel" id="prov-whatsapp" required placeholder="Ej: +54 9 11 1234-5678">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Tareas que realiza <span style="font-weight: normal; color: var(--secondary);">(se cargan en Configuración)</span></label>
+                    <div id="prov-tareas-checks" class="chk-tareas"></div>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-prov">Guardar Proveedor</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormProveedor()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Proveedores</h3>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="buscar-proveedor" placeholder="Buscar por nombre, apellido, DNI, WhatsApp o tarea..." onkeyup="renderProveedores()" style="flex: 1; min-width: 200px;">
+            <select id="filtro-tarea-proveedor" onchange="renderProveedores()" style="min-width: 170px;"></select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Apellido y Nombre</th>
+                        <th class="col-nowrap">DNI</th>
+                        <th class="col-nowrap">WhatsApp</th>
+                        <th>Tareas</th>
+                        <th class="col-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-proveedores"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- PEDIR PRESUPUESTO -->
+    <section id="sec-pedir-presupuesto" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+            <h3 style="margin: 0;">📨 Pedir presupuesto</h3>
+            <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="showSection('presupuestos')">← Volver a Presupuestos</button>
+        </div>
+        <div class="card-box">
+            <form id="form-pedir-presupuesto" onsubmit="enviarPedidoPresupuesto(event)" oninput="actualizarVistaPreviaPedido()">
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="ppr-fecha" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría de la tarea</label>
+                    <select id="ppr-categoria" required></select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Nombre de la tarea a presupuestar</label>
+                    <input type="text" id="ppr-tarea" required placeholder="Ej: Cambio de membrana en techo">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción de la tarea a presupuestar</label>
+                    <textarea id="ppr-descripcion" rows="3" required placeholder="Ej: Dormy 14. Retirar membrana vieja, colocar membrana nueva y sellar canaleta."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Proveedor (destinatario del WhatsApp)</label>
+                    <select id="ppr-proveedor" required></select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Texto libre adicional <span style="font-weight: normal; color: var(--secondary);">(opcional, se agrega al final del mensaje)</span></label>
+                    <textarea id="ppr-texto-libre" rows="2" placeholder="Ej: Necesitamos el presupuesto antes del viernes. Se puede visitar de lunes a miércoles."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Vista previa del mensaje</label>
+                    <div id="ppr-preview" class="msg-preview"></div>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-whatsapp" title="Enviar por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Enviar por WhatsApp</button>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -1282,6 +1429,40 @@
                     </thead>
                     <tbody id="tabla-estados-config"></tbody>
                 </table>
+
+                <!-- TAREAS DE PROVEEDORES -->
+                <h4 style="margin-top: 25px;">Tareas de Proveedores (rubros)</h4>
+                <div class="card-box" style="margin-top: 10px;">
+                    <form id="form-tarea-proveedor" onsubmit="guardarTareaProveedorConfig(event)" style="grid-template-columns: 1fr auto;">
+                        <div class="form-group">
+                            <label>Nombre de la tarea</label>
+                            <input type="text" id="cfg-tarea-prov-nombre" required placeholder="Ej: Albañil, Pintura, Jardinería, Techos">
+                        </div>
+                        <div class="form-group" style="justify-content: flex-end;">
+                            <button type="submit" class="btn-action" style="height: 38px;">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+                <table style="margin-bottom: 25px;">
+                    <thead>
+                        <tr><th>Tarea</th><th class="col-nowrap">Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla-tareas-proveedor-config"></tbody>
+                </table>
+
+                <!-- TEXTO DE WHATSAPP PARA PEDIR PRESUPUESTOS -->
+                <h4>Mensaje de WhatsApp para Pedir Presupuesto</h4>
+                <div class="card-box" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label>Texto prediseñado (encabezado del mensaje)</label>
+                        <textarea id="cfg-texto-whatsapp" rows="3"></textarea>
+                        <small style="color: var(--secondary); margin-top: 4px;">Usá <b>{proveedor}</b> para insertar el nombre del proveedor. Debajo de este texto se agregan solos la tarea, descripción, categoría, fecha y el texto libre.</small>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn-action" onclick="guardarTextoWhatsappConfig()">Guardar Mensaje</button>
+                        <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="restaurarTextoWhatsappConfig()">Restaurar original</button>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -1365,6 +1546,8 @@
             'herramientas': 'Gestión de Herramientas',
             'reparaciones': 'Administración de Techos - Dormys (1-99)',
             'presupuestos': 'Gestión de Presupuestos',
+            'pedir-presupuesto': 'Pedir Presupuesto',
+            'proveedores': 'Gestión de Proveedores',
             'novedades': 'Novedades Techos',
             'pagos': 'Pagos realizados',
             'electrogeno': 'Grupo Electrógeno',
@@ -1623,6 +1806,13 @@
         let cronogramaData = JSON.parse(localStorage.getItem('cronogramaData')) || [];
         let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
         let facundoData = JSON.parse(localStorage.getItem('facundoData')) || {};
+
+        // --- PROVEEDORES ---
+        const TEXTO_WHATSAPP_DEFAULT = 'Hola {proveedor}, ¿cómo estás? Te escribimos de Administración Dormys para pedirte un presupuesto del siguiente trabajo:';
+        const TAREAS_PROVEEDOR_DEFAULT = ['Albañil', 'Pintura', 'Jardinería', 'Techos', 'Electricidad', 'Plomería'];
+        let proveedoresData = JSON.parse(localStorage.getItem('proveedoresData')) || [];
+        let tareasProveedorConfig = JSON.parse(localStorage.getItem('tareasProveedorConfig')) || [...TAREAS_PROVEEDOR_DEFAULT];
+        let textoWhatsappPresupuesto = localStorage.getItem('textoWhatsappPresupuesto') || TEXTO_WHATSAPP_DEFAULT;
         
         let categoriasConfigRaw = JSON.parse(localStorage.getItem('categoriasConfig')) || [
             { nombre: 'Mantenimiento', color: '#3b82f6' },
@@ -1804,13 +1994,15 @@
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
             if (sectionId === 'presupuestos') renderPresupuestos();
+            if (sectionId === 'proveedores') { renderChecksTareasProveedor(); renderProveedores(); }
+            if (sectionId === 'pedir-presupuesto') initPedirPresupuesto();
             if (sectionId === 'electrogeno') { CargarCamposElectrogeno(); renderElectrogenoNovedades(); }
             if (sectionId === 'facundo') cargarDatosFacundoForm();
             if (sectionId === 'matafuegos') renderMatafuegos();
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); cargarConfigProveedores(); }
         }
 
         function guardarFacundoData(e) {
@@ -3362,10 +3554,299 @@
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
             }
             if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
+            if (data.proveedoresData) { proveedoresData = data.proveedoresData; localStorage.setItem('proveedoresData', JSON.stringify(data.proveedoresData)); }
+            if (data.tareasProveedorConfig) { tareasProveedorConfig = data.tareasProveedorConfig; localStorage.setItem('tareasProveedorConfig', JSON.stringify(data.tareasProveedorConfig)); }
+            if (data.textoWhatsappPresupuesto) { textoWhatsappPresupuesto = data.textoWhatsappPresupuesto; localStorage.setItem('textoWhatsappPresupuesto', data.textoWhatsappPresupuesto); }
             if (data.textoImporteConfig) { textoImporteConfig = data.textoImporteConfig; localStorage.setItem('textoImporteConfig', data.textoImporteConfig); }
             if (data.appBgColor) { appBgColor = data.appBgColor; localStorage.setItem('appBgColor', data.appBgColor); }
             if (data.appCardBgColor) { appCardBgColor = data.appCardBgColor; localStorage.setItem('appCardBgColor', data.appCardBgColor); }
             if (githubToken) localStorage.setItem('githubToken', githubToken);
+        }
+
+
+        // =====================================================================
+        //  PROVEEDORES + PEDIR PRESUPUESTO POR WHATSAPP
+        // =====================================================================
+        function escHtml(t) {
+            return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function hoyISO() {
+            const d = new Date();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${d.getFullYear()}-${mm}-${dd}`;
+        }
+
+        function fechaLarga(iso) {
+            if (!iso) return '';
+            const [y, m, d] = iso.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        function formatearDNI(dni) {
+            const n = String(dni || '').replace(/\D/g, '');
+            return n.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // Convierte un celular argentino a formato internacional para wa.me (54 9 + área + número)
+        function normalizarWhatsAppAR(numero) {
+            let d = String(numero || '').replace(/\D/g, '');
+            if (!d) return '';
+            if (d.startsWith('00')) d = d.slice(2);
+            if (d.startsWith('54')) {
+                d = d.slice(2);
+                if (d.startsWith('9')) d = d.slice(1);
+            }
+            if (d.startsWith('0')) d = d.slice(1);
+            // Quita el "15" de la forma local: código de área (2-4 dígitos) + 15 + número => 10 dígitos en total
+            if (d.length === 12) {
+                for (let p = 2; p <= 4; p++) {
+                    if (d.slice(p, p + 2) === '15') { d = d.slice(0, p) + d.slice(p + 2); break; }
+                }
+            }
+            if (d.length !== 10 || d.startsWith('15')) return '';   // sin código de área no es válido
+            return '549' + d;
+        }
+
+        function abrirWhatsApp(numero, texto) {
+            const intl = normalizarWhatsAppAR(numero);
+            if (!intl) {
+                alert('El número de WhatsApp no es válido. Ingresalo con código de área, por ejemplo: 11 1234-5678.');
+                return false;
+            }
+            let url = `https://wa.me/${intl}`;
+            if (texto) url += `?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
+            return true;
+        }
+
+        const WA_ICONO_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+
+        // ---------- Config: tareas de proveedores y texto de WhatsApp ----------
+        function cargarConfigProveedores() {
+            renderTareasProveedorConfig();
+            const ta = document.getElementById('cfg-texto-whatsapp');
+            if (ta) ta.value = textoWhatsappPresupuesto;
+        }
+
+        function renderTareasProveedorConfig() {
+            const tbody = document.getElementById('tabla-tareas-proveedor-config');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            tareasProveedorConfig.forEach((t, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${escHtml(t)}</strong></td>
+                        <td class="col-nowrap"><button class="btn-delete" title="Eliminar" onclick="eliminarTareaProveedorConfig(${idx})">❌</button></td>
+                    </tr>`;
+            });
+        }
+
+        function guardarTareaProveedorConfig(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('cfg-tarea-prov-nombre').value.trim();
+            if (!nombre) return;
+            if (tareasProveedorConfig.some(t => t.toLowerCase() === nombre.toLowerCase())) {
+                return alert('Esa tarea ya existe.');
+            }
+            tareasProveedorConfig.push(nombre);
+            localStorage.setItem('tareasProveedorConfig', JSON.stringify(tareasProveedorConfig));
+            document.getElementById('form-tarea-proveedor').reset();
+            renderTareasProveedorConfig();
+        }
+
+        function eliminarTareaProveedorConfig(idx) {
+            const nombre = tareasProveedorConfig[idx];
+            const enUso = proveedoresData.filter(p => (p.tareas || []).includes(nombre)).length;
+            const aviso = enUso
+                ? `La tarea "${nombre}" está asignada a ${enUso} proveedor(es) y se les quitará. ¿Eliminarla?`
+                : `¿Eliminar la tarea "${nombre}"?`;
+            if (!confirm(aviso)) return;
+            tareasProveedorConfig.splice(idx, 1);
+            proveedoresData.forEach(p => { p.tareas = (p.tareas || []).filter(t => t !== nombre); });
+            localStorage.setItem('tareasProveedorConfig', JSON.stringify(tareasProveedorConfig));
+            localStorage.setItem('proveedoresData', JSON.stringify(proveedoresData));
+            renderTareasProveedorConfig();
+        }
+
+        function guardarTextoWhatsappConfig() {
+            const val = document.getElementById('cfg-texto-whatsapp').value.trim();
+            if (!val) return alert('El mensaje no puede quedar vacío.');
+            textoWhatsappPresupuesto = val;
+            localStorage.setItem('textoWhatsappPresupuesto', val);
+            alert('Mensaje de WhatsApp guardado correctamente.');
+        }
+
+        function restaurarTextoWhatsappConfig() {
+            document.getElementById('cfg-texto-whatsapp').value = TEXTO_WHATSAPP_DEFAULT;
+        }
+
+        // ---------- ABM de proveedores ----------
+        function renderChecksTareasProveedor(seleccionadas = []) {
+            const cont = document.getElementById('prov-tareas-checks');
+            if (!cont) return;
+            if (tareasProveedorConfig.length === 0) {
+                cont.innerHTML = '<span style="color: var(--secondary); font-size: 0.85rem;">No hay tareas cargadas. Agregalas en Configuración.</span>';
+                return;
+            }
+            cont.innerHTML = tareasProveedorConfig.map((t, i) => `
+                <label><input type="checkbox" name="prov-tarea" value="${escHtml(t)}" ${seleccionadas.includes(t) ? 'checked' : ''}> ${escHtml(t)}</label>
+            `).join('');
+        }
+
+        function guardarProveedor(e) {
+            e.preventDefault();
+            const id = document.getElementById('prov-id').value;
+            const nombre = document.getElementById('prov-nombre').value.trim();
+            const apellido = document.getElementById('prov-apellido').value.trim();
+            const dni = document.getElementById('prov-dni').value.replace(/\D/g, '');
+            const whatsapp = document.getElementById('prov-whatsapp').value.trim();
+            const tareas = [...document.querySelectorAll('input[name="prov-tarea"]:checked')].map(c => c.value);
+
+            if (dni.length < 7 || dni.length > 8) return alert('El DNI debe tener 7 u 8 dígitos.');
+            if (!normalizarWhatsAppAR(whatsapp)) {
+                return alert('El número de WhatsApp no es válido. Ingresalo con código de área, por ejemplo: 11 1234-5678.');
+            }
+            if (proveedoresData.some(p => p.dni === dni && String(p.id) !== String(id))) {
+                return alert('Ya existe un proveedor con ese DNI.');
+            }
+
+            const item = { id: id ? parseInt(id) : Date.now(), nombre, apellido, dni, whatsapp, tareas };
+            if (id) {
+                const idx = proveedoresData.findIndex(p => p.id == id);
+                if (idx !== -1) proveedoresData[idx] = item; else proveedoresData.push(item);
+            } else {
+                proveedoresData.push(item);
+            }
+            localStorage.setItem('proveedoresData', JSON.stringify(proveedoresData));
+            resetFormProveedor();
+            renderProveedores();
+            alert('¡Proveedor guardado correctamente!');
+        }
+
+        function resetFormProveedor() {
+            document.getElementById('form-proveedor').reset();
+            document.getElementById('prov-id').value = '';
+            document.getElementById('btn-guardar-prov').innerText = 'Guardar Proveedor';
+            renderChecksTareasProveedor();
+        }
+
+        function editarProveedor(id) {
+            const p = proveedoresData.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('prov-id').value = p.id;
+            document.getElementById('prov-nombre').value = p.nombre;
+            document.getElementById('prov-apellido').value = p.apellido;
+            document.getElementById('prov-dni').value = p.dni;
+            document.getElementById('prov-whatsapp').value = p.whatsapp;
+            renderChecksTareasProveedor(p.tareas || []);
+            document.getElementById('btn-guardar-prov').innerText = 'Actualizar Proveedor';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarProveedor(id) {
+            const p = proveedoresData.find(x => x.id === id);
+            if (!p) return;
+            if (confirm(`¿Eliminar a ${p.apellido}, ${p.nombre}?`)) {
+                proveedoresData = proveedoresData.filter(x => x.id !== id);
+                localStorage.setItem('proveedoresData', JSON.stringify(proveedoresData));
+                renderProveedores();
+            }
+        }
+
+        function whatsappProveedor(id) {
+            const p = proveedoresData.find(x => x.id === id);
+            if (p) abrirWhatsApp(p.whatsapp, '');
+        }
+
+        function renderProveedores() {
+            const tbody = document.getElementById('tabla-proveedores');
+            if (!tbody) return;
+
+            const selFiltro = document.getElementById('filtro-tarea-proveedor');
+            const filtroActual = selFiltro.value;
+            selFiltro.innerHTML = '<option value="">Todas las tareas</option>' +
+                tareasProveedorConfig.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+            selFiltro.value = tareasProveedorConfig.includes(filtroActual) ? filtroActual : '';
+
+            const texto = (document.getElementById('buscar-proveedor').value || '').toLowerCase().trim();
+            const lista = proveedoresData
+                .filter(p => !selFiltro.value || (p.tareas || []).includes(selFiltro.value))
+                .filter(p => {
+                    if (!texto) return true;
+                    const hay = `${p.nombre} ${p.apellido} ${p.dni} ${formatearDNI(p.dni)} ${p.whatsapp} ${(p.tareas || []).join(' ')}`.toLowerCase();
+                    return hay.includes(texto);
+                })
+                .sort((a, b) => (a.apellido + a.nombre).localeCompare(b.apellido + b.nombre, 'es'));
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--secondary);">No hay proveedores para mostrar.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(p => `
+                <tr>
+                    <td><b>${escHtml(p.apellido)}</b>, ${escHtml(p.nombre)}</td>
+                    <td class="col-nowrap">${formatearDNI(p.dni)}</td>
+                    <td class="col-nowrap">${escHtml(p.whatsapp)}</td>
+                    <td>${(p.tareas || []).map(t => `<span class="badge" style="background-color: var(--primary-light); margin: 2px;">${escHtml(t)}</span>`).join('') || '<span style="color: var(--secondary);">—</span>'}</td>
+                    <td class="col-nowrap">
+                        <a href="#" class="link-whatsapp" title="Abrir chat de WhatsApp" onclick="whatsappProveedor(${p.id}); return false;">${WA_ICONO_SVG}</a>
+                        <button class="btn-edit" title="Editar" onclick="editarProveedor(${p.id})">✏️</button>
+                        <button class="btn-delete" title="Eliminar" onclick="eliminarProveedor(${p.id})">❌</button>
+                    </td>
+                </tr>`).join('');
+        }
+
+        // ---------- Pedir presupuesto ----------
+        function initPedirPresupuesto() {
+            document.getElementById('ppr-fecha').value = hoyISO();
+
+            const selCat = document.getElementById('ppr-categoria');
+            const catActual = selCat.value;
+            selCat.innerHTML = categoriasConfig.map(c => `<option value="${escHtml(c.nombre)}">${escHtml(c.nombre)}</option>`).join('');
+            if (catActual) selCat.value = catActual;
+
+            const selProv = document.getElementById('ppr-proveedor');
+            const provActual = selProv.value;
+            const ordenados = [...proveedoresData].sort((a, b) => (a.apellido + a.nombre).localeCompare(b.apellido + b.nombre, 'es'));
+            selProv.innerHTML = '<option value="">— Elegí un proveedor —</option>' + ordenados.map(p => {
+                const tareas = (p.tareas || []).length ? ` (${p.tareas.join(', ')})` : '';
+                return `<option value="${p.id}">${escHtml(p.apellido)}, ${escHtml(p.nombre)}${escHtml(tareas)}</option>`;
+            }).join('');
+            if (provActual) selProv.value = provActual;
+
+            actualizarVistaPreviaPedido();
+        }
+
+        function armarMensajePedido() {
+            const v = id => document.getElementById(id).value.trim();
+            const prov = proveedoresData.find(p => String(p.id) === document.getElementById('ppr-proveedor').value);
+            const intro = (textoWhatsappPresupuesto || TEXTO_WHATSAPP_DEFAULT).split('{proveedor}').join(prov ? prov.nombre : '');
+            const partes = [
+                intro.replace(/\s+,/g, ',').trim(),
+                '',
+                `📌 Tarea: ${v('ppr-tarea')}`,
+                `📝 Descripción: ${v('ppr-descripcion')}`,
+                `🏷️ Categoría: ${v('ppr-categoria')}`,
+                `📅 Fecha: ${fechaLarga(v('ppr-fecha'))}`
+            ];
+            const libre = v('ppr-texto-libre');
+            if (libre) partes.push('', libre);
+            return partes.join('\n');
+        }
+
+        function actualizarVistaPreviaPedido() {
+            const box = document.getElementById('ppr-preview');
+            if (box) box.textContent = armarMensajePedido();
+        }
+
+        function enviarPedidoPresupuesto(e) {
+            e.preventDefault();
+            const prov = proveedoresData.find(p => String(p.id) === document.getElementById('ppr-proveedor').value);
+            if (!prov) return alert('Elegí un proveedor para enviar el WhatsApp.');
+            abrirWhatsApp(prov.whatsapp, armarMensajePedido());
         }
 
         window.onload = async function() {
@@ -3490,6 +3971,9 @@
                     facundoData: JSON.parse(localStorage.getItem('facundoData')) || {},
                     categoriasConfig: JSON.parse(localStorage.getItem('categoriasConfig')) || [],
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
+                    proveedoresData: JSON.parse(localStorage.getItem('proveedoresData')) || [],
+                    tareasProveedorConfig: JSON.parse(localStorage.getItem('tareasProveedorConfig')) || [...TAREAS_PROVEEDOR_DEFAULT],
+                    textoWhatsappPresupuesto: localStorage.getItem('textoWhatsappPresupuesto') || TEXTO_WHATSAPP_DEFAULT,
                     textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
                     appBgColor: localStorage.getItem('appBgColor') || '#f1f5f9',
                     appCardBgColor: localStorage.getItem('appCardBgColor') || '#ffffff',
