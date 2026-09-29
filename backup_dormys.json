@@ -1066,8 +1066,18 @@
       "color": "#10b981"
     }
   ],
+  "proveedoresData": [],
+  "tareasProveedorConfig": [
+    "Albañil",
+    "Pintura",
+    "Jardinería",
+    "Techos",
+    "Electricidad",
+    "Plomería"
+  ],
+  "textoWhatsappPresupuesto": "Hola {proveedor}, ¿cómo estás? Te escribimos de Administración Dormys para pedirte un presupuesto del siguiente trabajo:",
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#ffffff",
-  "fechaExportacion": "2026-09-29T19:15:44.507Z"
+  "fechaExportacion": "2026-09-29T19:30:07.286Z"
 }
