@@ -342,6 +342,10 @@
                     <label>Estado</label>
                     <select id="nov-estado" required></select>
                 </div>
+                <div class="form-group">
+                    <label>Importe Total ($)</label>
+                    <input type="number" id="nov-monto" min="0" step="0.01" placeholder="Ej: 150000">
+                </div>
                 <div class="form-group full-width">
                     <label>Descripción</label>
                     <input type="text" id="nov-descripcion" required placeholder="Ej: Filtración en canaleta">
@@ -376,6 +380,7 @@
                         <th>Fecha</th>
                         <th>Dormy</th>
                         <th>Dueño</th>
+                        <th>Importe ($)</th>
                         <th>Descripción</th>
                         <th>Observación</th>
                         <th>Estado</th>
@@ -442,7 +447,7 @@
 
     <!-- ESTADÍSTICAS -->
     <section id="sec-stats" class="section">
-        <h3>Estadísticas del Estado de Techos</h3>
+        <h3>Estadísticas del Estado de Techos y Presupuestos</h3>
         <br>
         <div class="stats-grid">
             <div>
@@ -453,6 +458,21 @@
                 <h4 style="text-align: center;">Resumen General</h4>
                 <div id="resumen-stats" style="margin-top: 20px; line-height: 2;"></div>
             </div>
+        </div>
+
+        <br>
+        <h4 style="margin-top: 20px;">Totales de Presupuestos Pasados por Dormy</h4>
+        <div style="overflow-x: auto; max-height: 350px; margin-top: 10px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Dormy</th>
+                        <th>Dueño</th>
+                        <th>Total Presupuestado ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-stats-presupuestos"></tbody>
+            </table>
         </div>
     </section>
 
@@ -1306,10 +1326,10 @@
                     dormy: document.getElementById('nov-dormy').value,
                     fecha: document.getElementById('nov-fecha').value,
                     estado: document.getElementById('nov-estado').value,
+                    monto: parseFloat(document.getElementById('nov-monto').value) || 0,
                     descripcion: document.getElementById('nov-descripcion').value,
                     observacion: document.getElementById('nov-observacion').value,
-                    archivos: archivosLigeros,
-                    _cacheArchivos: [...tempFilesNov]
+                    archivos: archivosLigeros
                 };
 
                 if (id) {
@@ -1318,7 +1338,7 @@
                     else novedades.push(item);
                 } else { novedades.push(item); }
 
-                localStorage.setItem('novedades', JSON.stringify(novedades.map(n => ({ ...n, _cacheArchivos: undefined }))));
+                localStorage.setItem('novedades', JSON.stringify(novedades));
                 resetFormNovedad();
                 renderNovedades();
                 alert('Novedad guardada correctamente.');
@@ -1331,6 +1351,7 @@
         function resetFormNovedad() {
             document.getElementById('form-novedad').reset();
             document.getElementById('nov-id').value = '';
+            document.getElementById('nov-monto').value = '';
             document.getElementById('nov-archivos-existentes').innerHTML = '';
             document.getElementById('lbl-duenio').innerText = '';
             tempFilesNov = [];
@@ -1361,6 +1382,7 @@
                         <td>${n.fecha}</td>
                         <td><b>Dormy ${n.dormy}</b></td>
                         <td>${duenio}</td>
+                        <td>${n.monto ? '$' + n.monto.toFixed(2) : '-'}</td>
                         <td>${n.descripcion}</td>
                         <td>${n.observacion || '-'}</td>
                         <td><span class="badge" style="background-color: ${getColorDeEstado(n.estado)};">${n.estado}</span></td>
@@ -1381,6 +1403,7 @@
             document.getElementById('nov-dormy').value = nov.dormy;
             document.getElementById('nov-fecha').value = nov.fecha;
             document.getElementById('nov-estado').value = nov.estado;
+            document.getElementById('nov-monto').value = nov.monto || '';
             document.getElementById('nov-descripcion').value = nov.descripcion;
             document.getElementById('nov-observacion').value = nov.observacion;
 
@@ -1402,7 +1425,7 @@
         function eliminarNovedad(id) {
             if (confirm('¿Eliminar novedad?')) {
                 novedades = novedades.filter(n => n.id !== id);
-                localStorage.setItem('novedades', JSON.stringify(novedades.map(n => ({ ...n, _cacheArchivos: undefined }))));
+                localStorage.setItem('novedades', JSON.stringify(novedades));
                 renderNovedades();
             }
         }
@@ -1460,8 +1483,7 @@
                     responsable: responsable, 
                     monto: finalMonto, 
                     concepto: concepto,
-                    facturas: facturasLigeras,
-                    _cacheFacturas: [...tempFilesPago]
+                    facturas: facturasLigeras
                 };
 
                 if (id) {
@@ -1472,7 +1494,7 @@
                     pagos.push(item);
                 }
 
-                localStorage.setItem('pagos', JSON.stringify(pagos.map(p => ({ ...p, _cacheFacturas: undefined }))));
+                localStorage.setItem('pagos', JSON.stringify(pagos));
                 resetFormPago();
                 await renderPagos();
                 renderGrillaReparaciones();
@@ -1545,7 +1567,7 @@
         function eliminarPago(id) {
             if (confirm('¿Eliminar pago?')) {
                 pagos = pagos.filter(p => p.id !== id);
-                localStorage.setItem('pagos', JSON.stringify(pagos.map(p => ({ ...p, _cacheFacturas: undefined }))));
+                localStorage.setItem('pagos', JSON.stringify(pagos));
                 renderPagos();
             }
         }
@@ -1565,15 +1587,37 @@
             const conteoEstados = {};
             estadosRep.forEach(e => conteoEstados[e] = 0);
 
+            const presupuestosPorDormy = {};
+            for (let i = 1; i <= 99; i++) presupuestosPorDormy[i] = 0;
+
+            let totalPresupuestosGral = 0;
+
             for (let i = 1; i <= 99; i++) {
-                const item = reparacionesData[i] || { estado: 'Sin registrar' };
+                const item = reparacionesData[i] || { estado: 'Sin registrar', presupuesto: '' };
                 const est = item.estado || 'Sin registrar';
                 if (conteoEstados[est] !== undefined) {
                     conteoEstados[est]++;
                 } else {
                     conteoEstados[est] = 1;
                 }
+
+                if (item.presupuesto) {
+                    const val = parsearNumero(item.presupuesto);
+                    if (val !== null && val > 0) {
+                        presupuestosPorDormy[i] += val;
+                        totalPresupuestosGral += val;
+                    }
+                }
             }
+
+            novedades.forEach(n => {
+                const dormyId = parseInt(n.dormy);
+                const monto = parseFloat(n.monto) || 0;
+                if (dormyId >= 1 && dormyId <= 99 && monto > 0) {
+                    presupuestosPorDormy[dormyId] += monto;
+                    totalPresupuestosGral += monto;
+                }
+            });
 
             const labels = Object.keys(conteoEstados);
             const dataValues = Object.values(conteoEstados);
@@ -1585,10 +1629,27 @@
                 const color = coloresReparacion[l] || '#cbd5e1';
                 resumenHtml += `<p style="margin-bottom: 4px;"><strong>${l}:</strong> <span style="color:${color}; font-weight:bold;">${conteoEstados[l]}</span> (${((conteoEstados[l]/99)*100).toFixed(1)}%)</p>`;
             });
-            resumenHtml += `<hr style="margin: 12px 0;"><p><strong>Total Invertido en Pagos:</strong> $${totalPagos.toFixed(2)}</p>`;
+            resumenHtml += `<hr style="margin: 12px 0;"><p><strong>Total Presupuestado Acumulado:</strong> <span style="color:var(--primary); font-weight:bold;">$${totalPresupuestosGral.toFixed(2)}</span></p>`;
+            resumenHtml += `<p><strong>Total Invertido en Pagos:</strong> $${totalPagos.toFixed(2)}</p>`;
             resumenHtml += `<p><strong>Total Novedades Cargadas:</strong> ${novedades.length}</p>`;
             
             document.getElementById('resumen-stats').innerHTML = resumenHtml;
+
+            const tbodyPresupuestos = document.getElementById('tabla-stats-presupuestos');
+            if (tbodyPresupuestos) {
+                tbodyPresupuestos.innerHTML = '';
+                for (let i = 1; i <= 99; i++) {
+                    const duenio = dormysData[i] ? dormysData[i].duenio : 'Sin asignar';
+                    const totalDormy = presupuestosPorDormy[i];
+                    tbodyPresupuestos.innerHTML += `
+                        <tr>
+                            <td><b>Dormy ${i}</b></td>
+                            <td>${duenio}</td>
+                            <td>${totalDormy > 0 ? '<strong>$' + totalDormy.toFixed(2) + '</strong>' : '-'}</td>
+                        </tr>
+                    `;
+                }
+            }
 
             const ctx = document.getElementById('chartEstados').getContext('2d');
             if (chartInstance) chartInstance.destroy();
@@ -1627,27 +1688,53 @@
             }
         };
 
+        // --- EXPORTACIÓN E IMPORTACIÓN CORREGIDAS ---
+        function limpiarNovedadesParaBackup(novList) {
+            return novList.map(n => {
+                const copia = { ...n };
+                delete copia._cacheArchivos;
+                return copia;
+            });
+        }
+
+        function limpiarPagosParaBackup(pagosList) {
+            return pagosList.map(p => {
+                const copia = { ...p };
+                delete copia._cacheFacturas;
+                return copia;
+            });
+        }
+
         function exportarBackupJSON() {
             try {
+                const rawNov = JSON.parse(localStorage.getItem('novedades')) || [];
+                const rawPagos = JSON.parse(localStorage.getItem('pagos')) || [];
+
                 const dataToExport = {
                     dormysData: JSON.parse(localStorage.getItem('dormysData')) || {},
                     reparacionesData: JSON.parse(localStorage.getItem('reparacionesData')) || {},
-                    novedades: JSON.parse(localStorage.getItem('novedades')) || [],
-                    pagos: JSON.parse(localStorage.getItem('pagos')) || [],
+                    novedades: limpiarNovedadesParaBackup(rawNov),
+                    pagos: limpiarPagosParaBackup(rawPagos),
                     estadosConfig: JSON.parse(localStorage.getItem('estadosConfig')) || [],
                     textoImporteConfig: localStorage.getItem('textoImporteConfig') || 'Importe Total: $',
                     fechaExportacion: new Date().toISOString()
                 };
 
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
-                const downloadAnchor = document.createElement('a');
-                const fechaStr = new Date().toISOString().slice(0,10);
+                const jsonStr = JSON.stringify(dataToExport, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
                 
-                downloadAnchor.setAttribute("href", dataStr);
-                downloadAnchor.setAttribute("download", `backup_dormys_${fechaStr}.json`);
+                const fechaStr = new Date().toISOString().slice(0,10);
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.href = url;
+                downloadAnchor.download = `backup_dormys_${fechaStr}.json`;
                 document.body.appendChild(downloadAnchor);
                 downloadAnchor.click();
-                downloadAnchor.remove();
+                
+                setTimeout(() => {
+                    downloadAnchor.remove();
+                    URL.revokeObjectURL(url);
+                }, 100);
             } catch (err) {
                 alert("Error al exportar el backup: " + err.message);
             }
@@ -1669,7 +1756,11 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const importedData = JSON.parse(e.target.result);
+                    const contenido = e.target.result;
+                    const importedData = JSON.parse(contenido);
+
+                    // Limpiamos la memoria antes de ingresar los nuevos datos para evitar QuotaExceededError
+                    localStorage.clear();
 
                     if (importedData.dormysData) localStorage.setItem('dormysData', JSON.stringify(importedData.dormysData));
                     if (importedData.reparacionesData) localStorage.setItem('reparacionesData', JSON.stringify(importedData.reparacionesData));
@@ -1681,11 +1772,11 @@
                     alert('✅ ¡Backup importado correctamente! La aplicación se actualizará.');
                     location.reload();
                 } catch (err) {
-                    alert('❌ Error al leer el archivo JSON de backup. Formato no válido.');
+                    alert('❌ Error al leer o guardar el archivo JSON de backup.\n\nDetalle: ' + err.message);
                     console.error(err);
                 }
             };
-            reader.readAsText(file);
+            reader.readAsText(file, 'UTF-8');
         }
     </script>
 </body>
