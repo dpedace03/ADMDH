@@ -481,20 +481,30 @@
         <h3>Configuración General y Copia de Seguridad</h3>
         <br>
 
+        <!-- TOKEN DE GITHUB -->
+        <div class="card-box" style="border: 2px solid var(--primary-light); background: #f0f9ff; margin-bottom: 25px;">
+            <h4 style="color: var(--primary); margin-bottom: 8px;">🐙 Integración con GitHub (Sincronización Automática)</h4>
+            <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 12px;">Para permitir que la aplicación suba automáticamente el backup a GitHub (https://github.com/dpedace03/ADMDH), ingresa tu GitHub Personal Access Token (PAT) con permisos de escritura (repo / contents).</p>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="password" id="cfg-github-token" placeholder="ghp_xxxxxxxxxxxxxxxxx" style="flex: 1; min-width: 250px;">
+                <button type="button" class="btn-action" onclick="guardarGithubToken()">Guardar Token</button>
+            </div>
+        </div>
+
         <!-- COPIA DE SEGURIDAD (BACKUP) -->
         <div class="card-box" style="border: 2px dashed var(--primary-light); background: #eff6ff; margin-bottom: 25px;">
             <h4 style="color: var(--primary); margin-bottom: 8px;">💾 Copia de Seguridad (Backup JSON)</h4>
-            <p style="font-size: 0.9rem; color: var(--secondary); margin-bottom: 15px;">Exporta un respaldo con la información de la aplicación o restaura una copia de seguridad existente (.json).</p>
+            <p style="font-size: 0.9rem; color: var(--secondary); margin-bottom: 15px;">Exporta un respaldo actualizando GitHub / descargando el archivo JSON, o restaura una copia local manualmente.</p>
             
             <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
                 <button type="button" onclick="exportarBackupJSON()" class="btn-action" style="background-color: var(--success); padding: 10px 18px; font-size: 0.95rem;">
-                    ⬇️ Exportar Backup JSON
+                    ⬆️ Exportar Backup JSON (Subir / Descargar)
                 </button>
 
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 280px;">
                     <input type="file" id="import-json-file" accept=".json" style="padding: 6px;">
                     <button type="button" onclick="importarBackupJSON()" class="btn-action" style="background-color: var(--warning); padding: 10px 18px; font-size: 0.95rem; white-space: nowrap;">
-                        ⬆️ Importar Backup JSON
+                        📂 Importar Backup JSON Local
                     </button>
                 </div>
             </div>
@@ -592,6 +602,10 @@
     </div>
 
     <script>
+        const GITHUB_REPO_URL = "https://raw.githubusercontent.com/dpedace03/ADMDH/main/";
+        const GITHUB_CONTENTS_API = "https://api.github.com/repos/dpedace03/ADMDH/contents";
+        let githubToken = localStorage.getItem('githubToken') || '';
+
         let textoImporteConfig = localStorage.getItem('textoImporteConfig') || 'Importe Total: $';
 
         function guardarTextoImporteConfig() {
@@ -599,6 +613,13 @@
             textoImporteConfig = val;
             localStorage.setItem('textoImporteConfig', val);
             alert('Texto para extracción de importe guardado.');
+        }
+
+        function guardarGithubToken() {
+            const token = document.getElementById('cfg-github-token').value.trim();
+            githubToken = token;
+            localStorage.setItem('githubToken', token);
+            alert('Token de GitHub guardado correctamente.');
         }
 
         const DB_NAME = 'TechosDormysFilesDB';
@@ -819,8 +840,6 @@
         for (let i = 1; i <= 99; i++) {
             if (!dormysData[i]) dormysData[i] = { duenio: `Propietario ${i}` };
         }
-        localStorage.setItem('dormysData', JSON.stringify(dormysData));
-        localStorage.setItem('estadosConfig', JSON.stringify(estadosConfig));
 
         function moduloProximamente(nombre) {
             alert(`El módulo "${nombre}" estará disponible próximamente.`);
@@ -870,19 +889,16 @@
             renderGrillaReparaciones();
         }
 
-        const datosInicialesReparaciones = {"34": "Reparación leve", "35": "Reparación leve", "36": "Reparado", "37": "Reparado", "38": "Reparado", "39": "Reparación media", "40": "Reparación media", "41": "Reparación urgente", "42": "Reparado", "43": "Reparado", "44": "Reparación leve", "45": "Reparación leve", "46": "Reparación leve", "47": "Reparación leve", "48": "Reparación leve", "49": "Reparación urgente", "50": "Reparación urgente", "51": "Reparación urgente", "52": "Reparación media", "53": "Reparado", "54": "Reparado", "55": "Reparación urgente", "56": "Reparación media", "57": "Reparación urgente", "58": "Reparación media", "59": "Reparación leve", "60": "Reparación urgente", "99": "Reparado", "98": "Reparado", "97": "Reparado", "96": "Reparación leve", "95": "Reparado", "94": "Reparación media", "93": "Reparado", "92": "Reparado", "91": "Reparación urgente", "90": "Reparación urgente", "89": "Reparación urgente", "88": "Reparación urgente", "87": "Reparación media", "86": "Reparación urgente", "75": "Reparado", "76": "Reparación urgente", "77": "Reparación parcial", "78": "Reparación parcial", "79": "Reparación media", "80": "Reparado", "81": "Reparación leve", "82": "Reparación leve", "84": "Reparación leve", "85": "Reparación leve"};
-
         let reparacionesData = JSON.parse(localStorage.getItem('reparacionesData')) || null;
 
         if (!reparacionesData) {
             reparacionesData = {};
             for (let i = 1; i <= 99; i++) {
                 reparacionesData[i] = {
-                    estado: datosInicialesReparaciones[i] || 'Sin registrar',
+                    estado: 'Sin registrar',
                     presupuesto: ''
                 };
             }
-            localStorage.setItem('reparacionesData', JSON.stringify(reparacionesData));
         }
 
         const coloresReparacion = {
@@ -1676,19 +1692,73 @@
             });
         }
 
+        // --- CARGA AUTOMÁTICA DE BACKUP DESDE GITHUB SIN CACHÉ ---
+        async function cargarDatosDesdeGitHub() {
+            try {
+                // 1. Consultar el repositorio vía API de GitHub para localizar archivos de backup (backup*.json)
+                const apiRes = await fetch(GITHUB_CONTENTS_API + '?t=' + Date.now());
+                let targetFile = 'backup_dormys.json';
+                
+                if (apiRes.ok) {
+                    const files = await apiRes.json();
+                    // Buscar si existe algún archivo que empiece con 'backup' y termine en '.json'
+                    const backupFiles = files.filter(f => f.name.toLowerCase().startsWith('backup') && f.name.toLowerCase().endsWith('.json'));
+                    
+                    if (backupFiles.length > 0) {
+                        // Seleccionar el archivo de backup más reciente o modificado
+                        backupFiles.sort((a, b) => b.name.localeCompare(a.name));
+                        targetFile = backupFiles[0].name;
+                    }
+                }
+
+                // 2. Descargar el JSON omitiendo la caché del navegador/CDN
+                const downloadUrl = `${GITHUB_REPO_URL}${targetFile}?nocache=${Date.now()}`;
+                const res = await fetch(downloadUrl);
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    aplicarDatosBackup(data);
+                    console.log(`✅ Datos sincronizados automáticamente desde GitHub (${targetFile})`);
+                } else {
+                    console.warn(`No se pudo obtener ${targetFile} desde GitHub. Estado: ${res.status}`);
+                }
+            } catch (err) {
+                console.error('Error al sincronizar automáticamente desde GitHub:', err);
+            }
+        }
+
+        function aplicarDatosBackup(data) {
+            if (!data) return;
+            localStorage.clear();
+
+            if (data.dormysData) { dormysData = data.dormysData; localStorage.setItem('dormysData', JSON.stringify(data.dormysData)); }
+            if (data.reparacionesData) { reparacionesData = data.reparacionesData; localStorage.setItem('reparacionesData', JSON.stringify(data.reparacionesData)); }
+            if (data.novedades) { novedades = data.novedades; localStorage.setItem('novedades', JSON.stringify(data.novedades)); }
+            if (data.pagos) { pagos = data.pagos; localStorage.setItem('pagos', JSON.stringify(data.pagos)); }
+            if (data.estadosConfig) { estadosConfig = data.estadosConfig; localStorage.setItem('estadosConfig', JSON.stringify(data.estadosConfig)); }
+            if (data.textoImporteConfig) { textoImporteConfig = data.textoImporteConfig; localStorage.setItem('textoImporteConfig', data.textoImporteConfig); }
+            if (githubToken) localStorage.setItem('githubToken', githubToken);
+        }
+
         window.onload = async function() {
             await initDB();
+            // IMPORTACIÓN AUTOMÁTICA DESDE GITHUB AL INICIAR
+            await cargarDatosDesdeGitHub();
+            
             populateEstadoSelects();
             changeUser();
             await renderNovedades();
             await renderPagos();
             renderGrillaReparaciones();
+
             if (document.getElementById('cfg-texto-importe')) {
                 document.getElementById('cfg-texto-importe').value = textoImporteConfig;
             }
+            if (document.getElementById('cfg-github-token')) {
+                document.getElementById('cfg-github-token').value = githubToken;
+            }
         };
 
-        // --- EXPORTACIÓN E IMPORTACIÓN CORREGIDAS ---
         function limpiarNovedadesParaBackup(novList) {
             return novList.map(n => {
                 const copia = { ...n };
@@ -1705,7 +1775,52 @@
             });
         }
 
-        function exportarBackupJSON() {
+        async function subirBackupAGitHub(dataToExport) {
+            if (!githubToken) return false;
+            try {
+                const urlApiFile = `${GITHUB_CONTENTS_API}/backup_dormys.json`;
+                let sha = null;
+
+                const getRes = await fetch(urlApiFile, {
+                    headers: { 'Authorization': `token ${githubToken}` }
+                });
+                if (getRes.ok) {
+                    const fileInfo = await getRes.json();
+                    sha = fileInfo.sha;
+                }
+
+                const jsonStr = JSON.stringify(dataToExport, null, 2);
+                const bytes = new TextEncoder().encode(jsonStr);
+                let binary = '';
+                for (let i = 0; i < bytes.byteLength; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                const contentBase64 = btoa(binary);
+
+                const body = {
+                    message: `Backup automático - ${new Date().toLocaleString('es-AR')}`,
+                    content: contentBase64,
+                    branch: "main"
+                };
+                if (sha) body.sha = sha;
+
+                const putRes = await fetch(urlApiFile, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                return putRes.ok;
+            } catch (err) {
+                console.error("Error al subir a GitHub API:", err);
+                return false;
+            }
+        }
+
+        async function exportarBackupJSON() {
             try {
                 const rawNov = JSON.parse(localStorage.getItem('novedades')) || [];
                 const rawPagos = JSON.parse(localStorage.getItem('pagos')) || [];
@@ -1720,14 +1835,23 @@
                     fechaExportacion: new Date().toISOString()
                 };
 
+                if (githubToken) {
+                    const exito = await subirBackupAGitHub(dataToExport);
+                    if (exito) {
+                        alert("✅ ¡Backup actualizado y subido correctamente a GitHub!");
+                        return;
+                    } else {
+                        alert("⚠️ No se pudo actualizar en GitHub automáticamente. Se procederá con la descarga local.");
+                    }
+                }
+
                 const jsonStr = JSON.stringify(dataToExport, null, 2);
                 const blob = new Blob([jsonStr], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
-                const fechaStr = new Date().toISOString().slice(0,10);
                 const downloadAnchor = document.createElement('a');
                 downloadAnchor.href = url;
-                downloadAnchor.download = `backup_dormys_${fechaStr}.json`;
+                downloadAnchor.download = `backup_dormys.json`;
                 document.body.appendChild(downloadAnchor);
                 downloadAnchor.click();
                 
@@ -1759,15 +1883,7 @@
                     const contenido = e.target.result;
                     const importedData = JSON.parse(contenido);
 
-                    // Limpiamos la memoria antes de ingresar los nuevos datos para evitar QuotaExceededError
-                    localStorage.clear();
-
-                    if (importedData.dormysData) localStorage.setItem('dormysData', JSON.stringify(importedData.dormysData));
-                    if (importedData.reparacionesData) localStorage.setItem('reparacionesData', JSON.stringify(importedData.reparacionesData));
-                    if (importedData.novedades) localStorage.setItem('novedades', JSON.stringify(importedData.novedades));
-                    if (importedData.pagos) localStorage.setItem('pagos', JSON.stringify(importedData.pagos));
-                    if (importedData.estadosConfig) localStorage.setItem('estadosConfig', JSON.stringify(importedData.estadosConfig));
-                    if (importedData.textoImporteConfig) localStorage.setItem('textoImporteConfig', importedData.textoImporteConfig);
+                    aplicarDatosBackup(importedData);
 
                     alert('✅ ¡Backup importado correctamente! La aplicación se actualizará.');
                     location.reload();
