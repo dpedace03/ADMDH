@@ -102,6 +102,7 @@
 
         header h2 { font-size: 1.15rem; font-weight: 700; }
 
+        body.en-inicio nav { display: none; }   /* en la pantalla principal ya están los botones grandes */
         nav {
             display: flex;
             flex-wrap: wrap;
@@ -381,6 +382,58 @@
         .leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; }
         .leyenda-color { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
 
+        /* EMPLEADOS */
+        .emp-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+        .emp-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+        .emp-tab {
+            display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+            background: #f8fafc; color: var(--text); border: 1px solid var(--border); border-radius: 10px;
+            padding: 8px 12px; font-weight: 700; font-size: 0.85rem; white-space: nowrap;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.12); position: relative; top: 0; transition: all 0.1s;
+        }
+        .emp-tab .emp-ico { font-size: 1.15rem; }
+        .emp-tab:hover { background: #eff6ff; }
+        .emp-tab:active { top: 2px; box-shadow: 0 1px 0 rgba(0,0,0,0.12); }
+        .emp-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .emp-panel { display: none; }
+        .emp-panel.active { display: block; }
+        /* Ficha: 4 columnas -> Nombre | Apellido | DNI | Nacimiento  /  Domicilio | WhatsApp  /  Puesto laboral */
+        #form-ficha { grid-template-columns: repeat(4, 1fr); }
+        #form-ficha .col-2 { grid-column: span 2; }
+        /* Registro de tareas: Fecha a la izquierda, Tarea (descripción) a la derecha */
+        #form-tarea-emp { grid-template-columns: 200px 1fr; }
+        @media (max-width: 700px) {
+            #form-ficha { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            #form-ficha { grid-template-columns: 1fr; }
+            #form-ficha .col-2 { grid-column: 1 / -1; }
+            #form-tarea-emp { grid-template-columns: 1fr; }
+        }
+        .input-con-icono { display: flex; gap: 8px; align-items: stretch; }
+        .input-con-icono input { flex: 1; min-width: 0; }
+        .btn-icono-campo {
+            flex: 0 0 auto; width: 44px; font-size: 1.3rem; cursor: pointer; background: #f8fafc;
+            border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 3px 0 rgba(0,0,0,0.12);
+            position: relative; top: 0; transition: all 0.1s; padding: 0;
+        }
+        .btn-icono-campo:hover { background: #eff6ff; }
+        .btn-icono-campo:active { top: 2px; box-shadow: 0 1px 0 rgba(0,0,0,0.12); }
+        .btn-icono-campo.con-detalle { background: #dcfce7; border-color: #86efac; }
+        .emp-filtros { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 10px; }
+        .emp-filtros .form-group { margin: 0; flex: 0 0 160px; }
+        .emp-filtros > input[type=text] { width: auto; flex: 1 1 220px; }
+        .emp-filtros > select { width: auto; }
+        .emp-jornada h4 { margin-bottom: 10px; color: var(--primary); }
+        /* Jornada laboral: Inicio | Fin | [Guardar] [Borrar] en una sola fila */
+        .hor-form { grid-template-columns: 220px 220px auto; align-items: end; justify-content: start; }
+        .hor-acciones { display: flex; gap: 8px; align-items: flex-end; }
+        .hor-acciones .btn-submit, .hor-acciones .btn-reset-form { flex: 0 0 auto; height: 44px; padding: 0 22px; }
+        @media (max-width: 600px) {
+            .hor-form { grid-template-columns: 1fr 1fr; }
+            .hor-acciones { grid-column: 1 / -1; }
+        }
+
         /* CRONOGRAMA ANUAL */
         .anual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
         .mes-card {
@@ -461,7 +514,7 @@
         }
     </style>
 </head>
-<body>
+<body class="en-inicio">
 
     <header>
         <div class="header-title-container">
@@ -493,7 +546,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 900px; margin: 0 auto 30px auto;">
             <button class="home-grid-btn" onclick="showSection('facundo')">
                 <span style="font-size: 2.2rem;">👤</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Facundo</span>
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Empleados</span>
             </button>
 
             <button class="home-grid-btn" onclick="moduloProximamente('Casita')">
@@ -516,12 +569,12 @@
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Proveedores</span>
             </button>
 
-            <button class="home-grid-btn" onclick="moduloProximamente('Informes')">
+            <button class="home-grid-btn" onclick="showSection('stats')">
                 <span style="font-size: 2.2rem;">📊</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Informes</span>
             </button>
 
-            <button class="home-grid-btn" onclick="moduloProximamente('Gastos')">
+            <button class="home-grid-btn" onclick="showSection('pagos')">
                 <span style="font-size: 2.2rem;">💸</span>
                 <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Gastos</span>
             </button>
@@ -577,48 +630,266 @@
         </div>
     </section>
 
-    <!-- SECCIÓN FACUNDO -->
+    <!-- SECCIÓN EMPLEADOS (Facundo) -->
     <section id="sec-facundo" class="section">
-        <h3>👤 Información de Facundo</h3>
-        <div class="card-box" style="margin-top: 15px;">
-            <form id="form-facundo" onsubmit="guardarFacundoData(event)">
+        <div class="emp-header">
+            <h3 style="margin: 0;">👤 Información de Facundo</h3>
+            <div class="emp-tabs">
+                <button type="button" class="emp-tab active" data-tab="ficha" onclick="mostrarTabEmpleado('ficha')"><span class="emp-ico">🪪</span> Ficha</button>
+                <button type="button" class="emp-tab" data-tab="horarios" onclick="mostrarTabEmpleado('horarios')"><span class="emp-ico">🕒</span> Horarios</button>
+                <button type="button" class="emp-tab" data-tab="vacaciones" onclick="mostrarTabEmpleado('vacaciones')"><span class="emp-ico">🏖️</span> Vacaciones</button>
+                <button type="button" class="emp-tab" data-tab="tareas" onclick="mostrarTabEmpleado('tareas')"><span class="emp-ico">📝</span> Registro tareas</button>
+            </div>
+        </div>
+
+        <!-- FICHA -->
+        <div id="emp-panel-ficha" class="emp-panel active">
+            <div class="card-box">
+                <form id="form-ficha" onsubmit="guardarFicha(event)">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="ficha-nombre" required placeholder="Ej: Facundo">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido</label>
+                        <input type="text" id="ficha-apellido" required placeholder="Ej: Gómez">
+                    </div>
+                    <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" id="ficha-dni" inputmode="numeric" placeholder="Ej: 30123456">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de nacimiento</label>
+                        <input type="date" id="ficha-nacimiento">
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label>Domicilio</label>
+                        <input type="text" id="ficha-domicilio" placeholder="Ej: Calle 123, Cañuelas">
+                    </div>
+                    <div class="form-group col-2">
+                        <label>Número de WhatsApp</label>
+                        <input type="tel" id="ficha-whatsapp" placeholder="Ej: +54 9 11 1234-5678">
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label>Puesto laboral</label>
+                        <div class="input-con-icono">
+                            <input type="text" id="ficha-puesto" placeholder="Ej: Casero / Mantenimiento">
+                            <button type="button" class="btn-icono-campo" id="btn-puesto-detalle" title="Descripción detallada del puesto" onclick="abrirModalPuestoDetalle()">📝</button>
+                        </div>
+                    </div>
+
+                    <div class="btn-group-form">
+                        <button type="submit" class="btn-submit">Guardar Ficha</button>
+                        <button type="button" class="btn-reset-form" onclick="borrarFicha()">Borrar ficha</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- HORARIOS -->
+        <div id="emp-panel-horarios" class="emp-panel">
+            <div class="card-box emp-jornada" style="margin-top: 10px;">
+                <h4>Jornada laboral - Invierno</h4>
+                <form id="form-hor-invierno" class="hor-form" onsubmit="guardarHorario(event, 'invierno')">
+                    <div class="form-group">
+                        <label>Horario de Inicio de Trabajo</label>
+                        <input type="time" id="hor-invierno-inicio">
+                    </div>
+                    <div class="form-group">
+                        <label>Horario de Fin de Trabajo</label>
+                        <input type="time" id="hor-invierno-fin">
+                    </div>
+                    <div class="hor-acciones">
+                        <button type="submit" class="btn-submit">Guardar</button>
+                        <button type="button" class="btn-reset-form" onclick="borrarHorario('invierno')">Borrar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-box emp-jornada" style="margin-top: 10px;">
+                <h4>Jornada laboral - Verano</h4>
+                <form id="form-hor-verano" class="hor-form" onsubmit="guardarHorario(event, 'verano')">
+                    <div class="form-group">
+                        <label>Horario de Inicio de Trabajo</label>
+                        <input type="time" id="hor-verano-inicio">
+                    </div>
+                    <div class="form-group">
+                        <label>Horario de Fin de Trabajo</label>
+                        <input type="time" id="hor-verano-fin">
+                    </div>
+                    <div class="hor-acciones">
+                        <button type="submit" class="btn-submit">Guardar</button>
+                        <button type="button" class="btn-reset-form" onclick="borrarHorario('verano')">Borrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VACACIONES -->
+        <div id="emp-panel-vacaciones" class="emp-panel">
+            <div class="card-box">
+                <form id="form-vacacion" onsubmit="guardarVacacion(event)">
+                    <input type="hidden" id="vac-id">
+                    <div class="form-group">
+                        <label>Fecha de Inicio de Vacaciones</label>
+                        <input type="date" id="vac-inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Fin de Vacaciones</label>
+                        <input type="date" id="vac-fin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Año</label>
+                        <input type="number" id="vac-anio" min="2000" max="2100" step="1" placeholder="Ej: 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Días totales</label>
+                        <input type="number" id="vac-dias-totales" min="0" step="1" placeholder="Ej: 14">
+                    </div>
+                    <div class="form-group">
+                        <label>Días tomados</label>
+                        <input type="number" id="vac-dias-tomados" min="0" step="1" placeholder="Ej: 7">
+                    </div>
+                    <div class="btn-group-form">
+                        <button type="submit" class="btn-submit" id="btn-guardar-vac">Guardar Vacaciones</button>
+                        <button type="button" class="btn-reset-form" onclick="resetFormVacacion()">Nuevo</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3>Listado de Vacaciones</h3>
+            <div class="emp-filtros">
+                <input type="text" id="buscar-vacacion" placeholder="Buscar por año, fecha o días..." oninput="renderVacaciones()" style="flex: 1; min-width: 200px;">
+                <select id="filtro-anio-vacacion" onchange="renderVacaciones()" style="min-width: 140px;"></select>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-nowrap">Año</th>
+                            <th class="col-nowrap">Inicio</th>
+                            <th class="col-nowrap">Fin</th>
+                            <th class="col-nowrap">Días totales</th>
+                            <th class="col-nowrap">Días tomados</th>
+                            <th class="col-nowrap">Pendientes</th>
+                            <th class="col-nowrap">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-vacaciones"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REGISTRO DE TAREAS -->
+        <div id="emp-panel-tareas" class="emp-panel">
+            <div class="card-box">
+                <form id="form-tarea-emp" onsubmit="guardarTareaEmp(event)">
+                    <input type="hidden" id="temp-id">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="temp-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tarea (descripción)</label>
+                        <input type="text" id="temp-tarea" required placeholder="Ej: Poda de los árboles del frente">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Observación</label>
+                        <textarea id="temp-observacion" rows="2" placeholder="Ej: Falta terminar el sector del fondo"></textarea>
+                    </div>
+                    <div class="btn-group-form">
+                        <button type="submit" class="btn-submit" id="btn-guardar-temp">Guardar Tarea</button>
+                        <button type="button" class="btn-reset-form" onclick="resetFormTareaEmp()">Nuevo</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3>Listado de Tareas Realizadas</h3>
+            <div class="emp-filtros">
+                <input type="text" id="buscar-tarea-emp" placeholder="Buscar en tarea u observación..." oninput="renderTareasEmp()" style="flex: 1; min-width: 200px;">
                 <div class="form-group">
-                    <label>Horario de Inicio de Trabajo</label>
-                    <input type="time" id="facundo-hora-inicio">
+                    <label>Desde</label>
+                    <input type="date" id="filtro-tarea-desde" onchange="renderTareasEmp()">
                 </div>
-
                 <div class="form-group">
-                    <label>Horario de Fin de Trabajo</label>
-                    <input type="time" id="facundo-hora-fin">
+                    <label>Hasta</label>
+                    <input type="date" id="filtro-tarea-hasta" onchange="renderTareasEmp()">
                 </div>
-
-                <div class="form-group">
-                    <label>Fecha de Inicio de Vacaciones</label>
-                    <input type="date" id="facundo-vac-inicio">
-                </div>
-
-                <div class="form-group">
-                    <label>Fecha de Fin de Vacaciones</label>
-                    <input type="date" id="facundo-vac-fin">
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Número de WhatsApp</label>
-                    <input type="tel" id="facundo-whatsapp" placeholder="Ej: +54 9 11 1234-5678">
-                </div>
-
-                <div class="btn-group-form">
-                    <button type="submit" class="btn-submit">Guardar Datos de Facundo</button>
-                </div>
-            </form>
+                <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.85rem;" onclick="limpiarFiltrosTareaEmp()">Limpiar filtros</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-nowrap">Fecha</th>
+                            <th>Tarea</th>
+                            <th>Observación</th>
+                            <th class="col-nowrap">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-tareas-emp"></tbody>
+                </table>
+            </div>
         </div>
     </section>
 
     <!-- SECCIÓN HERRAMIENTAS -->
     <section id="sec-herramientas" class="section">
-        <h3>🧰 Módulo de Herramientas</h3>
-        <div class="card-box" style="margin-top: 15px;">
-            <p style="color: var(--secondary);">Gestión y control del inventario de herramientas de mantenimiento.</p>
+        <h3>🧰 Gestión de Herramientas</h3>
+        <div class="card-box" style="margin-top: 10px;">
+            <form id="form-herramienta" onsubmit="guardarHerramienta(event)">
+                <input type="hidden" id="herr-id">
+
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="herr-nombre" required placeholder="Ej: Amoladora angular">
+                </div>
+
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select id="herr-estado" required>
+                        <option value="Activa" selected>Activa</option>
+                        <option value="En reparación">En reparación</option>
+                        <option value="En desuso">En desuso</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción</label>
+                    <textarea id="herr-descripcion" rows="3" placeholder="Ej: Bosch 115 mm, con 2 discos de repuesto. Guardada en el depósito."></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-herr">Guardar Herramienta</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormHerramienta()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Herramientas</h3>
+        <div class="emp-filtros">
+            <input type="text" id="buscar-herramienta" placeholder="Buscar por nombre o descripción..." oninput="renderHerramientas()">
+            <select id="filtro-estado-herramienta" onchange="renderHerramientas()" style="min-width: 170px;">
+                <option value="">Todos los estados</option>
+                <option value="Activa">Activa</option>
+                <option value="En reparación">En reparación</option>
+                <option value="En desuso">En desuso</option>
+            </select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th class="col-nowrap">Estado</th>
+                        <th class="col-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-herramientas"></tbody>
+            </table>
         </div>
     </section>
 
@@ -758,8 +1029,8 @@
         </div>
 
         <h3>Listado de Proveedores</h3>
-        <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="buscar-proveedor" placeholder="Buscar por nombre, apellido, DNI, WhatsApp o tarea..." onkeyup="renderProveedores()" style="flex: 1; min-width: 200px;">
+        <div class="emp-filtros">
+            <input type="text" id="buscar-proveedor" placeholder="Buscar por nombre, apellido, DNI, WhatsApp o tarea..." oninput="renderProveedores()" style="flex: 1; min-width: 200px;">
             <select id="filtro-tarea-proveedor" onchange="renderProveedores()" style="min-width: 170px;"></select>
         </div>
         <div style="overflow-x: auto;">
@@ -1327,6 +1598,25 @@
         <div class="anual-grid" id="grilla-anual"></div>
     </section>
 
+    <!-- MODAL: DESCRIPCIÓN DETALLADA DEL PUESTO LABORAL -->
+    <div id="modalPuestoDetalle" class="modal">
+        <div class="modal-content-wrapper" style="background: white; padding: 20px; border-radius: 12px; max-width: 560px; width: 90%;">
+            <span class="close-modal" onclick="cerrarModalPuestoDetalle()" style="color: #333; top: 10px; right: 15px;">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 4px;">📝 Descripción del puesto laboral</h3>
+            <p id="modal-puesto-nombre" style="color: var(--secondary); font-size: 0.9rem; margin-bottom: 12px;"></p>
+            <form onsubmit="guardarPuestoDetalle(event)" style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="form-group">
+                    <label>Descripción detallada</label>
+                    <textarea id="modal-puesto-texto" rows="10" placeholder="Ej: Tareas a cargo, responsabilidades, días y zonas de trabajo, herramientas que usa, a quién reporta..."></textarea>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="submit" class="btn-submit" style="flex: 1;">Guardar</button>
+                    <button type="button" class="btn-reset-form" onclick="borrarPuestoDetalle()">Borrar texto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: TEXTO DE UN MES (CRONOGRAMA ANUAL) -->
     <div id="modalMesAnual" class="modal">
         <div class="modal-content-wrapper" style="background: white; padding: 20px; border-radius: 12px; max-width: 480px; width: 90%;">
@@ -1883,11 +2173,35 @@
         let electrogenoData = JSON.parse(localStorage.getItem('electrogenoData')) || [];
         let electrogenoNovedades = JSON.parse(localStorage.getItem('electrogenoNovedades')) || [];
         let matafuegosData = JSON.parse(localStorage.getItem('matafuegosData')) || [];
+        let herramientasData = JSON.parse(localStorage.getItem('herramientasData')) || [];   // [{id, nombre, descripcion, estado}]
+        const COLORES_ESTADO_HERRAMIENTA = { 'Activa': '#10b981', 'En reparación': '#f59e0b', 'En desuso': '#64748b' };
         let tareasData = JSON.parse(localStorage.getItem('tareasData')) || [];
         let registrosData = JSON.parse(localStorage.getItem('registrosData')) || [];
         let cronogramaData = JSON.parse(localStorage.getItem('cronogramaData')) || [];
         let presupuestosData = JSON.parse(localStorage.getItem('presupuestosData')) || [];
-        let facundoData = JSON.parse(localStorage.getItem('facundoData')) || {};
+        // Datos del empleado: { ficha, horarios:{invierno,verano}, vacaciones:[], tareas:[] }
+        // Acepta también el formato anterior (horaInicio, horaFin, vacInicio, vacFin, whatsapp) y lo migra.
+        function normalizarFacundoData(d) {
+            d = d || {};
+            const n = {
+                ficha: { nombre: '', apellido: '', dni: '', nacimiento: '', domicilio: '', whatsapp: '', puesto: '', puestoDescripcion: '', ...(d.ficha || {}) },
+                horarios: {
+                    invierno: { inicio: '', fin: '', ...((d.horarios || {}).invierno || {}) },
+                    verano:   { inicio: '', fin: '', ...((d.horarios || {}).verano || {}) }
+                },
+                vacaciones: Array.isArray(d.vacaciones) ? d.vacaciones : [],
+                tareas: Array.isArray(d.tareas) ? d.tareas : []
+            };
+            if (!d.ficha && d.whatsapp) n.ficha.whatsapp = d.whatsapp;
+            if (!d.horarios && (d.horaInicio || d.horaFin)) n.horarios.invierno = { inicio: d.horaInicio || '', fin: d.horaFin || '' };
+            if (!d.vacaciones && (d.vacInicio || d.vacFin)) {
+                n.vacaciones.push({ id: Date.now(), inicio: d.vacInicio || '', fin: d.vacFin || '',
+                    anio: parseInt((d.vacInicio || d.vacFin).slice(0, 4)) || null, diasTotales: null, diasTomados: null });
+            }
+            return n;
+        }
+        let facundoData = normalizarFacundoData(JSON.parse(localStorage.getItem('facundoData')));
+        localStorage.setItem('facundoData', JSON.stringify(facundoData));
 
         // --- ESTADOS DE PRESUPUESTOS ---
         const ESTADOS_PRES_DEFAULT = [
@@ -2081,6 +2395,7 @@
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(`sec-${sectionId}`).classList.add('active');
+            document.body.classList.toggle('en-inicio', sectionId === 'admin-dormys');
             const btnNav = document.getElementById(`btn-${sectionId}`);
             if (btnNav) btnNav.classList.add('active');
 
@@ -2095,8 +2410,9 @@
             if (sectionId === 'proveedores') { renderChecksTareasProveedor(); renderProveedores(); }
             if (sectionId === 'pedir-presupuesto') initPedirPresupuesto();
             if (sectionId === 'electrogeno') { CargarCamposElectrogeno(); renderElectrogenoNovedades(); }
-            if (sectionId === 'facundo') cargarDatosFacundoForm();
+            if (sectionId === 'facundo') initEmpleado();
             if (sectionId === 'matafuegos') renderMatafuegos();
+            if (sectionId === 'herramientas') { resetFormHerramienta(); renderHerramientas(); }
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
@@ -2104,25 +2420,316 @@
             if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); }
         }
 
-        function guardarFacundoData(e) {
-            e.preventDefault();
-            facundoData = {
-                horaInicio: document.getElementById('facundo-hora-inicio').value,
-                horaFin: document.getElementById('facundo-hora-fin').value,
-                vacInicio: document.getElementById('facundo-vac-inicio').value,
-                vacFin: document.getElementById('facundo-vac-fin').value,
-                whatsapp: document.getElementById('facundo-whatsapp').value
-            };
+        // =====================================================================
+        //  EMPLEADOS (Facundo): Ficha, Horarios, Vacaciones y Registro de tareas
+        // =====================================================================
+        function guardarFacundoLS() {
             localStorage.setItem('facundoData', JSON.stringify(facundoData));
-            alert('¡Datos de Facundo guardados correctamente!');
         }
 
-        function cargarDatosFacundoForm() {
-            document.getElementById('facundo-hora-inicio').value = facundoData.horaInicio || '';
-            document.getElementById('facundo-hora-fin').value = facundoData.horaFin || '';
-            document.getElementById('facundo-vac-inicio').value = facundoData.vacInicio || '';
-            document.getElementById('facundo-vac-fin').value = facundoData.vacFin || '';
-            document.getElementById('facundo-whatsapp').value = facundoData.whatsapp || '';
+        function initEmpleado() {
+            cargarFicha();
+            cargarHorarios();
+            resetFormVacacion();
+            resetFormTareaEmp();
+            mostrarTabEmpleado('ficha');
+        }
+
+        function mostrarTabEmpleado(tab) {
+            document.querySelectorAll('#sec-facundo .emp-panel').forEach(p => p.classList.toggle('active', p.id === 'emp-panel-' + tab));
+            document.querySelectorAll('#sec-facundo .emp-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            if (tab === 'vacaciones') renderVacaciones();
+            if (tab === 'tareas') renderTareasEmp();
+        }
+
+        // ---------- Ficha ----------
+        function cargarFicha() {
+            const f = facundoData.ficha;
+            document.getElementById('ficha-nombre').value = f.nombre || '';
+            document.getElementById('ficha-apellido').value = f.apellido || '';
+            document.getElementById('ficha-dni').value = f.dni || '';
+            document.getElementById('ficha-nacimiento').value = f.nacimiento || '';
+            document.getElementById('ficha-domicilio').value = f.domicilio || '';
+            document.getElementById('ficha-whatsapp').value = f.whatsapp || '';
+            document.getElementById('ficha-puesto').value = f.puesto || '';
+            marcarBotonPuestoDetalle();
+        }
+
+        // ---------- Descripción detallada del puesto ----------
+        function marcarBotonPuestoDetalle() {
+            const btn = document.getElementById('btn-puesto-detalle');
+            if (btn) btn.classList.toggle('con-detalle', !!(facundoData.ficha.puestoDescripcion || '').trim());
+        }
+
+        function abrirModalPuestoDetalle() {
+            const puesto = document.getElementById('ficha-puesto').value.trim();
+            document.getElementById('modal-puesto-nombre').innerText = puesto ? `Puesto: ${puesto}` : 'Puesto sin nombre cargado';
+            document.getElementById('modal-puesto-texto').value = facundoData.ficha.puestoDescripcion || '';
+            document.getElementById('modalPuestoDetalle').style.display = 'flex';
+            document.getElementById('modal-puesto-texto').focus();
+        }
+
+        function cerrarModalPuestoDetalle() {
+            document.getElementById('modalPuestoDetalle').style.display = 'none';
+        }
+
+        function guardarPuestoDetalle(e) {
+            e.preventDefault();
+            facundoData.ficha.puestoDescripcion = document.getElementById('modal-puesto-texto').value.trim();
+            guardarFacundoLS();
+            marcarBotonPuestoDetalle();
+            cerrarModalPuestoDetalle();
+        }
+
+        function borrarPuestoDetalle() {
+            if (!(facundoData.ficha.puestoDescripcion || '').trim()) return cerrarModalPuestoDetalle();
+            if (!confirm('¿Borrar la descripción del puesto?')) return;
+            facundoData.ficha.puestoDescripcion = '';
+            guardarFacundoLS();
+            marcarBotonPuestoDetalle();
+            cerrarModalPuestoDetalle();
+        }
+
+        function guardarFicha(e) {
+            e.preventDefault();
+            const whatsapp = document.getElementById('ficha-whatsapp').value.trim();
+            const dni = document.getElementById('ficha-dni').value.replace(/\D/g, '');
+            if (dni && (dni.length < 7 || dni.length > 8)) return alert('El DNI debe tener 7 u 8 dígitos.');
+            if (whatsapp && !normalizarWhatsAppAR(whatsapp)) {
+                return alert('El número de WhatsApp no es válido. Ingresalo con código de área, por ejemplo: 11 1234-5678.');
+            }
+            facundoData.ficha = {
+                ...facundoData.ficha,   // conserva la descripción detallada del puesto, que se edita aparte
+                nombre: document.getElementById('ficha-nombre').value.trim(),
+                apellido: document.getElementById('ficha-apellido').value.trim(),
+                dni,
+                nacimiento: document.getElementById('ficha-nacimiento').value,
+                domicilio: document.getElementById('ficha-domicilio').value.trim(),
+                whatsapp,
+                puesto: document.getElementById('ficha-puesto').value.trim()
+            };
+            guardarFacundoLS();
+            alert('¡Ficha guardada correctamente!');
+        }
+
+        function borrarFicha() {
+            if (!confirm('¿Borrar todos los datos de la ficha?')) return;
+            facundoData.ficha = { nombre: '', apellido: '', dni: '', nacimiento: '', domicilio: '', whatsapp: '', puesto: '', puestoDescripcion: '' };
+            guardarFacundoLS();
+            cargarFicha();
+        }
+
+        // ---------- Horarios (Invierno / Verano) ----------
+        function cargarHorarios() {
+            ['invierno', 'verano'].forEach(k => {
+                document.getElementById(`hor-${k}-inicio`).value = facundoData.horarios[k].inicio || '';
+                document.getElementById(`hor-${k}-fin`).value = facundoData.horarios[k].fin || '';
+            });
+        }
+
+        function guardarHorario(e, temporada) {
+            e.preventDefault();
+            facundoData.horarios[temporada] = {
+                inicio: document.getElementById(`hor-${temporada}-inicio`).value,
+                fin: document.getElementById(`hor-${temporada}-fin`).value
+            };
+            guardarFacundoLS();
+            alert(`¡Jornada laboral de ${temporada} guardada correctamente!`);
+        }
+
+        function borrarHorario(temporada) {
+            if (!confirm(`¿Borrar la jornada laboral de ${temporada}?`)) return;
+            facundoData.horarios[temporada] = { inicio: '', fin: '' };
+            guardarFacundoLS();
+            cargarHorarios();
+        }
+
+        // ---------- Vacaciones ----------
+        function resetFormVacacion() {
+            document.getElementById('form-vacacion').reset();
+            document.getElementById('vac-id').value = '';
+            document.getElementById('btn-guardar-vac').innerText = 'Guardar Vacaciones';
+        }
+
+        function numOrNull(id) {
+            const v = document.getElementById(id).value;
+            return v === '' ? null : parseInt(v);
+        }
+
+        function guardarVacacion(e) {
+            e.preventDefault();
+            const id = document.getElementById('vac-id').value;
+            const inicio = document.getElementById('vac-inicio').value;
+            const fin = document.getElementById('vac-fin').value;
+            const diasTotales = numOrNull('vac-dias-totales');
+            const diasTomados = numOrNull('vac-dias-tomados');
+            let anio = numOrNull('vac-anio');
+
+            if (fin < inicio) return alert('La fecha de fin no puede ser anterior a la de inicio.');
+            if (diasTotales !== null && diasTomados !== null && diasTomados > diasTotales) {
+                return alert('Los días tomados no pueden superar a los días totales.');
+            }
+            if (anio === null) anio = parseInt(inicio.slice(0, 4));
+
+            const item = { id: id ? parseInt(id) : Date.now(), inicio, fin, anio, diasTotales, diasTomados };
+            const idx = id ? facundoData.vacaciones.findIndex(v => v.id == id) : -1;
+            if (idx !== -1) facundoData.vacaciones[idx] = item; else facundoData.vacaciones.push(item);
+            guardarFacundoLS();
+            resetFormVacacion();
+            renderVacaciones();
+        }
+
+        function editarVacacion(id) {
+            const v = facundoData.vacaciones.find(x => x.id === id);
+            if (!v) return;
+            document.getElementById('vac-id').value = v.id;
+            document.getElementById('vac-inicio').value = v.inicio || '';
+            document.getElementById('vac-fin').value = v.fin || '';
+            document.getElementById('vac-anio').value = v.anio ?? '';
+            document.getElementById('vac-dias-totales').value = v.diasTotales ?? '';
+            document.getElementById('vac-dias-tomados').value = v.diasTomados ?? '';
+            document.getElementById('btn-guardar-vac').innerText = 'Actualizar Vacaciones';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarVacacion(id) {
+            if (!confirm('¿Eliminar este período de vacaciones?')) return;
+            facundoData.vacaciones = facundoData.vacaciones.filter(v => v.id !== id);
+            guardarFacundoLS();
+            renderVacaciones();
+        }
+
+        function renderVacaciones() {
+            const tbody = document.getElementById('tabla-vacaciones');
+            if (!tbody) return;
+
+            const selAnio = document.getElementById('filtro-anio-vacacion');
+            const anioActual = selAnio.value;
+            const anios = [...new Set(facundoData.vacaciones.map(v => v.anio).filter(a => a != null))].sort((a, b) => b - a);
+            selAnio.innerHTML = '<option value="">Todos los años</option>' + anios.map(a => `<option value="${a}">${a}</option>`).join('');
+            selAnio.value = anios.map(String).includes(anioActual) ? anioActual : '';
+
+            const texto = (document.getElementById('buscar-vacacion').value || '').toLowerCase().trim();
+            const lista = facundoData.vacaciones
+                .filter(v => !selAnio.value || String(v.anio) === selAnio.value)
+                .filter(v => {
+                    if (!texto) return true;
+                    const hay = `${v.anio ?? ''} ${v.inicio} ${fechaLarga(v.inicio)} ${v.fin} ${fechaLarga(v.fin)} ${v.diasTotales ?? ''} ${v.diasTomados ?? ''}`.toLowerCase();
+                    return hay.includes(texto);
+                })
+                .sort((a, b) => (b.inicio || '').localeCompare(a.inicio || ''));
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--secondary);">No hay vacaciones para mostrar.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(v => {
+                const pend = (v.diasTotales != null) ? v.diasTotales - (v.diasTomados || 0) : null;
+                return `
+                <tr>
+                    <td class="col-nowrap"><b>${v.anio ?? '—'}</b></td>
+                    <td class="col-nowrap">${fechaLarga(v.inicio)}</td>
+                    <td class="col-nowrap">${fechaLarga(v.fin)}</td>
+                    <td class="col-nowrap">${v.diasTotales ?? '—'}</td>
+                    <td class="col-nowrap">${v.diasTomados ?? '—'}</td>
+                    <td class="col-nowrap">${pend === null ? '—' : pend}</td>
+                    <td class="col-nowrap">
+                        <button class="btn-edit" title="Editar" onclick="editarVacacion(${v.id})">✏️</button>
+                        <button class="btn-delete" title="Eliminar" onclick="eliminarVacacion(${v.id})">❌</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ---------- Registro de tareas ----------
+        function resetFormTareaEmp() {
+            document.getElementById('form-tarea-emp').reset();
+            document.getElementById('temp-id').value = '';
+            document.getElementById('temp-fecha').value = hoyISO();
+            document.getElementById('btn-guardar-temp').innerText = 'Guardar Tarea';
+        }
+
+        function guardarTareaEmp(e) {
+            e.preventDefault();
+            const id = document.getElementById('temp-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                fecha: document.getElementById('temp-fecha').value,
+                tarea: document.getElementById('temp-tarea').value.trim(),
+                observacion: document.getElementById('temp-observacion').value.trim()
+            };
+            const idx = id ? facundoData.tareas.findIndex(t => t.id == id) : -1;
+            if (idx !== -1) facundoData.tareas[idx] = item; else facundoData.tareas.push(item);
+            guardarFacundoLS();
+            resetFormTareaEmp();
+            renderTareasEmp();
+        }
+
+        function editarTareaEmp(id) {
+            const t = facundoData.tareas.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('temp-id').value = t.id;
+            document.getElementById('temp-fecha').value = t.fecha || '';
+            document.getElementById('temp-tarea').value = t.tarea || '';
+            document.getElementById('temp-observacion').value = t.observacion || '';
+            document.getElementById('btn-guardar-temp').innerText = 'Actualizar Tarea';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarTareaEmp(id) {
+            if (!confirm('¿Eliminar esta tarea del registro?')) return;
+            facundoData.tareas = facundoData.tareas.filter(t => t.id !== id);
+            guardarFacundoLS();
+            renderTareasEmp();
+        }
+
+        function verDetalleTareaEmp(id, campo) {
+            const t = facundoData.tareas.find(x => x.id === id);
+            if (t) abrirModalTextoDetalle(campo === 'tarea' ? 'Tarea' : 'Observación', t[campo] || '');
+        }
+
+        function limpiarFiltrosTareaEmp() {
+            document.getElementById('buscar-tarea-emp').value = '';
+            document.getElementById('filtro-tarea-desde').value = '';
+            document.getElementById('filtro-tarea-hasta').value = '';
+            renderTareasEmp();
+        }
+
+        function celdaTextoEmp(id, campo, texto) {
+            if (!texto) return '<span style="color: var(--secondary);">—</span>';
+            return `<div class="cell-with-lupa">
+                        <span class="text-clamp-2" title="${escHtml(texto)}">${escHtml(texto)}</span>
+                        <button type="button" class="btn-lupa" title="Ver detalle completo" onclick="verDetalleTareaEmp(${id}, '${campo}')">🔍</button>
+                    </div>`;
+        }
+
+        function renderTareasEmp() {
+            const tbody = document.getElementById('tabla-tareas-emp');
+            if (!tbody) return;
+            const texto = (document.getElementById('buscar-tarea-emp').value || '').toLowerCase().trim();
+            const desde = document.getElementById('filtro-tarea-desde').value;
+            const hasta = document.getElementById('filtro-tarea-hasta').value;
+
+            const lista = facundoData.tareas
+                .filter(t => !desde || (t.fecha || '') >= desde)
+                .filter(t => !hasta || (t.fecha || '') <= hasta)
+                .filter(t => !texto || `${t.tarea} ${t.observacion} ${t.fecha} ${fechaLarga(t.fecha)}`.toLowerCase().includes(texto))
+                .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '') || b.id - a.id);
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--secondary);">No hay tareas para mostrar.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(t => `
+                <tr>
+                    <td class="col-nowrap">${fechaLarga(t.fecha)}</td>
+                    <td>${celdaTextoEmp(t.id, 'tarea', t.tarea)}</td>
+                    <td>${celdaTextoEmp(t.id, 'observacion', t.observacion)}</td>
+                    <td class="col-nowrap">
+                        <button class="btn-edit" title="Editar" onclick="editarTareaEmp(${t.id})">✏️</button>
+                        <button class="btn-delete" title="Eliminar" onclick="eliminarTareaEmp(${t.id})">❌</button>
+                    </td>
+                </tr>`).join('');
         }
 
         function CargarCamposElectrogeno() {
@@ -3638,12 +4245,13 @@
             if (data.pagos) { pagos = data.pagos; localStorage.setItem('pagos', JSON.stringify(data.pagos)); }
             if (data.electrogenoData) { electrogenoData = data.electrogenoData; localStorage.setItem('electrogenoData', JSON.stringify(data.electrogenoData)); }
             if (data.electrogenoNovedades) { electrogenoNovedades = data.electrogenoNovedades; localStorage.setItem('electrogenoNovedades', JSON.stringify(data.electrogenoNovedades)); }
+            if (data.herramientasData) { herramientasData = data.herramientasData; localStorage.setItem('herramientasData', JSON.stringify(data.herramientasData)); }
             if (data.matafuegosData) { matafuegosData = data.matafuegosData; localStorage.setItem('matafuegosData', JSON.stringify(data.matafuegosData)); }
             if (data.tareasData) { tareasData = data.tareasData; localStorage.setItem('tareasData', JSON.stringify(data.tareasData)); }
             if (data.registrosData) { registrosData = data.registrosData; localStorage.setItem('registrosData', JSON.stringify(data.registrosData)); }
             if (data.cronogramaData) { cronogramaData = data.cronogramaData; localStorage.setItem('cronogramaData', JSON.stringify(data.cronogramaData)); }
             if (data.presupuestosData) { presupuestosData = data.presupuestosData; localStorage.setItem('presupuestosData', JSON.stringify(data.presupuestosData)); }
-            if (data.facundoData) { facundoData = data.facundoData; localStorage.setItem('facundoData', JSON.stringify(data.facundoData)); }
+            if (data.facundoData) { facundoData = normalizarFacundoData(data.facundoData); localStorage.setItem('facundoData', JSON.stringify(facundoData)); }
             if (data.categoriasConfig) { 
                 categoriasConfig = data.categoriasConfig.map(c => (typeof c === 'string') ? { nombre: c, color: '#3b82f6' } : c); 
                 localStorage.setItem('categoriasConfig', JSON.stringify(categoriasConfig)); 
@@ -4123,6 +4731,88 @@
             renderEstadosPresConfig();
         }
 
+
+        // =====================================================================
+        //  HERRAMIENTAS (ABM)
+        // =====================================================================
+        function resetFormHerramienta() {
+            document.getElementById('form-herramienta').reset();
+            document.getElementById('herr-id').value = '';
+            document.getElementById('herr-estado').value = 'Activa';
+            document.getElementById('btn-guardar-herr').innerText = 'Guardar Herramienta';
+        }
+
+        function guardarHerramienta(e) {
+            e.preventDefault();
+            const id = document.getElementById('herr-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                nombre: document.getElementById('herr-nombre').value.trim(),
+                descripcion: document.getElementById('herr-descripcion').value.trim(),
+                estado: document.getElementById('herr-estado').value
+            };
+            const idx = id ? herramientasData.findIndex(h => h.id == id) : -1;
+            if (idx !== -1) herramientasData[idx] = item; else herramientasData.push(item);
+            localStorage.setItem('herramientasData', JSON.stringify(herramientasData));
+            resetFormHerramienta();
+            renderHerramientas();
+        }
+
+        function editarHerramienta(id) {
+            const h = herramientasData.find(x => x.id === id);
+            if (!h) return;
+            document.getElementById('herr-id').value = h.id;
+            document.getElementById('herr-nombre').value = h.nombre;
+            document.getElementById('herr-descripcion').value = h.descripcion || '';
+            document.getElementById('herr-estado').value = h.estado;
+            document.getElementById('btn-guardar-herr').innerText = 'Actualizar Herramienta';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarHerramienta(id) {
+            const h = herramientasData.find(x => x.id === id);
+            if (!h) return;
+            if (!confirm(`¿Eliminar la herramienta "${h.nombre}"?`)) return;
+            herramientasData = herramientasData.filter(x => x.id !== id);
+            localStorage.setItem('herramientasData', JSON.stringify(herramientasData));
+            renderHerramientas();
+        }
+
+        function verDetalleHerramienta(id) {
+            const h = herramientasData.find(x => x.id === id);
+            if (h) abrirModalTextoDetalle(h.nombre, h.descripcion || '');
+        }
+
+        function renderHerramientas() {
+            const tbody = document.getElementById('tabla-herramientas');
+            if (!tbody) return;
+            const texto = (document.getElementById('buscar-herramienta').value || '').toLowerCase().trim();
+            const estado = document.getElementById('filtro-estado-herramienta').value;
+
+            const lista = herramientasData
+                .filter(h => !estado || h.estado === estado)
+                .filter(h => !texto || `${h.nombre} ${h.descripcion}`.toLowerCase().includes(texto))
+                .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--secondary);">No hay herramientas para mostrar.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(h => `
+                <tr>
+                    <td><b>${escHtml(h.nombre)}</b></td>
+                    <td>${h.descripcion ? `<div class="cell-with-lupa">
+                            <span class="text-clamp-2" title="${escHtml(h.descripcion)}">${escHtml(h.descripcion)}</span>
+                            <button type="button" class="btn-lupa" title="Ver detalle completo" onclick="verDetalleHerramienta(${h.id})">🔍</button>
+                        </div>` : '<span style="color: var(--secondary);">—</span>'}</td>
+                    <td class="col-nowrap"><span class="badge" style="background-color: ${COLORES_ESTADO_HERRAMIENTA[h.estado] || '#64748b'};">${escHtml(h.estado)}</span></td>
+                    <td class="col-nowrap">
+                        <button class="btn-edit" title="Editar" onclick="editarHerramienta(${h.id})">✏️</button>
+                        <button class="btn-delete" title="Eliminar" onclick="eliminarHerramienta(${h.id})">❌</button>
+                    </td>
+                </tr>`).join('');
+        }
+
         window.onload = async function() {
             aplicarColorTema(appBgColor, appCardBgColor);
             await initDB();
@@ -4239,6 +4929,7 @@
                     electrogenoData: JSON.parse(localStorage.getItem('electrogenoData')) || [],
                     electrogenoNovedades: JSON.parse(localStorage.getItem('electrogenoNovedades')) || [],
                     matafuegosData: JSON.parse(localStorage.getItem('matafuegosData')) || [],
+                    herramientasData: JSON.parse(localStorage.getItem('herramientasData')) || [],
                     tareasData: JSON.parse(localStorage.getItem('tareasData')) || [],
                     registrosData: JSON.parse(localStorage.getItem('registrosData')) || [],
                     cronogramaData: JSON.parse(localStorage.getItem('cronogramaData')) || [],
