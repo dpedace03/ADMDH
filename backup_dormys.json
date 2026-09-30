@@ -1045,11 +1045,36 @@
     }
   ],
   "facundoData": {
-    "horaInicio": "07:00",
-    "horaFin": "16:00",
-    "vacInicio": "2026-10-29",
-    "vacFin": "2026-11-09",
-    "whatsapp": "+54 9 11 2177-3900"
+    "ficha": {
+      "nombre": "Facundo",
+      "apellido": "Benitez",
+      "dni": "",
+      "nacimiento": "",
+      "domicilio": "",
+      "whatsapp": "+54 9 11 2177-3900",
+      "puesto": "Categoría Maestranza 3"
+    },
+    "horarios": {
+      "invierno": {
+        "inicio": "07:00",
+        "fin": "16:00"
+      },
+      "verano": {
+        "inicio": "",
+        "fin": ""
+      }
+    },
+    "vacaciones": [
+      {
+        "id": 1790774164516,
+        "inicio": "2026-10-29",
+        "fin": "2026-11-02",
+        "anio": 2026,
+        "diasTotales": null,
+        "diasTomados": null
+      }
+    ],
+    "tareas": []
   },
   "categoriasConfig": [
     {
@@ -1162,5 +1187,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-29T23:04:30.951Z"
+  "fechaExportacion": "2026-09-30T13:19:12.418Z"
 }
