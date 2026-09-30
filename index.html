@@ -314,6 +314,20 @@
         }
 
         .text-preview { white-space: nowrap; }
+
+        /* Botón "+" junto al título: muestra / oculta el formulario de alta */
+        .alta-oculta { display: none !important; }
+        .titulo-con-mas { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .titulo-con-mas h3 { margin: 0; }
+        .btn-mas {
+            width: 38px; height: 38px; padding: 0 0 3px 0; border: none; border-radius: 50%;
+            background: var(--primary-light); color: #fff; font-size: 1.8rem; font-weight: 700; line-height: 1;
+            display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex: 0 0 auto;
+            box-shadow: 0 3px 0 #1d4ed8; position: relative; top: 0; transition: transform 0.2s, background 0.15s;
+        }
+        .btn-mas:hover { background: #2563eb; }
+        .btn-mas:active { top: 2px; box-shadow: 0 1px 0 #1d4ed8; }
+        .btn-mas.abierto { transform: rotate(45deg); background: #64748b; box-shadow: 0 3px 0 #475569; }
         .btn-lupa {
             background: transparent;
             border: none;
@@ -935,10 +949,10 @@
     <!-- PRESUPUESTOS -->
     <section id="sec-presupuestos" class="section">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
-            <h3 style="margin: 0;">📄 Gestión de Presupuestos</h3>
+            <div class="titulo-con-mas"><h3>📄 Gestión de Presupuestos</h3><button type="button" class="btn-mas" data-alta="presupuestos" title="Agregar presupuesto" aria-label="Agregar presupuesto" onclick="toggleFormAlta('presupuestos')">+</button></div>
             <button type="button" class="btn-action" onclick="showSection('pedir-presupuesto')">📨 Pedir presupuesto</button>
         </div>
-        <div class="card-box">
+        <div class="card-box alta-oculta">
             <form id="form-presupuesto" onsubmit="guardarPresupuesto(event)">
                 <input type="hidden" id="pres-id">
 
@@ -1007,8 +1021,8 @@
 
     <!-- PROVEEDORES (ABM) -->
     <section id="sec-proveedores" class="section">
-        <h3>👷 Gestión de Proveedores</h3>
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>👷 Gestión de Proveedores</h3><button type="button" class="btn-mas" data-alta="proveedores" title="Agregar proveedor" aria-label="Agregar proveedor" onclick="toggleFormAlta('proveedores')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-proveedor" onsubmit="guardarProveedor(event)">
                 <input type="hidden" id="prov-id">
 
@@ -1163,8 +1177,8 @@
 
     <!-- NOVEDADES TECHOS -->
     <section id="sec-novedades" class="section">
-        <h3>Cargar / Modificar Novedad Techos</h3>
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>🏠 Gestión de Novedades Techos</h3><button type="button" class="btn-mas" data-alta="novedades" title="Agregar novedad" aria-label="Agregar novedad" onclick="toggleFormAlta('novedades')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-novedad" onsubmit="guardarNovedad(event)">
                 <input type="hidden" id="nov-id">
                 <div class="form-group">
@@ -1439,8 +1453,8 @@
 
     <!-- TAREAS -->
     <section id="sec-tareas" class="section">
-        <h3>📋 Gestión de Tareas</h3>
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>📋 Gestión de Tareas</h3><button type="button" class="btn-mas" data-alta="tareas" title="Agregar tarea" aria-label="Agregar tarea" onclick="toggleFormAlta('tareas')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-tareas" onsubmit="guardarTarea(event)">
                 <input type="hidden" id="tarea-id">
 
@@ -1496,8 +1510,8 @@
 
     <!-- REGISTRO DE TAREAS Y ACTIVIDADES -->
     <section id="sec-registro" class="section">
-        <h3>📝 Registro de Actividades y Novedades</h3>
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>📝 Registro de Actividades y Novedades</h3><button type="button" class="btn-mas" data-alta="registro" title="Agregar registro" aria-label="Agregar registro" onclick="toggleFormAlta('registro')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-registro" onsubmit="guardarRegistro(event)">
                 <input type="hidden" id="reg-id">
 
@@ -2295,6 +2309,42 @@
             if (!dormysData[i]) dormysData[i] = { duenio: `Propietario ${i}` };
         }
 
+        // =====================================================================
+        //  Formularios de alta ocultos: se muestran con el botón "+" junto al título
+        // =====================================================================
+        const FORMS_ALTA = {
+            presupuestos: { form: 'form-presupuesto', reset: () => resetFormPresupuesto() },
+            proveedores:  { form: 'form-proveedor',   reset: () => resetFormProveedor() },
+            tareas:       { form: 'form-tareas',      reset: () => resetFormTarea() },
+            registro:     { form: 'form-registro',    reset: () => resetFormRegistro() },
+            novedades:    { form: 'form-novedad',     reset: () => resetFormNovedad() }
+        };
+
+        function abrirFormAlta(key, enfocar = true) {
+            const card = document.getElementById(FORMS_ALTA[key].form).closest('.card-box');
+            card.classList.remove('alta-oculta');
+            const btn = document.querySelector(`.btn-mas[data-alta="${key}"]`);
+            if (btn) { btn.classList.add('abierto'); btn.title = 'Cerrar formulario'; }
+            if (enfocar) {
+                const campo = card.querySelector('input:not([type=hidden]):not([type=file]), select, textarea');
+                if (campo) campo.focus({ preventScroll: true });
+            }
+        }
+
+        // Cierra el formulario y descarta lo que hubiera sin guardar
+        function cerrarFormAlta(key) {
+            const card = document.getElementById(FORMS_ALTA[key].form).closest('.card-box');
+            card.classList.add('alta-oculta');
+            const btn = document.querySelector(`.btn-mas[data-alta="${key}"]`);
+            if (btn) { btn.classList.remove('abierto'); btn.title = btn.getAttribute('aria-label'); }
+            FORMS_ALTA[key].reset();
+        }
+
+        function toggleFormAlta(key) {
+            const card = document.getElementById(FORMS_ALTA[key].form).closest('.card-box');
+            if (card.classList.contains('alta-oculta')) abrirFormAlta(key); else cerrarFormAlta(key);
+        }
+
         function moduloProximamente(nombre) {
             alert(`El módulo "${nombre}" estará disponible próximamente.`);
         }
@@ -2305,11 +2355,11 @@
                 alert('Por favor ingrese un número del 1 al 99.');
                 return;
             }
-            document.getElementById('nov-dormy').value = num;
-            actualizarDuenioLabel();
             document.getElementById('buscar-nov').value = num;
             renderNovedades();
             showSection('novedades');
+            document.getElementById('nov-dormy').value = num;   // queda precargado para cuando se abra el formulario con "+"
+            actualizarDuenioLabel();
         }
 
         let estadoFiltroActivo = null;
@@ -2451,6 +2501,7 @@
 
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
+            if (FORMS_ALTA[sectionId]) cerrarFormAlta(sectionId);
             if (sectionId === 'presupuestos') { populateEstadoPresSelects(); renderPresupuestos(); }
             if (sectionId === 'proveedores') { renderChecksTareasProveedor(); renderProveedores(); }
             if (sectionId === 'pedir-presupuesto') initPedirPresupuesto();
@@ -3290,7 +3341,7 @@
                 }
 
                 localStorage.setItem('presupuestosData', JSON.stringify(presupuestosData));
-                resetFormPresupuesto();
+                cerrarFormAlta('presupuestos');
                 await renderPresupuestos();
                 alert('¡Presupuesto guardado correctamente!');
             } catch (err) {
@@ -3364,6 +3415,7 @@
         async function editarPresupuesto(id) {
             const p = presupuestosData.find(item => item.id === id);
             if (!p) return;
+            abrirFormAlta('presupuestos', false);
             document.getElementById('pres-id').value = p.id;
             document.getElementById('pres-fecha').value = p.fecha;
             document.getElementById('pres-autor').value = p.autor;
@@ -3432,7 +3484,7 @@
                 } else { novedades.push(item); }
 
                 localStorage.setItem('novedades', JSON.stringify(novedades));
-                resetFormNovedad();
+                cerrarFormAlta('novedades');
                 renderNovedades();
                 alert('Novedad guardada correctamente.');
             } catch (err) {
@@ -3513,6 +3565,7 @@
         async function editarNovedad(id) {
             const nov = novedades.find(n => n.id === id);
             if (!nov) return;
+            abrirFormAlta('novedades', false);
             document.getElementById('nov-id').value = nov.id;
             document.getElementById('nov-dormy').value = nov.dormy;
             document.getElementById('nov-fecha').value = nov.fecha;
@@ -3919,7 +3972,7 @@
             }
 
             localStorage.setItem('tareasData', JSON.stringify(tareasData));
-            resetFormTarea();
+            cerrarFormAlta('tareas');
             renderTareas();
             alert('¡Tarea guardada correctamente!');
         }
@@ -3975,6 +4028,7 @@
         function editarTarea(id) {
             const item = tareasData.find(x => x.id === id);
             if (!item) return;
+            abrirFormAlta('tareas', false);
             document.getElementById('tarea-id').value = item.id;
             document.getElementById('tarea-nombre').value = item.nombre;
             document.getElementById('tarea-responsable').value = item.responsable;
@@ -4012,7 +4066,7 @@
             }
 
             localStorage.setItem('registrosData', JSON.stringify(registrosData));
-            resetFormRegistro();
+            cerrarFormAlta('registro');
             renderRegistros();
             alert('¡Registro guardado correctamente!');
         }
@@ -4062,6 +4116,7 @@
         function editarRegistro(id) {
             const item = registrosData.find(x => x.id === id);
             if (!item) return;
+            abrirFormAlta('registro', false);
             document.getElementById('reg-id').value = item.id;
             document.getElementById('reg-fecha').value = item.fecha;
             document.getElementById('reg-tarea').value = item.tarea;
@@ -4492,7 +4547,7 @@
                 proveedoresData.push(item);
             }
             localStorage.setItem('proveedoresData', JSON.stringify(proveedoresData));
-            resetFormProveedor();
+            cerrarFormAlta('proveedores');
             renderProveedores();
             alert('¡Proveedor guardado correctamente!');
         }
@@ -4507,6 +4562,7 @@
         function editarProveedor(id) {
             const p = proveedoresData.find(x => x.id === id);
             if (!p) return;
+            abrirFormAlta('proveedores', false);
             document.getElementById('prov-id').value = p.id;
             document.getElementById('prov-nombre').value = p.nombre;
             document.getElementById('prov-apellido').value = p.apellido;
