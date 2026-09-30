@@ -1076,7 +1076,32 @@
         "diasTomados": null
       }
     ],
-    "tareas": []
+    "tareas": [
+      {
+        "id": 1790807146590,
+        "fecha": "2026-09-28",
+        "tarea": "Corte de pasto",
+        "observacion": "Buenas tardes Dani , hoy corte pasto delante del silo, delante de paquete , delante de la pileta , del dormy 9 al 33 y la zanja, delante del estacionamiento que está en el bosquesito Norte, fue monti a ver la pileta, le pregunté si quería que te llamara para hablar con vos y me dijo que no , que era para ver lo que había que hacer nada más"
+      },
+      {
+        "id": 1790807273635,
+        "fecha": "2026-09-24",
+        "tarea": "Corte de cerco y sopladora",
+        "observacion": "Buenas tardes Dani , hoy estuve cortando cercos y pase la sopladora en los pasillos"
+      },
+      {
+        "id": 1790807315775,
+        "fecha": "2026-09-29",
+        "tarea": "Lija y pintura de gabinetes",
+        "observacion": "Buenas tardes Dani , hoy estuve lijando y pintando las puertas de los gabinetes"
+      },
+      {
+        "id": 1790807354424,
+        "fecha": "2026-09-30",
+        "tarea": "Hidrolavadora",
+        "observacion": "Hidrolavadora en la parte trasera de domrys 19 al 29"
+      }
+    ]
   },
   "categoriasConfig": [
     {
@@ -1189,5 +1214,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-30T14:13:42.261Z"
+  "fechaExportacion": "2026-09-30T22:29:38.488Z"
 }
