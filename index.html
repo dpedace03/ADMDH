@@ -867,8 +867,8 @@
 
     <!-- SECCIÓN HERRAMIENTAS -->
     <section id="sec-herramientas" class="section">
-        <h3>🧰 Gestión de Herramientas</h3>
-        <div class="card-box" style="margin-top: 10px;">
+        <div class="titulo-con-mas"><h3>🧰 Gestión de Herramientas</h3><button type="button" class="btn-mas" data-alta="herramientas" title="Agregar herramienta" aria-label="Agregar herramienta" onclick="toggleFormAlta('herramientas')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-herramienta" onsubmit="guardarHerramienta(event)">
                 <input type="hidden" id="herr-id">
 
@@ -1247,8 +1247,8 @@
 
     <!-- PAGOS RESPONSABLES -->
     <section id="sec-pagos" class="section">
-        <h3>Pagos realizados</h3>
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>Pagos realizados</h3><button type="button" class="btn-mas" data-alta="pagos" title="Agregar pago" aria-label="Agregar pago" onclick="toggleFormAlta('pagos')">+</button></div>
+        <div class="card-box alta-oculta">
             <form id="form-pago" onsubmit="guardarPago(event)">
                 <input type="hidden" id="pago-id">
                 <div class="form-group">
@@ -1564,9 +1564,9 @@
 
     <!-- CRONOGRAMA SEMANAL -->
     <section id="sec-cronograma" class="section">
-        <h3>📅 Cronograma Semanal de Tareas</h3>
-        
-        <div class="card-box">
+        <div class="titulo-con-mas"><h3>📅 Cronograma Semanal de Tareas</h3><button type="button" class="btn-mas" data-alta="cronograma" title="Agregar tarea al cronograma" aria-label="Agregar tarea al cronograma" onclick="toggleFormAlta('cronograma')">+</button></div>
+
+        <div class="card-box alta-oculta">
             <form id="form-cronograma" onsubmit="guardarCronogramaTarea(event)">
                 <input type="hidden" id="crono-id">
 
@@ -2317,7 +2317,10 @@
             proveedores:  { form: 'form-proveedor',   reset: () => resetFormProveedor() },
             tareas:       { form: 'form-tareas',      reset: () => resetFormTarea() },
             registro:     { form: 'form-registro',    reset: () => resetFormRegistro() },
-            novedades:    { form: 'form-novedad',     reset: () => resetFormNovedad() }
+            novedades:    { form: 'form-novedad',     reset: () => resetFormNovedad() },
+            pagos:        { form: 'form-pago',        reset: () => resetFormPago() },
+            cronograma:   { form: 'form-cronograma',  reset: () => resetFormCronograma() },
+            herramientas: { form: 'form-herramienta', reset: () => resetFormHerramienta() }
         };
 
         function abrirFormAlta(key, enfocar = true) {
@@ -3662,7 +3665,7 @@
                 }
 
                 localStorage.setItem('pagos', JSON.stringify(pagos));
-                resetFormPago();
+                cerrarFormAlta('pagos');
                 await renderPagos();
                 renderGrillaReparaciones();
                 alert('¡Pago registrado correctamente!');
@@ -3726,6 +3729,7 @@
         async function editarPago(id) {
             const p = pagos.find(item => item.id === id);
             if (!p) return;
+            abrirFormAlta('pagos', false);
             document.getElementById('pago-id').value = p.id;
             document.getElementById('pago-fecha').value = p.fecha;
             document.getElementById('pago-responsable').value = p.responsable;
@@ -4155,7 +4159,7 @@
             }
 
             localStorage.setItem('cronogramaData', JSON.stringify(cronogramaData));
-            resetFormCronograma();
+            cerrarFormAlta('cronograma');
             renderCronograma();
             alert('¡Tarea asignada al cronograma!');
         }
@@ -4206,6 +4210,7 @@
         function editarCronograma(id) {
             const item = cronogramaData.find(x => x.id === id);
             if (!item) return;
+            abrirFormAlta('cronograma', false);
             document.getElementById('crono-id').value = item.id;
             document.getElementById('crono-dia').value = item.dia;
             document.getElementById('crono-horario').value = item.horario || '';
@@ -5103,13 +5108,14 @@
             const idx = id ? herramientasData.findIndex(h => h.id == id) : -1;
             if (idx !== -1) herramientasData[idx] = item; else herramientasData.push(item);
             localStorage.setItem('herramientasData', JSON.stringify(herramientasData));
-            resetFormHerramienta();
+            cerrarFormAlta('herramientas');
             renderHerramientas();
         }
 
         function editarHerramienta(id) {
             const h = herramientasData.find(x => x.id === id);
             if (!h) return;
+            abrirFormAlta('herramientas', false);
             document.getElementById('herr-id').value = h.id;
             document.getElementById('herr-nombre').value = h.nombre;
             document.getElementById('herr-descripcion').value = h.descripcion || '';
