@@ -102,9 +102,8 @@
 
         header h2 { font-size: 1.15rem; font-weight: 700; }
 
-        body.en-inicio nav { display: none; }   /* en la pantalla principal ya están los botones grandes */
         nav {
-            display: flex;
+            display: none;   /* barra superior oculta en todas las pantallas: se navega con los botones grandes de la principal y el 🏠 del encabezado */
             flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 12px;
@@ -438,22 +437,38 @@
         .anual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
         .mes-card {
             background: #fff; border: 2px solid var(--border); border-radius: 12px; padding: 10px 12px;
-            cursor: pointer; text-align: left; font: inherit; color: var(--text); display: flex; flex-direction: column; gap: 6px;
+            text-align: left; font: inherit; color: var(--text); display: flex; flex-direction: column; gap: 6px;
             box-shadow: 0 3px 0 #cbd5e1; position: relative; top: 0; transition: all 0.1s;
         }
         .mes-card:hover { border-color: var(--primary-light); }
-        .mes-card:active { top: 2px; box-shadow: 0 1px 0 #cbd5e1; }
         .mes-card.mes-actual { border-color: var(--primary-light); background: #eff6ff; }
         .mes-card.mes-con-texto { border-color: #86efac; }
         .mes-card.mes-actual.mes-con-texto { border-color: var(--primary-light); }
-        .mes-nombre { font-weight: 800; font-size: 1rem; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .mes-nombre { cursor: pointer; font-weight: 800; font-size: 1rem; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
         .mes-nombre .mes-pin { font-size: 0.85rem; }
         .mini-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; text-align: center; font-size: 0.7rem; }
         .mini-cal .dow { font-weight: 700; color: var(--secondary); padding-bottom: 2px; }
-        .mini-cal .dia { padding: 2px 0; border-radius: 4px; color: #334155; }
+        .mini-cal .dia { padding: 2px 0; border-radius: 4px; color: #334155; background: none; border: none; font: inherit; cursor: pointer; }
+        .mini-cal .dia:hover { background: #dbeafe; }
+        .mini-cal .dia.con-eventos { background: #fef3c7; color: #92400e; font-weight: 800; box-shadow: inset 0 -2px 0 #f59e0b; }
+        .mini-cal .dia.con-eventos:hover { background: #fde68a; }
         .mini-cal .dia.hoy { background: var(--primary-light); color: #fff; font-weight: 800; }
-        .mes-nota { font-size: 0.78rem; color: #14532d; background: #f0fdf4; border-radius: 6px; padding: 5px 7px; white-space: pre-wrap; word-break: break-word; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .mes-nota { cursor: pointer; font-size: 0.78rem; color: #14532d; background: #f0fdf4; border-radius: 6px; padding: 5px 7px; white-space: pre-wrap; word-break: break-word; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
         .mes-nota.vacia { background: transparent; color: var(--secondary); font-style: italic; }
+        /* Agenda del día */
+        .agenda-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+        .agenda-nav h3 { margin: 0; color: var(--primary); font-size: 1.05rem; text-align: center; flex: 1; }
+        .agenda-resumen { text-align: center; font-size: 0.85rem; color: var(--secondary); margin-bottom: 10px; }
+        .agenda-sec { border-left: 4px solid var(--sec-color, #94a3b8); background: #f8fafc; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+        .agenda-sec-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
+        .agenda-count { background: var(--sec-color, #94a3b8); color: #fff; border-radius: 10px; font-size: 0.72rem; padding: 1px 8px; margin-left: 6px; }
+        .agenda-link { background: none; border: 1px solid var(--border); border-radius: 6px; font-size: 0.75rem; padding: 3px 8px; cursor: pointer; color: var(--primary); font-weight: 700; white-space: nowrap; }
+        .agenda-link:hover { background: #eff6ff; }
+        .agenda-sec ul { list-style: none; margin: 0; padding: 0; }
+        .agenda-sec li { padding: 5px 0; border-top: 1px dashed #e2e8f0; font-size: 0.9rem; word-break: break-word; }
+        .agenda-sec li:first-child { border-top: none; }
+        .agenda-sec li small { display: block; color: #475569; font-size: 0.8rem; white-space: pre-wrap; }
+        .agenda-vacio { text-align: center; color: var(--secondary); padding: 16px 8px; font-style: italic; }
         .anio-nav { display: flex; align-items: center; gap: 8px; }
         .anio-nav strong { font-size: 1.3rem; min-width: 60px; text-align: center; color: var(--primary); }
 
@@ -514,7 +529,7 @@
         }
     </style>
 </head>
-<body class="en-inicio">
+<body>
 
     <header>
         <div class="header-title-container">
@@ -1585,6 +1600,7 @@
 
     <!-- CRONOGRAMA ANUAL -->
     <section id="sec-cronograma-anual" class="section">
+      <div id="anual-calendario">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
             <h3 style="margin: 0;">🗓️ Cronograma Anual</h3>
             <div class="anio-nav">
@@ -1594,8 +1610,23 @@
                 <button type="button" class="btn-reset-form" style="padding: 8px 12px; font-size: 0.85rem;" onclick="irAnioActualAnual()">Hoy</button>
             </div>
         </div>
-        <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 6px;">Hacé clic en un mes para agregar o editar su texto.</p>
+        <p style="font-size: 0.85rem; color: var(--secondary); margin-bottom: 6px;">Hacé clic en un <b>día</b> para ver todo lo registrado en esa fecha (los días con registros aparecen marcados en amarillo), o en el <b>nombre del mes</b> para agregar o editar su texto.</p>
         <div class="anual-grid" id="grilla-anual"></div>
+      </div>
+
+      <!-- VISTA DE UN SOLO DÍA (botón Hoy): reemplaza al calendario -->
+      <div id="anual-vista-dia" style="display: none; max-width: 760px; margin: 0 auto;">
+        <div class="agenda-nav">
+            <button type="button" class="btn-action" onclick="moverVistaDiaAnual(-1)" title="Día anterior">◀</button>
+            <h3 id="vista-dia-titulo">Fecha</h3>
+            <button type="button" class="btn-action" onclick="moverVistaDiaAnual(1)" title="Día siguiente">▶</button>
+        </div>
+        <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+            <button type="button" class="btn-action" onclick="irAnioActualAnual()">Hoy</button>
+            <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="cerrarVistaDiaAnual()">🗓️ Ver calendario</button>
+        </div>
+        <div id="vista-dia-contenido"></div>
+      </div>
     </section>
 
     <!-- MODAL: DESCRIPCIÓN DETALLADA DEL PUESTO LABORAL -->
@@ -1614,6 +1645,20 @@
                     <button type="button" class="btn-reset-form" onclick="borrarPuestoDetalle()">Borrar texto</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL: AGENDA DE UN DÍA (CRONOGRAMA ANUAL) -->
+    <div id="modalDiaAnual" class="modal">
+        <div class="modal-content-wrapper" style="background: white; padding: 20px; border-radius: 12px; width: 680px; max-width: 95%; max-height: 90vh; overflow-y: auto; align-items: stretch; display: block;">
+            <span class="close-modal" onclick="cerrarModalDiaAnual()" style="color: #333; top: 8px; right: 15px; position: absolute;">&times;</span>
+            <input type="hidden" id="dia-modal-fecha">
+            <div class="agenda-nav" style="padding-right: 22px;">
+                <button type="button" class="btn-action" onclick="moverDiaAnual(-1)" title="Día anterior">◀</button>
+                <h3 id="dia-modal-titulo">Fecha</h3>
+                <button type="button" class="btn-action" onclick="moverDiaAnual(1)" title="Día siguiente">▶</button>
+            </div>
+            <div id="dia-modal-contenido"></div>
         </div>
     </div>
 
@@ -2395,7 +2440,6 @@
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(`sec-${sectionId}`).classList.add('active');
-            document.body.classList.toggle('en-inicio', sectionId === 'admin-dormys');
             const btnNav = document.getElementById(`btn-${sectionId}`);
             if (btnNav) btnNav.classList.add('active');
 
@@ -2416,7 +2460,12 @@
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
-            if (sectionId === 'cronograma-anual') renderCronogramaAnual();
+            if (sectionId === 'cronograma-anual') {
+                vistaDiaAnualIso = null;
+                document.getElementById('anual-vista-dia').style.display = 'none';
+                document.getElementById('anual-calendario').style.display = 'block';
+                renderCronogramaAnual();
+            }
             if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); }
         }
 
@@ -4588,6 +4637,7 @@
 
             const hoy = new Date();
             const dow = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+            const marcas = construirMarcasAgenda(anioAnualActual, recolectarEventosAgenda());
             let html = '';
 
             for (let mes = 0; mes < 12; mes++) {
@@ -4600,17 +4650,242 @@
                 for (let i = 0; i < primerDia; i++) celdas += '<span></span>';
                 for (let d = 1; d <= diasMes; d++) {
                     const esHoy = esMesActual && hoy.getDate() === d;
-                    celdas += `<span class="dia${esHoy ? ' hoy' : ''}">${d}</span>`;
+                    const iso = isoDeFecha(anioAnualActual, mes, d);
+                    const n = marcas.get(iso) || 0;
+                    celdas += `<button type="button" class="dia${esHoy ? ' hoy' : ''}${n ? ' con-eventos' : ''}" title="${n ? n + ' registro(s)' : 'Ver el día'}" onclick="abrirModalDiaAnual('${iso}')">${d}</button>`;
                 }
 
                 html += `
-                    <button type="button" class="mes-card${esMesActual ? ' mes-actual' : ''}${texto ? ' mes-con-texto' : ''}" onclick="abrirModalMesAnual(${mes})">
-                        <div class="mes-nombre"><span>${MESES_ES[mes]}</span><span class="mes-pin">${texto ? '📝' : '➕'}</span></div>
+                    <div class="mes-card${esMesActual ? ' mes-actual' : ''}${texto ? ' mes-con-texto' : ''}">
+                        <div class="mes-nombre" title="Texto del mes" onclick="abrirModalMesAnual(${mes})"><span>${MESES_ES[mes]}</span><span class="mes-pin">${texto ? '📝' : '➕'}</span></div>
                         <div class="mini-cal">${celdas}</div>
-                        <div class="mes-nota${texto ? '' : ' vacia'}">${texto ? escHtml(texto) : 'Sin texto'}</div>
-                    </button>`;
+                        <div class="mes-nota${texto ? '' : ' vacia'}" title="Texto del mes" onclick="abrirModalMesAnual(${mes})">${texto ? escHtml(texto) : 'Sin texto'}</div>
+                    </div>`;
             }
             grilla.innerHTML = html;
+        }
+
+        // =====================================================================
+        //  AGENDA DEL DÍA: agrupa todo lo registrado en una fecha
+        // =====================================================================
+        const DIAS_SEMANA_ES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const FECHA_ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+        // Orden de las secciones dentro del día, con su ícono, color y módulo de origen
+        const SECCIONES_AGENDA = [
+            { tipo: 'registro',    icono: '📝', titulo: 'Registro de actividades',        color: '#6366f1', modulo: 'registro' },
+            { tipo: 'tarea-emp',   icono: '👷', titulo: 'Tareas del empleado',            color: '#0ea5e9', modulo: 'facundo', tab: 'tareas' },
+            { tipo: 'vacaciones',  icono: '🏖️', titulo: 'Vacaciones',                     color: '#14b8a6', modulo: 'facundo', tab: 'vacaciones' },
+            { tipo: 'novedad',     icono: '🏠', titulo: 'Novedades de techos',            color: '#f59e0b', modulo: 'novedades' },
+            { tipo: 'reparacion',  icono: '🛠️', titulo: 'Reparaciones de techos',         color: '#f97316', modulo: 'reparaciones' },
+            { tipo: 'pago',        icono: '💳', titulo: 'Pagos',                          color: '#10b981', modulo: 'pagos' },
+            { tipo: 'presupuesto', icono: '📄', titulo: 'Presupuestos',                   color: '#3b82f6', modulo: 'presupuestos' },
+            { tipo: 'electro',     icono: '⚡', titulo: 'Grupo electrógeno',              color: '#a855f7', modulo: 'electrogeno' },
+            { tipo: 'matafuego',   icono: '🧯', titulo: 'Vencimiento de matafuegos',      color: '#ef4444', modulo: 'matafuegos' },
+            { tipo: 'cumple',      icono: '🎂', titulo: 'Cumpleaños',                     color: '#ec4899', modulo: 'facundo', tab: 'ficha' },
+            { tipo: 'semanal',     icono: '📅', titulo: 'Programado en el cronograma semanal', color: '#06b6d4', modulo: 'cronograma' }
+        ];
+
+        function isoDeFecha(anio, mes0, dia) {
+            return `${anio}-${String(mes0 + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+        }
+
+        function dowDeISO(iso) {
+            const [y, m, d] = iso.split('-').map(Number);
+            return new Date(y, m - 1, d).getDay();
+        }
+
+        function fmtMonto(n) {
+            return '$' + (Number(n) || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Junta los registros de todos los módulos con la fecha (o rango / día de la semana) en que aplican
+        function recolectarEventosAgenda() {
+            const ev = [];
+            const add = (tipo, match, titulo, detalle = [], extra = {}) =>
+                ev.push({ tipo, match, titulo, detalle: detalle.filter(Boolean), ...extra });
+            const okF = f => typeof f === 'string' && FECHA_ISO_RE.test(f);
+
+            (registrosData || []).forEach(r => okF(r.fecha) &&
+                add('registro', { f: r.fecha }, r.tarea || 'Sin descripción',
+                    [r.responsable && `Responsable: ${r.responsable}`, r.observacion]));
+
+            ((facundoData && facundoData.tareas) || []).forEach(t => okF(t.fecha) &&
+                add('tarea-emp', { f: t.fecha }, t.tarea || 'Sin descripción', [t.observacion]));
+
+            ((facundoData && facundoData.vacaciones) || []).forEach(v => {
+                if (!okF(v.inicio)) return;
+                const fin = okF(v.fin) ? v.fin : v.inicio;
+                const dias = (v.diasTotales != null) ? `Días totales: ${v.diasTotales}${v.diasTomados != null ? ' · tomados: ' + v.diasTomados : ''}` : '';
+                add('vacaciones', { desde: v.inicio, hasta: fin }, `Vacaciones del ${fechaLarga(v.inicio)} al ${fechaLarga(fin)}`, [dias]);
+            });
+
+            (novedades || []).forEach(n => okF(n.fecha) &&
+                add('novedad', { f: n.fecha }, `Dormy ${n.dormy || '—'}${n.estado ? ' · ' + n.estado : ''}${n.monto ? ' · ' + fmtMonto(n.monto) : ''}`,
+                    [n.descripcion, n.observacion && `Obs.: ${n.observacion}`]));
+
+            if (reparacionesData) {
+                Object.keys(reparacionesData).forEach(k => {
+                    const r = reparacionesData[k];
+                    if (r && okF(r.fecha)) add('reparacion', { f: r.fecha }, `Dormy ${k} · ${r.estado || 'Sin registrar'}`,
+                        [r.orden && `Orden: ${r.orden}`, r.presupuesto && `Presupuesto: ${r.presupuesto}`]);
+                });
+            }
+
+            (pagos || []).forEach(pg => okF(pg.fecha) &&
+                add('pago', { f: pg.fecha }, `${pg.concepto || 'Pago'} · ${fmtMonto(pg.monto)}`, [pg.responsable && `Responsable: ${pg.responsable}`]));
+
+            (presupuestosData || []).forEach(pr => okF(pr.fecha) &&
+                add('presupuesto', { f: pr.fecha }, `${pr.autor || 'Presupuesto'}${pr.estado ? ' · ' + pr.estado : ''}${pr.importe ? ' · ' + fmtMonto(pr.importe) : ''}`,
+                    [pr.descripcion]));
+
+            (electrogenoNovedades || []).forEach(en => okF(en.fecha) &&
+                add('electro', { f: en.fecha }, `${en.descripcion || 'Novedad'}${en.importe ? ' · ' + fmtMonto(en.importe) : ''}`,
+                    [en.observacion && `Obs.: ${en.observacion}`]));
+
+            (matafuegosData || []).forEach(m => okF(m.vencimiento) &&
+                add('matafuego', { f: m.vencimiento }, `Matafuego N° ${m.nro || '—'}`, [m.ubicacion && `Ubicación: ${m.ubicacion}`, 'Vence este día']));
+
+            const fi = facundoData && facundoData.ficha;
+            if (fi && okF(fi.nacimiento) && (fi.nombre || fi.apellido)) {
+                add('cumple', { mmdd: fi.nacimiento.slice(5) }, `Cumpleaños de ${`${fi.nombre} ${fi.apellido}`.trim()}`, [], { nacimiento: fi.nacimiento });
+            }
+
+            (cronogramaData || []).forEach(c => {
+                const dw = DIAS_SEMANA_ES.indexOf(c.dia);
+                if (dw < 0) return;
+                add('semanal', { dow: dw }, `${c.horario ? c.horario + ' · ' : ''}${c.tarea || 'Tarea'}`,
+                    [c.responsable && `Responsable: ${c.responsable}`, c.observacion], { sinMarca: true, orden: c.horario || '' });
+            });
+            return ev;
+        }
+
+        function coincideAgenda(m, iso) {
+            if (m.f) return m.f === iso;
+            if (m.desde) return m.desde <= iso && iso <= m.hasta;
+            if (m.mmdd) return iso.slice(5) === m.mmdd;
+            if (m.dow !== undefined) return dowDeISO(iso) === m.dow;
+            return false;
+        }
+
+        // Cantidad de registros por día del año (para marcar el calendario). El cronograma semanal no marca días.
+        function construirMarcasAgenda(anio, eventos) {
+            const marcas = new Map();
+            const suma = iso => marcas.set(iso, (marcas.get(iso) || 0) + 1);
+            const prefijo = String(anio);
+            eventos.forEach(e => {
+                if (e.sinMarca) return;
+                const m = e.match;
+                if (m.f) { if (m.f.startsWith(prefijo)) suma(m.f); }
+                else if (m.mmdd) {
+                    const [mm, dd] = m.mmdd.split('-').map(Number);
+                    const d = new Date(anio, mm - 1, dd);
+                    if (d.getMonth() === mm - 1) suma(isoDeFecha(anio, mm - 1, dd));   // ignora 29/02 en años no bisiestos
+                } else if (m.desde) {
+                    const ini = new Date(Math.max(new Date(m.desde + 'T00:00:00'), new Date(anio, 0, 1)));
+                    const fin = new Date(Math.min(new Date(m.hasta + 'T00:00:00'), new Date(anio, 11, 31)));
+                    for (let d = new Date(ini), i = 0; d <= fin && i < 400; d.setDate(d.getDate() + 1), i++) {
+                        suma(isoDeFecha(d.getFullYear(), d.getMonth(), d.getDate()));
+                    }
+                }
+            });
+            return marcas;
+        }
+
+        // Arma el título y el contenido (secciones agrupadas) de un día; lo usan la ventana y la vista de un día
+        function construirAgendaDia(iso) {
+            const [y, m, d] = iso.split('-').map(Number);
+            const fecha = new Date(y, m - 1, d);
+            let titulo = fecha.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            titulo = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+
+            const eventos = recolectarEventosAgenda().filter(e => coincideAgenda(e.match, iso));
+            const registros = eventos.filter(e => !e.sinMarca).length;
+            let html = eventos.length === 0 ? ''
+                : `<div class="agenda-resumen">${registros ? `${registros} registro(s) en esta fecha` : 'No hay registros en esta fecha'}</div>`;
+
+            SECCIONES_AGENDA.forEach(sec => {
+                const items = eventos.filter(e => e.tipo === sec.tipo);
+                if (items.length === 0) return;
+                if (sec.tipo === 'semanal') items.sort((a, b) => (a.orden || '').localeCompare(b.orden || ''));
+                html += `
+                    <div class="agenda-sec" style="--sec-color: ${sec.color};">
+                        <div class="agenda-sec-head">
+                            <span>${sec.icono} ${sec.titulo}<span class="agenda-count">${items.length}</span></span>
+                            <button type="button" class="agenda-link" onclick="irAModuloDesdeDia('${sec.modulo}', '${sec.tab || ''}')">Ir al módulo →</button>
+                        </div>
+                        <ul>${items.map(it => {
+                            let det = it.detalle.slice();
+                            if (it.tipo === 'cumple') det = [`Cumple ${y - parseInt(it.nacimiento.slice(0, 4))} años`];
+                            return `<li><b>${escHtml(it.titulo)}</b>${det.length ? `<small>${det.map(escHtml).join('\n')}</small>` : ''}</li>`;
+                        }).join('')}</ul>
+                    </div>`;
+            });
+
+            if (eventos.length === 0) {
+                html += '<div class="agenda-vacio">Nada registrado ni programado para este día.</div>';
+            }
+            return { titulo, html };
+        }
+
+        function sumarDiasISO(iso, delta) {
+            const [y, m, d] = iso.split('-').map(Number);
+            const n = new Date(y, m - 1, d + delta);
+            return isoDeFecha(n.getFullYear(), n.getMonth(), n.getDate());
+        }
+
+        // --- Ventana (clic en un día del calendario) ---
+        function abrirModalDiaAnual(iso) {
+            document.getElementById('dia-modal-fecha').value = iso;
+            const { titulo, html } = construirAgendaDia(iso);
+            document.getElementById('dia-modal-titulo').innerText = titulo;
+            document.getElementById('dia-modal-contenido').innerHTML = html;
+            document.getElementById('modalDiaAnual').style.display = 'flex';
+        }
+
+        // --- Vista de un solo día (botón Hoy): oculta el calendario y muestra solo ese día ---
+        let vistaDiaAnualIso = null;
+
+        function mostrarVistaDiaAnual(iso) {
+            vistaDiaAnualIso = iso;
+            anioAnualActual = parseInt(iso.slice(0, 4));   // al volver al calendario se ve el año de este día
+            const { titulo, html } = construirAgendaDia(iso);
+            document.getElementById('vista-dia-titulo').innerText = titulo;
+            document.getElementById('vista-dia-contenido').innerHTML = html;
+            document.getElementById('anual-calendario').style.display = 'none';
+            document.getElementById('anual-vista-dia').style.display = 'block';
+            window.scrollTo({ top: 0 });
+        }
+
+        function moverVistaDiaAnual(delta) {
+            if (vistaDiaAnualIso) mostrarVistaDiaAnual(sumarDiasISO(vistaDiaAnualIso, delta));
+        }
+
+        function cerrarVistaDiaAnual() {
+            vistaDiaAnualIso = null;
+            document.getElementById('anual-vista-dia').style.display = 'none';
+            document.getElementById('anual-calendario').style.display = 'block';
+            renderCronogramaAnual();
+        }
+
+        function cerrarModalDiaAnual() {
+            document.getElementById('modalDiaAnual').style.display = 'none';
+        }
+
+        function moverDiaAnual(delta) {
+            const iso = sumarDiasISO(document.getElementById('dia-modal-fecha').value, delta);
+            const anio = parseInt(iso.slice(0, 4));
+            if (anio !== anioAnualActual) {
+                anioAnualActual = anio;
+                renderCronogramaAnual();
+            }
+            abrirModalDiaAnual(iso);
+        }
+
+        function irAModuloDesdeDia(modulo, tab) {
+            cerrarModalDiaAnual();
+            showSection(modulo);
+            if (tab) mostrarTabEmpleado(tab);
         }
 
         function cambiarAnioAnual(delta) {
@@ -4619,8 +4894,8 @@
         }
 
         function irAnioActualAnual() {
-            anioAnualActual = new Date().getFullYear();
-            renderCronogramaAnual();
+            const h = new Date();
+            mostrarVistaDiaAnual(isoDeFecha(h.getFullYear(), h.getMonth(), h.getDate()));
         }
 
         function abrirModalMesAnual(mes) {
