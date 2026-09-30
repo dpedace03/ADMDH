@@ -897,6 +897,7 @@
       "vencimiento": "2027-09-01"
     }
   ],
+  "herramientasData": [],
   "tareasData": [
     {
       "id": 1790652315058,
@@ -1052,7 +1053,8 @@
       "nacimiento": "",
       "domicilio": "",
       "whatsapp": "+54 9 11 2177-3900",
-      "puesto": "Categoría Maestranza 3"
+      "puesto": "Categoría Maestranza 3",
+      "puestoDescripcion": ""
     },
     "horarios": {
       "invierno": {
@@ -1187,5 +1189,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-30T13:19:12.418Z"
+  "fechaExportacion": "2026-09-30T14:11:15.151Z"
 }
