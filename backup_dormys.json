@@ -1057,6 +1057,24 @@
           "name": "WhatsApp Image 2026-09-30 at 10.28.33.jpeg"
         }
       ]
+    },
+    {
+      "id": 1790811152254,
+      "fecha": "2026-09-28",
+      "autor": "Alberto Ferreyra",
+      "importe": 864000,
+      "estado": "Pendiente",
+      "descripcion": "La zinguería por dos dormys, sería: \n5 tramos zinguería tipo americana \n11 soportes \nDos cierres \nDos boquetas 3 * 4 \nOcho caños tres por cuatro \nDos conectores 3 por 4 \nOcho granpas tres por cuatro \nUn sellador para zinguerías \nTornillos varios de distintas maneras \nTotal de materiales \n432.000\nMano de obra puedo recortar y colocar la singuería \n432.000\nTotal del trabajo \n864.000 \nPor 2 dormis",
+      "adjuntos": []
+    },
+    {
+      "id": 1790811200748,
+      "fecha": "2026-09-28",
+      "autor": "Alberto Ferreyra",
+      "importe": 3590000,
+      "estado": "Pendiente",
+      "descripcion": "Arreglo de 1 dormy:\n\n30 listones de 4 m \n\nDos y medio rollos de membrana por espuma \n\n1 rollo de ruberoy\n\n70 m yesero \n\nUna cenefa de 4 metros 1 x 8 \n\nMachimbre media por cinco \n\nClavo de distintas medidas \n\nCal arena y cemento \n\nTotal de materiales 1.520.000 $\n\nY de mano de obra \n\nPor bajar las Tejas cambiar cobertura y listones en mal estado por todo nuevo , cambiar tirantes y machimbre en mal estado poner cenefa de una por ocho y volver a colocar de vuelta las Tejas \n\n1.970.000 $  \n\nTotal del trabajo \n\n3.590.000 $",
+      "adjuntos": []
     }
   ],
   "facundoData": {
@@ -1228,5 +1246,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-30T22:36:30.799Z"
+  "fechaExportacion": "2026-09-30T23:34:41.281Z"
 }
