@@ -1039,10 +1039,24 @@
       "id": 1790722286668,
       "fecha": "2026-09-29",
       "autor": "Mauricio Samchez",
-      "importe": 0,
-      "estado": "Solicitado",
-      "descripcion": "Reemplazo Facundo — Tareas de corte de pasto, limpieza, pasar hidrolavadora. (Mantenimiento)",
+      "importe": 130000,
+      "estado": "Pendiente",
+      "descripcion": "Reemplazo Facundo — Tareas de corte de pasto, limpieza, pasar hidrolavadora. (Mantenimiento). El  jornal sería de 130.000 IVA incluido",
       "adjuntos": []
+    },
+    {
+      "id": 1790807590166,
+      "fecha": "2026-09-30",
+      "autor": "Mauricio Sanchez",
+      "importe": 1400000,
+      "estado": "Pendiente",
+      "descripcion": "Presupuesto de reja de paso \n2 paños fijos más 2 portones centrales con pasadores \nAmurado al piso existente\nPresupuesto mano de obra y material 1.400.000 IVA incluido",
+      "adjuntos": [
+        {
+          "id": "file_1790807586408_45s3i",
+          "name": "WhatsApp Image 2026-09-30 at 10.28.33.jpeg"
+        }
+      ]
     }
   ],
   "facundoData": {
@@ -1214,5 +1228,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-30T22:29:38.488Z"
+  "fechaExportacion": "2026-09-30T22:36:30.799Z"
 }
