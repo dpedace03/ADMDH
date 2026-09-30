@@ -313,6 +313,7 @@
             gap: 6px;
         }
 
+        .text-preview { white-space: nowrap; }
         .btn-lupa {
             background: transparent;
             border: none;
@@ -2773,7 +2774,7 @@
                 <tr>
                     <td class="col-nowrap">${fechaLarga(t.fecha)}</td>
                     <td>${celdaTextoEmp(t.id, 'tarea', t.tarea)}</td>
-                    <td>${celdaTextoEmp(t.id, 'observacion', t.observacion)}</td>
+                    <td>${celdaVistaPrevia(t.observacion, 'Observación de la tarea')}</td>
                     <td class="col-nowrap">
                         <button class="btn-edit" title="Editar" onclick="editarTareaEmp(${t.id})">✏️</button>
                         <button class="btn-delete" title="Eliminar" onclick="eliminarTareaEmp(${t.id})">❌</button>
@@ -2834,6 +2835,23 @@
                     <button type="button" class="btn-lupa" title="Ver detalle completo" onclick="abrirModalTextoDetalle('${tituloModal}', \`${safeTextoEscaped}\`)">🔍</button>
                 </div>
             `;
+        }
+
+        // Muestra solo las primeras palabras del texto; si hay más, agrega "…" y la lupa 🔍 para ver el texto completo
+        function celdaVistaPrevia(texto, tituloModal = 'Detalle', maxPalabras = 6, maxCaracteres = 45) {
+            const t = String(texto ?? '').replace(/\s+/g, ' ').trim();
+            if (!t || t === '-') return '<span style="color: var(--secondary);">—</span>';
+            const palabras = t.split(' ');
+            let vista = palabras.slice(0, maxPalabras).join(' ');
+            let hayMas = palabras.length > maxPalabras;
+            if (vista.length > maxCaracteres) { vista = vista.slice(0, maxCaracteres).trimEnd(); hayMas = true; }
+            const completo = String(texto).trim();
+            const lupa = hayMas
+                ? `<button type="button" class="btn-lupa" title="Ver texto completo" onclick="abrirModalTextoDetalle(decodeURIComponent('${encodeURIComponent(tituloModal)}'), decodeURIComponent('${encodeURIComponent(completo)}'))">🔍</button>`
+                : '';
+            return `<div class="cell-with-lupa">
+                        <span class="text-preview" title="${escHtml(t)}">${escHtml(vista)}${hayMas ? '…' : ''}</span>${lupa}
+                    </div>`;
         }
 
         function abrirModalTextoDetalle(titulo, texto) {
@@ -3330,7 +3348,7 @@
                     <tr>
                         <td class="col-nowrap">${p.fecha}</td>
                         <td><b>${p.autor}</b></td>
-                        <td>${renderCellWithLupa(p.descripcion, 'Descripción del Presupuesto', 2)}</td>
+                        <td>${celdaVistaPrevia(p.descripcion, 'Descripción del Presupuesto')}</td>
                         <td class="col-nowrap">${(p.estado === 'Solicitado' && !p.importe) ? '<span style="color: var(--secondary);">—</span>' : '$' + p.importe.toFixed(2)}</td>
                         <td class="col-nowrap"><span class="badge" style="background-color: ${colorBadge};">${escHtml(p.estado)}</span></td>
                         <td>${generarThumbnailsHTML(p._cacheAdjuntos || p.adjuntos)}</td>
@@ -3480,7 +3498,7 @@
                         <td>${duenio}</td>
                         <td class="col-nowrap">${n.monto ? '$' + n.monto.toFixed(2) : '-'}</td>
                         <td>${n.descripcion || '-'}</td>
-                        <td>${renderCellWithLupa(n.observacion, 'Observación de Novedad', 2)}</td>
+                        <td>${celdaVistaPrevia(n.observacion, 'Observación de Novedad')}</td>
                         <td class="col-nowrap"><span class="badge" style="background-color: ${getColorDeEstado(n.estado)};">${n.estado}</span></td>
                         <td>${generarThumbnailsHTML(n._cacheArchivos || n.archivos)}</td>
                         <td class="col-nowrap">
