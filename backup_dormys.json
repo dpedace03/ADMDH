@@ -898,6 +898,73 @@
     }
   ],
   "herramientasData": [],
+  "menuConfig": {
+    "empleados": {
+      "numero": 1,
+      "sub": 0
+    },
+    "casita": {
+      "numero": 11,
+      "sub": 2
+    },
+    "techos": {
+      "numero": 3,
+      "sub": 0
+    },
+    "presupuestos": {
+      "numero": 6,
+      "sub": 3
+    },
+    "proveedores": {
+      "numero": 5,
+      "sub": 0
+    },
+    "informes": {
+      "numero": 6,
+      "sub": 0
+    },
+    "gastos": {
+      "numero": 6,
+      "sub": 1
+    },
+    "piscina": {
+      "numero": 11,
+      "sub": 3
+    },
+    "electrogeno": {
+      "numero": 9,
+      "sub": 0
+    },
+    "matafuegos": {
+      "numero": 10,
+      "sub": 0
+    },
+    "tareas": {
+      "numero": 11,
+      "sub": 0
+    },
+    "herramientas": {
+      "numero": 1,
+      "sub": 1
+    },
+    "procedimientos": {
+      "numero": 6,
+      "sub": 2
+    },
+    "registro": {
+      "numero": 11,
+      "sub": 1
+    },
+    "cronograma": {
+      "numero": 15,
+      "sub": 0
+    },
+    "cronograma-anual": {
+      "numero": 15,
+      "sub": 16
+    }
+  },
+  "procedimientosData": [],
   "tareasData": [
     {
       "id": 1790652315058,
@@ -1271,5 +1338,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T16:27:09.928Z"
+  "fechaExportacion": "2026-10-01T20:35:27.679Z"
 }
