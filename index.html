@@ -314,6 +314,9 @@
         }
 
         .text-preview { white-space: nowrap; }
+        .menu-estructura { margin-top: 10px; background: #f8fafc; border: 1px dashed var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; line-height: 1.7; text-align: left; }
+        .menu-estructura .menu-error { color: #b91c1c; font-weight: 700; }
+        #tabla-menu-config input { width: 80px; text-align: center; }
 
         /* Botón "+" junto al título: muestra / oculta el formulario de alta */
         .alta-oculta { display: none !important; }
@@ -550,6 +553,7 @@
         <div class="header-title-container">
             <button class="btn-header-icon" onclick="showSection('config')" title="Configuración">⚙️</button>
             <button class="btn-header-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
+            <button class="btn-header-icon" id="btn-volver-submenu" style="display: none;" onclick="volverASubmenu()" title="Volver a la pantalla anterior">⬅️</button>
             <h2 id="main-header-title">Administración Dormys</h2>
         </div>
     </header>
@@ -573,82 +577,7 @@
     <section id="sec-admin-dormys" class="section active" style="text-align: center; padding: 30px 15px;">
         <h2 style="color: var(--primary); margin-bottom: 25px; font-size: 1.5rem;">Administración Dormys</h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 900px; margin: 0 auto 30px auto;">
-            <button class="home-grid-btn" onclick="showSection('facundo')">
-                <span style="font-size: 2.2rem;">👤</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Empleados</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="moduloProximamente('Casita')">
-                <span style="font-size: 2.2rem;">🏡</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Casita</span>
-            </button>
-
-            <button class="home-grid-btn primary" onclick="showSection('reparaciones')">
-                <span style="font-size: 2.2rem;">🏚️</span>
-                <span style="font-weight: bold; font-size: 1.1rem;">Techos</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('presupuestos')">
-                <span style="font-size: 2.2rem;">📄</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Presupuestos</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('proveedores')">
-                <span style="font-size: 2.2rem;">👷</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Proveedores</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('stats')">
-                <span style="font-size: 2.2rem;">📊</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Informes</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('pagos')">
-                <span style="font-size: 2.2rem;">💸</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Gastos</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="moduloProximamente('Piscina')">
-                <span style="font-size: 2.2rem;">🏊</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Piscina</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('electrogeno')">
-                <span style="font-size: 2.2rem;">⚡</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Grupo electrógeno</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('matafuegos')">
-                <span style="font-size: 2.2rem;">🧯</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Matafuegos</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('tareas')">
-                <span style="font-size: 2.2rem;">📋</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Tareas</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('herramientas')">
-                <span style="font-size: 2.2rem;">🧰</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Herramientas</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('registro')">
-                <span style="font-size: 2.2rem;">📝</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Registro</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('cronograma')">
-                <span style="font-size: 2.2rem;">📅</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma semanal</span>
-            </button>
-
-            <button class="home-grid-btn" onclick="showSection('cronograma-anual')">
-                <span style="font-size: 2.2rem;">🗓️</span>
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--text);">Cronograma anual</span>
-            </button>
-        </div>
+        <div id="menu-principal-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 900px; margin: 0 auto 30px auto;"></div>
 
         <div style="background: var(--card-bg); padding: 18px; border-radius: 12px; max-width: 380px; margin: 0 auto; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--text);">Acceso Rápido por Dormy</label>
@@ -862,6 +791,67 @@
                     <tbody id="tabla-tareas-emp"></tbody>
                 </table>
             </div>
+        </div>
+    </section>
+
+    <!-- SUBMENÚ: pantalla que se abre al hacer clic en un botón que tiene botones hijos -->
+    <section id="sec-submenu" class="section" style="text-align: center; padding: 30px 15px;">
+        <h2 id="submenu-titulo" style="color: var(--primary); margin-bottom: 25px; font-size: 1.5rem;">Submenú</h2>
+        <div id="submenu-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; max-width: 900px; margin: 0 auto 10px auto;"></div>
+    </section>
+
+    <!-- PROCEDIMIENTOS (ABM) -->
+    <section id="sec-procedimientos" class="section">
+        <div class="titulo-con-mas"><h3>📘 Gestión de Procedimientos</h3><button type="button" class="btn-mas" data-alta="procedimientos" title="Agregar procedimiento" aria-label="Agregar procedimiento" onclick="toggleFormAlta('procedimientos')">+</button></div>
+        <div class="card-box alta-oculta">
+            <form id="form-procedimiento" onsubmit="guardarProcedimiento(event)">
+                <input type="hidden" id="proc-id">
+
+                <div class="form-group full-width">
+                    <label>Nombre del procedimiento</label>
+                    <input type="text" id="proc-nombre" required placeholder="Ej: Limpieza de canaletas">
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="proc-categoria" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Responsable</label>
+                    <input type="text" id="proc-responsable" placeholder="Ej: Facundo">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Descripción / pasos a seguir</label>
+                    <textarea id="proc-descripcion" rows="6" required placeholder="Ej:&#10;1. Retirar hojas y residuos con la pala.&#10;2. Lavar con manguera desde el extremo más alto.&#10;3. Verificar que el agua escurra sin obstáculos."></textarea>
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn-submit" id="btn-guardar-proc">Guardar Procedimiento</button>
+                    <button type="button" class="btn-reset-form" onclick="resetFormProcedimiento()">Nuevo</button>
+                </div>
+            </form>
+        </div>
+
+        <h3>Listado de Procedimientos</h3>
+        <div class="emp-filtros">
+            <input type="text" id="buscar-procedimiento" placeholder="Buscar por nombre, responsable o descripción..." oninput="renderProcedimientos()">
+            <select id="filtro-categoria-procedimiento" onchange="renderProcedimientos()" style="min-width: 190px;"></select>
+        </div>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th class="col-nowrap">Categoría</th>
+                        <th class="col-nowrap">Responsable</th>
+                        <th>Descripción</th>
+                        <th class="col-nowrap">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-procedimientos"></tbody>
+            </table>
         </div>
     </section>
 
@@ -1777,6 +1767,28 @@
             </div>
         </div>
 
+        <div style="margin-bottom: 20px;">
+            <h4>Botones del Menú (número y subnúmero)</h4>
+            <div class="card-box" style="margin-top: 10px;">
+                <p style="font-size: 0.85rem; color: var(--secondary); line-height: 1.5; margin-bottom: 10px;">
+                    Cada botón tiene un <b>número</b> y un <b>subnúmero</b>. Con subnúmero <b>0</b> el botón aparece en el <b>menú principal</b>.
+                    Un botón con el mismo número y un subnúmero distinto de 0 aparece en la <b>pantalla que se abre al hacer clic</b> en el botón de ese número.
+                    Ejemplo: el botón <b>1 · 0</b> está en el menú principal; el botón <b>1 · 2</b> está dentro de la pantalla del botón 1 · 0.
+                </p>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>Botón</th><th class="col-nowrap">Número</th><th class="col-nowrap">Subnúmero</th></tr></thead>
+                        <tbody id="tabla-menu-config"></tbody>
+                    </table>
+                </div>
+                <div id="menu-config-estructura" class="menu-estructura"></div>
+                <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action" onclick="guardarMenuConfig()">Guardar Menú</button>
+                    <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="restaurarMenuConfig()">Restaurar orden original</button>
+                </div>
+            </div>
+        </div>
+
         <div class="config-grid">
             <div>
                 <div style="margin-bottom: 20px;">
@@ -1975,6 +1987,7 @@
             'admin-dormys': 'Administración Dormys',
             'facundo': 'Información de Facundo',
             'herramientas': 'Gestión de Herramientas',
+            'procedimientos': 'Gestión de Procedimientos',
             'reparaciones': 'Administración de Techos - Dormys (1-99)',
             'presupuestos': 'Gestión de Presupuestos',
             'pedir-presupuesto': 'Pedir Presupuesto',
@@ -2233,7 +2246,8 @@
         let electrogenoData = JSON.parse(localStorage.getItem('electrogenoData')) || [];
         let electrogenoNovedades = JSON.parse(localStorage.getItem('electrogenoNovedades')) || [];
         let matafuegosData = JSON.parse(localStorage.getItem('matafuegosData')) || [];
-        let herramientasData = JSON.parse(localStorage.getItem('herramientasData')) || [];   // [{id, nombre, descripcion, estado}]
+        let herramientasData = JSON.parse(localStorage.getItem('herramientasData')) || [];
+        let procedimientosData = JSON.parse(localStorage.getItem('procedimientosData')) || [];   // [{id, nombre, categoria, responsable, descripcion}]   // [{id, nombre, descripcion, estado}]
         const COLORES_ESTADO_HERRAMIENTA = { 'Activa': '#10b981', 'En reparación': '#f59e0b', 'En desuso': '#64748b' };
         let tareasData = JSON.parse(localStorage.getItem('tareasData')) || [];
         let registrosData = JSON.parse(localStorage.getItem('registrosData')) || [];
@@ -2320,7 +2334,8 @@
             novedades:    { form: 'form-novedad',     reset: () => resetFormNovedad() },
             pagos:        { form: 'form-pago',        reset: () => resetFormPago() },
             cronograma:   { form: 'form-cronograma',  reset: () => resetFormCronograma() },
-            herramientas: { form: 'form-herramienta', reset: () => resetFormHerramienta() }
+            herramientas: { form: 'form-herramienta', reset: () => resetFormHerramienta() },
+            procedimientos: { form: 'form-procedimiento', reset: () => resetFormProcedimiento() }
         };
 
         function abrirFormAlta(key, enfocar = true) {
@@ -2505,6 +2520,8 @@
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
             if (FORMS_ALTA[sectionId]) cerrarFormAlta(sectionId);
+            if (sectionId === 'admin-dormys') { submenuOrigen = null; renderMenuPrincipal(); }
+            actualizarBotonVolver(sectionId);
             if (sectionId === 'presupuestos') { populateEstadoPresSelects(); renderPresupuestos(); }
             if (sectionId === 'proveedores') { renderChecksTareasProveedor(); renderProveedores(); }
             if (sectionId === 'pedir-presupuesto') initPedirPresupuesto();
@@ -2512,6 +2529,7 @@
             if (sectionId === 'facundo') initEmpleado();
             if (sectionId === 'matafuegos') renderMatafuegos();
             if (sectionId === 'herramientas') { resetFormHerramienta(); renderHerramientas(); }
+            if (sectionId === 'procedimientos') { populateCategoriasProcedimiento(); renderProcedimientos(); }
             if (sectionId === 'tareas') { populateCategoriaSelects(); renderTareas(); }
             if (sectionId === 'registro') renderRegistros();
             if (sectionId === 'cronograma') renderCronograma();
@@ -2521,7 +2539,7 @@
                 document.getElementById('anual-calendario').style.display = 'block';
                 renderCronogramaAnual();
             }
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); renderMenuConfig(); }
         }
 
         // =====================================================================
@@ -4372,6 +4390,8 @@
             if (data.pagos) { pagos = data.pagos; localStorage.setItem('pagos', JSON.stringify(data.pagos)); }
             if (data.electrogenoData) { electrogenoData = data.electrogenoData; localStorage.setItem('electrogenoData', JSON.stringify(data.electrogenoData)); }
             if (data.electrogenoNovedades) { electrogenoNovedades = data.electrogenoNovedades; localStorage.setItem('electrogenoNovedades', JSON.stringify(data.electrogenoNovedades)); }
+            if (data.menuConfig) { menuConfig = data.menuConfig; localStorage.setItem('menuConfig', JSON.stringify(data.menuConfig)); }
+            if (data.procedimientosData) { procedimientosData = data.procedimientosData; localStorage.setItem('procedimientosData', JSON.stringify(data.procedimientosData)); }
             if (data.herramientasData) { herramientasData = data.herramientasData; localStorage.setItem('herramientasData', JSON.stringify(data.herramientasData)); }
             if (data.matafuegosData) { matafuegosData = data.matafuegosData; localStorage.setItem('matafuegosData', JSON.stringify(data.matafuegosData)); }
             if (data.tareasData) { tareasData = data.tareasData; localStorage.setItem('tareasData', JSON.stringify(data.tareasData)); }
@@ -5168,7 +5188,282 @@
                 </tr>`).join('');
         }
 
+
+        // =====================================================================
+        //  PROCEDIMIENTOS (ABM)
+        // =====================================================================
+        function populateCategoriasProcedimiento() {
+            const selForm = document.getElementById('proc-categoria');
+            const selFiltro = document.getElementById('filtro-categoria-procedimiento');
+            const opciones = categoriasConfig.map(c => `<option value="${escHtml(c.nombre)}">${escHtml(c.nombre)}</option>`).join('');
+            if (selForm) {
+                const actual = selForm.value;
+                selForm.innerHTML = opciones;
+                if (actual && categoriasConfig.some(c => c.nombre === actual)) selForm.value = actual;
+            }
+            if (selFiltro) {
+                const actual = selFiltro.value;
+                selFiltro.innerHTML = '<option value="">Todas las categorías</option>' + opciones;
+                selFiltro.value = categoriasConfig.some(c => c.nombre === actual) ? actual : '';
+            }
+        }
+
+        function resetFormProcedimiento() {
+            document.getElementById('form-procedimiento').reset();
+            document.getElementById('proc-id').value = '';
+            document.getElementById('btn-guardar-proc').innerText = 'Guardar Procedimiento';
+        }
+
+        function guardarProcedimiento(e) {
+            e.preventDefault();
+            const id = document.getElementById('proc-id').value;
+            const item = {
+                id: id ? parseInt(id) : Date.now(),
+                nombre: document.getElementById('proc-nombre').value.trim(),
+                categoria: document.getElementById('proc-categoria').value,
+                responsable: document.getElementById('proc-responsable').value.trim(),
+                descripcion: document.getElementById('proc-descripcion').value.trim()
+            };
+            const idx = id ? procedimientosData.findIndex(x => x.id == id) : -1;
+            if (idx !== -1) procedimientosData[idx] = item; else procedimientosData.push(item);
+            localStorage.setItem('procedimientosData', JSON.stringify(procedimientosData));
+            cerrarFormAlta('procedimientos');
+            renderProcedimientos();
+        }
+
+        function editarProcedimiento(id) {
+            const x = procedimientosData.find(i => i.id === id);
+            if (!x) return;
+            abrirFormAlta('procedimientos', false);
+            document.getElementById('proc-id').value = x.id;
+            document.getElementById('proc-nombre').value = x.nombre;
+            const sel = document.getElementById('proc-categoria');
+            if (x.categoria && ![...sel.options].some(o => o.value === x.categoria)) sel.add(new Option(x.categoria, x.categoria));   // categoría que ya no está en Config
+            sel.value = x.categoria;
+            document.getElementById('proc-responsable').value = x.responsable || '';
+            document.getElementById('proc-descripcion').value = x.descripcion || '';
+            document.getElementById('btn-guardar-proc').innerText = 'Actualizar Procedimiento';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminarProcedimiento(id) {
+            const x = procedimientosData.find(i => i.id === id);
+            if (!x) return;
+            if (!confirm(`¿Eliminar el procedimiento "${x.nombre}"?`)) return;
+            procedimientosData = procedimientosData.filter(i => i.id !== id);
+            localStorage.setItem('procedimientosData', JSON.stringify(procedimientosData));
+            renderProcedimientos();
+        }
+
+        function renderProcedimientos() {
+            const tbody = document.getElementById('tabla-procedimientos');
+            if (!tbody) return;
+            const texto = (document.getElementById('buscar-procedimiento').value || '').toLowerCase().trim();
+            const categoria = document.getElementById('filtro-categoria-procedimiento').value;
+
+            const lista = procedimientosData
+                .filter(x => !categoria || x.categoria === categoria)
+                .filter(x => !texto || `${x.nombre} ${x.categoria} ${x.responsable} ${x.descripcion}`.toLowerCase().includes(texto))
+                .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--secondary);">No hay procedimientos para mostrar.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(x => {
+                const cat = categoriasConfig.find(c => c.nombre === x.categoria);
+                return `
+                <tr>
+                    <td><b>${escHtml(x.nombre)}</b></td>
+                    <td class="col-nowrap"><span class="badge" style="background-color: ${cat ? cat.color : '#64748b'};">${escHtml(x.categoria || '—')}</span></td>
+                    <td class="col-nowrap">${escHtml(x.responsable) || '<span style="color: var(--secondary);">—</span>'}</td>
+                    <td>${celdaVistaPrevia(x.descripcion, x.nombre)}</td>
+                    <td class="col-nowrap">
+                        <button class="btn-edit" title="Editar" onclick="editarProcedimiento(${x.id})">✏️</button>
+                        <button class="btn-delete" title="Eliminar" onclick="eliminarProcedimiento(${x.id})">❌</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+
+        // =====================================================================
+        //  MENÚ CONFIGURABLE: cada botón tiene número y subnúmero
+        //  subnúmero 0  -> el botón está en el menú principal
+        //  mismo número y subnúmero distinto de 0 -> está en la pantalla que abre el botón de ese número
+        // =====================================================================
+        const BOTONES_MENU = [
+            { id: 'empleados',          icono: '👤',  texto: 'Empleados',          seccion: 'facundo' },
+            { id: 'casita',             icono: '🏡',  texto: 'Casita',             proximamente: true },
+            { id: 'techos',             icono: '🏚️', texto: 'Techos',             seccion: 'reparaciones', destacado: true },
+            { id: 'presupuestos',       icono: '📄',  texto: 'Presupuestos',       seccion: 'presupuestos' },
+            { id: 'proveedores',        icono: '👷',  texto: 'Proveedores',        seccion: 'proveedores' },
+            { id: 'informes',           icono: '📊',  texto: 'Informes',           seccion: 'stats' },
+            { id: 'gastos',             icono: '💸',  texto: 'Gastos',             seccion: 'pagos' },
+            { id: 'piscina',            icono: '🏊',  texto: 'Piscina',            proximamente: true },
+            { id: 'electrogeno',        icono: '⚡',  texto: 'Grupo electrógeno',  seccion: 'electrogeno' },
+            { id: 'matafuegos',         icono: '🧯',  texto: 'Matafuegos',         seccion: 'matafuegos' },
+            { id: 'tareas',             icono: '📋',  texto: 'Tareas',             seccion: 'tareas' },
+            { id: 'herramientas',       icono: '🧰',  texto: 'Herramientas',       seccion: 'herramientas' },
+            { id: 'procedimientos',     icono: '📘',  texto: 'Procedimientos',     seccion: 'procedimientos' },
+            { id: 'registro',           icono: '📝',  texto: 'Registro',           seccion: 'registro' },
+            { id: 'cronograma',         icono: '📅',  texto: 'Cronograma semanal', seccion: 'cronograma' },
+            { id: 'cronograma-anual',   icono: '🗓️', texto: 'Cronograma anual',   seccion: 'cronograma-anual' }
+        ];
+        let menuConfig = JSON.parse(localStorage.getItem('menuConfig')) || {};   // { idBoton: { numero, sub } }
+        let submenuOrigen = null;   // número del submenú desde el que se abrió la pantalla actual (para el botón "volver")
+
+        // Valores por defecto: todos en el menú principal (subnúmero 0), numerados según el orden original
+        function valoresMenu(config) {
+            return BOTONES_MENU.map((b, i) => {
+                const c = (config || {})[b.id] || {};
+                const numero = parseInt(c.numero), sub = parseInt(c.sub);
+                return { b, orden: i, numero: numero >= 1 ? numero : i + 1, sub: sub >= 0 ? sub : 0 };
+            });
+        }
+
+        // Arma la estructura: botones del menú principal y los hijos de cada uno
+        function calcularEstructuraMenu(items) {
+            const porNumero = (a, b) => a.numero - b.numero || a.sub - b.sub || a.orden - b.orden;
+            const numerosPadre = new Set(items.filter(x => x.sub === 0).map(x => x.numero));
+            // Un botón con subnúmero pero sin botón padre quedaría inalcanzable: se muestra en el menú principal
+            const principal = items.filter(x => x.sub === 0 || !numerosPadre.has(x.numero)).sort(porNumero);
+            const hijosDe = n => items.filter(x => x.sub !== 0 && x.numero === n).sort(porNumero);
+            return { principal, hijosDe, numerosPadre };
+        }
+
+        function tileMenuHTML(b, onclick, textoExtra) {
+            const dest = b.destacado;
+            return `<button class="home-grid-btn${dest ? ' primary' : ''}" onclick="${onclick}">
+                        <span style="font-size: 2.2rem;">${b.icono}</span>
+                        <span style="font-weight: bold; font-size: 1.1rem;${dest ? '' : ' color: var(--text);'}">${escHtml(textoExtra || b.texto)}</span>
+                    </button>`;
+        }
+
+        function renderMenuPrincipal() {
+            const grid = document.getElementById('menu-principal-grid');
+            if (!grid) return;
+            const est = calcularEstructuraMenu(valoresMenu(menuConfig));
+            grid.innerHTML = est.principal.map(x => tileMenuHTML(x.b, `abrirBotonMenu('${x.b.id}', false)`)).join('');
+        }
+
+        function ejecutarBotonMenu(b, origen) {
+            submenuOrigen = origen;
+            if (b.proximamente) { moduloProximamente(b.texto); return; }
+            showSection(b.seccion);
+        }
+
+        // Clic en un botón: si tiene botones hijos abre su pantalla (submenú); si no, abre su módulo
+        function abrirBotonMenu(id, desdeSubmenu) {
+            const items = valoresMenu(menuConfig);
+            const item = items.find(x => x.b.id === id);
+            if (!item) return;
+            const est = calcularEstructuraMenu(items);
+            if (item.sub === 0 && est.hijosDe(item.numero).length > 0) { abrirSubmenu(item.numero); return; }
+            ejecutarBotonMenu(item.b, desdeSubmenu ? item.numero : null);
+        }
+
+        function abrirSubmenu(numero) {
+            const items = valoresMenu(menuConfig);
+            const padre = items.find(x => x.numero === numero && x.sub === 0);
+            if (!padre) return;
+            const hijos = calcularEstructuraMenu(items).hijosDe(numero);
+            // Si el botón padre tiene su propia pantalla, se ofrece también como primer botón
+            let html = padre.b.proximamente ? '' : tileMenuHTML(padre.b, `ejecutarBotonMenu(BOTONES_MENU.find(b => b.id === '${padre.b.id}'), ${numero})`, `Abrir ${padre.b.texto}`);
+            html += hijos.map(x => tileMenuHTML(x.b, `abrirBotonMenu('${x.b.id}', true)`)).join('');
+            document.getElementById('submenu-titulo').innerText = padre.b.texto;
+            document.getElementById('submenu-grid').innerHTML = html;
+            titulosSecciones['submenu'] = padre.b.texto;
+            submenuOrigen = numero;
+            showSection('submenu');
+        }
+
+        function volverASubmenu() {
+            if (submenuOrigen !== null) abrirSubmenu(submenuOrigen);
+        }
+
+        function actualizarBotonVolver(sectionId) {
+            const btn = document.getElementById('btn-volver-submenu');
+            if (!btn) return;
+            btn.style.display = (submenuOrigen !== null && sectionId !== 'submenu' && sectionId !== 'admin-dormys') ? 'flex' : 'none';
+        }
+
+        // ---------- Configuración ----------
+        function renderMenuConfig() {
+            const tbody = document.getElementById('tabla-menu-config');
+            if (!tbody) return;
+            tbody.innerHTML = valoresMenu(menuConfig).map(x => `
+                <tr>
+                    <td><span style="font-size: 1.2rem;">${x.b.icono}</span> <b>${escHtml(x.b.texto)}</b></td>
+                    <td class="col-nowrap"><input type="number" min="1" step="1" id="mc-num-${x.b.id}" value="${x.numero}" oninput="previsualizarMenuConfig()"></td>
+                    <td class="col-nowrap"><input type="number" min="0" step="1" id="mc-sub-${x.b.id}" value="${x.sub}" oninput="previsualizarMenuConfig()"></td>
+                </tr>`).join('');
+            previsualizarMenuConfig();
+        }
+
+        // Lee lo que hay escrito en la tabla y devuelve { items, errores }
+        function leerMenuConfigFormulario() {
+            const errores = [];
+            const items = BOTONES_MENU.map((b, i) => {
+                const n = document.getElementById(`mc-num-${b.id}`).value.trim();
+                const sb = document.getElementById(`mc-sub-${b.id}`).value.trim();
+                const numero = /^\d+$/.test(n) ? parseInt(n) : NaN;
+                const sub = /^\d+$/.test(sb) ? parseInt(sb) : NaN;
+                if (!(numero >= 1)) errores.push(`"${b.texto}": el número debe ser un entero desde 1.`);
+                if (!(sub >= 0)) errores.push(`"${b.texto}": el subnúmero debe ser un entero desde 0.`);
+                return { b, orden: i, numero, sub };
+            });
+            const validos = items.filter(x => x.numero >= 1 && x.sub >= 0);
+            const vistos = {};
+            validos.forEach(x => {
+                const k = `${x.numero}·${x.sub}`;
+                if (vistos[k]) errores.push(`"${x.b.texto}" y "${vistos[k]}" tienen el mismo número y subnúmero (${x.numero} · ${x.sub}).`);
+                else vistos[k] = x.b.texto;
+            });
+            const padres = new Set(validos.filter(x => x.sub === 0).map(x => x.numero));
+            validos.filter(x => x.sub !== 0 && !padres.has(x.numero)).forEach(x =>
+                errores.push(`"${x.b.texto}" (${x.numero} · ${x.sub}) no tiene botón padre: tiene que existir un botón con número ${x.numero} y subnúmero 0.`));
+            return { items, validos, errores };
+        }
+
+        function previsualizarMenuConfig() {
+            const box = document.getElementById('menu-config-estructura');
+            if (!box) return;
+            const { validos, errores } = leerMenuConfigFormulario();
+            const est = calcularEstructuraMenu(validos);
+            let html = '<b>Así quedaría el menú:</b><br>';
+            html += est.principal.map(x => {
+                const hijos = est.hijosDe(x.numero);
+                const base = `<b>${x.numero}</b> ${x.b.icono} ${escHtml(x.b.texto)}`;
+                return x.sub === 0 && hijos.length
+                    ? `${base}  →  <span style="color: var(--secondary);">pantalla con:</span> ${hijos.map(h => `<b>${h.numero}·${h.sub}</b> ${h.b.icono} ${escHtml(h.b.texto)}`).join(', ')}`
+                    : base;
+            }).join('<br>');
+            if (errores.length) html += `<br><br>${errores.map(e => `<span class="menu-error">⚠ ${escHtml(e)}</span>`).join('<br>')}`;
+            box.innerHTML = html;
+        }
+
+        function guardarMenuConfig() {
+            const { items, errores } = leerMenuConfigFormulario();
+            if (errores.length) return alert('No se puede guardar el menú:\n\n' + errores.map(e => '• ' + e).join('\n'));
+            menuConfig = {};
+            items.forEach(x => { menuConfig[x.b.id] = { numero: x.numero, sub: x.sub }; });
+            localStorage.setItem('menuConfig', JSON.stringify(menuConfig));
+            renderMenuPrincipal();
+            previsualizarMenuConfig();
+            alert('Menú guardado correctamente.');
+        }
+
+        function restaurarMenuConfig() {
+            if (!confirm('¿Volver al orden original? Todos los botones quedarán en el menú principal.')) return;
+            menuConfig = {};
+            localStorage.removeItem('menuConfig');
+            renderMenuConfig();
+            renderMenuPrincipal();
+        }
+
         window.onload = async function() {
+            renderMenuPrincipal();
             aplicarColorTema(appBgColor, appCardBgColor);
             await initDB();
             await cargarDatosDesdeGitHub();
@@ -5285,6 +5580,8 @@
                     electrogenoNovedades: JSON.parse(localStorage.getItem('electrogenoNovedades')) || [],
                     matafuegosData: JSON.parse(localStorage.getItem('matafuegosData')) || [],
                     herramientasData: JSON.parse(localStorage.getItem('herramientasData')) || [],
+                    menuConfig: JSON.parse(localStorage.getItem('menuConfig')) || {},
+                    procedimientosData: JSON.parse(localStorage.getItem('procedimientosData')) || [],
                     tareasData: JSON.parse(localStorage.getItem('tareasData')) || [],
                     registrosData: JSON.parse(localStorage.getItem('registrosData')) || [],
                     cronogramaData: JSON.parse(localStorage.getItem('cronogramaData')) || [],
