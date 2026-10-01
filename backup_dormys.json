@@ -956,12 +956,12 @@
       "sub": 1
     },
     "cronograma": {
-      "numero": 15,
-      "sub": 0
+      "numero": 11,
+      "sub": 6
     },
     "cronograma-anual": {
-      "numero": 15,
-      "sub": 16
+      "numero": 11,
+      "sub": 7
     }
   },
   "procedimientosData": [],
@@ -1338,5 +1338,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T20:36:57.694Z"
+  "fechaExportacion": "2026-10-01T20:38:23.955Z"
 }
