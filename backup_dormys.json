@@ -912,8 +912,8 @@
       "sub": 0
     },
     "presupuestos": {
-      "numero": 11,
-      "sub": 10
+      "numero": 6,
+      "sub": 0
     },
     "proveedores": {
       "numero": 5,
@@ -924,16 +924,16 @@
       "sub": 8
     },
     "gastos": {
-      "numero": 11,
-      "sub": 9
+      "numero": 7,
+      "sub": 0
     },
     "piscina": {
       "numero": 11,
       "sub": 3
     },
     "electrogeno": {
-      "numero": 11,
-      "sub": 4
+      "numero": 15,
+      "sub": 0
     },
     "matafuegos": {
       "numero": 11,
@@ -960,8 +960,8 @@
       "sub": 6
     },
     "cronograma-anual": {
-      "numero": 11,
-      "sub": 7
+      "numero": 8,
+      "sub": 0
     }
   },
   "procedimientosData": [],
@@ -1344,5 +1344,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T20:46:15.448Z"
+  "fechaExportacion": "2026-10-01T20:50:12.488Z"
 }
