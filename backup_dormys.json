@@ -905,27 +905,27 @@
     },
     "casita": {
       "numero": 11,
-      "sub": 2
+      "sub": 11
     },
     "techos": {
       "numero": 3,
       "sub": 0
     },
     "presupuestos": {
-      "numero": 6,
-      "sub": 3
+      "numero": 11,
+      "sub": 10
     },
     "proveedores": {
       "numero": 5,
       "sub": 0
     },
     "informes": {
-      "numero": 6,
-      "sub": 0
+      "numero": 11,
+      "sub": 8
     },
     "gastos": {
-      "numero": 6,
-      "sub": 1
+      "numero": 11,
+      "sub": 9
     },
     "piscina": {
       "numero": 11,
@@ -948,7 +948,7 @@
       "sub": 1
     },
     "procedimientos": {
-      "numero": 6,
+      "numero": 11,
       "sub": 2
     },
     "registro": {
@@ -1220,6 +1220,12 @@
         "fecha": "2026-09-30",
         "tarea": "Hidrolavadora",
         "observacion": "Hidrolavadora en la parte trasera de domrys 19 al 29"
+      },
+      {
+        "id": 1790887377594,
+        "fecha": "2026-10-01",
+        "tarea": "Lija e hidrolavadora",
+        "observacion": "Buenas tardes Dani , hoy estuve lijando y pintando puertitas de gabinetes y pase la hidro dnd me faltó ayer"
       }
     ]
   },
@@ -1338,5 +1344,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T20:38:23.955Z"
+  "fechaExportacion": "2026-10-01T20:46:15.448Z"
 }
