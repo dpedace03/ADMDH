@@ -930,9 +930,9 @@
     {
       "id": 1790652397762,
       "nombre": "Limpieza Casita",
-      "responsable": "Facundo",
+      "responsable": "Facundo y Club",
       "categoria": "Limpieza",
-      "descripcion": ""
+      "descripcion": "El Club puede hacerla durante la semana, para el domingo a la mañana debemos contratar a alguien. Conusltar con alguna de las chicas del Snack"
     },
     {
       "id": 1790652453860,
@@ -951,7 +951,7 @@
     {
       "id": 1790652671141,
       "nombre": "Corte de pasto ",
-      "responsable": "Club",
+      "responsable": "Club durante la transicion",
       "categoria": "Jardinería",
       "descripcion": ""
     },
@@ -1001,6 +1001,27 @@
       "id": 1790667207085,
       "nombre": "Control de lamparas quemadas",
       "responsable": "Facundo",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
+    },
+    {
+      "id": 1790871807289,
+      "nombre": "Camaras del predio",
+      "responsable": "Club",
+      "categoria": "Mantenimiento",
+      "descripcion": ""
+    },
+    {
+      "id": 1790871905682,
+      "nombre": "Placita de juegos",
+      "responsable": "Facundo",
+      "categoria": "Mantenimiento",
+      "descripcion": "Contratar trabajos de pintura afuera."
+    },
+    {
+      "id": 1790871984480,
+      "nombre": "Renovacion Snack",
+      "responsable": "Comision Dormys",
       "categoria": "Mantenimiento",
       "descripcion": ""
     }
@@ -1171,6 +1192,10 @@
     {
       "nombre": "Riego",
       "color": "#1dcd49"
+    },
+    {
+      "nombre": "Snack",
+      "color": "#59695a"
     }
   ],
   "estadosConfig": [
@@ -1246,5 +1271,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-09-30T23:34:41.281Z"
+  "fechaExportacion": "2026-10-01T16:27:09.928Z"
 }
