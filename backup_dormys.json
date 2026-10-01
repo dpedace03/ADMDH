@@ -932,12 +932,12 @@
       "sub": 3
     },
     "electrogeno": {
-      "numero": 9,
-      "sub": 0
+      "numero": 11,
+      "sub": 4
     },
     "matafuegos": {
-      "numero": 10,
-      "sub": 0
+      "numero": 11,
+      "sub": 5
     },
     "tareas": {
       "numero": 11,
@@ -1338,5 +1338,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T20:35:27.679Z"
+  "fechaExportacion": "2026-10-01T20:36:57.694Z"
 }
