@@ -875,9 +875,9 @@
       "descripcion": "Fenk 11-4971-5896",
       "service": "cada 250 hs",
       "combustible": "pañol",
-      "hrsTotal": 1802,
       "hrsService": 1758,
-      "observacion": ""
+      "hrsTotal": 1802,
+      "observacion": "Facundo debe chequear la carga cada lunes o martes y pedir al pañol si es necesario"
     }
   ],
   "electrogenoNovedades": [
@@ -964,7 +964,15 @@
       "sub": 0
     }
   },
-  "procedimientosData": [],
+  "procedimientosData": [
+    {
+      "id": 1790973994734,
+      "nombre": "Aprobacion de trabajos",
+      "categoria": "Mantenimiento",
+      "responsable": "",
+      "descripcion": "La Comision define un trabajo y solicita presupuesto a proveedores.\nSe elige proveedor, este debe facturar , ofrecer garantia, y tener seguro.\nSe aprueba presupuesto y se le pide la FC al proveedor: usualmente hacen dos: la de materiales y la de MO. La debe enviar a federika@lamartona.com.ar con copia a la comision.\nLa Comision envia a Federika la aporbacion de la FC para que le pague.\nUsualmente se aprueba la FC de materiales antes para que el proveedor ya los pueda comprar y pueda comenzar a trabajar y la de MO cuando el trabajo este finalizado y aporbado.\n\nLas FC presentadas y aprobadas hasta el dia miercoles se pagan el mismo viernes. Sino pasa a la semana proxima."
+    }
+  ],
   "tareasData": [
     {
       "id": 1790652315058,
@@ -1020,7 +1028,7 @@
       "nombre": "Corte de pasto ",
       "responsable": "Club durante la transicion",
       "categoria": "Jardinería",
-      "descripcion": ""
+      "descripcion": "Van a enseñarle a Facundo el uso del tractor y el CLub se lo presta, queda suejeto a disponibilidad."
     },
     {
       "id": 1790652697142,
@@ -1041,7 +1049,7 @@
       "nombre": "Arreglo del piso de pileta",
       "responsable": "A cotizar",
       "categoria": "Pileta",
-      "descripcion": "Arreglo y pintura del piso de la pileta"
+      "descripcion": "Arreglo y pintura del piso de la pileta. "
     },
     {
       "id": 1790666461093,
@@ -1094,7 +1102,48 @@
     }
   ],
   "registrosData": [],
-  "cronogramaData": [],
+  "cronogramaData": [
+    {
+      "id": 1790974169449,
+      "dia": "Lunes",
+      "horario": "",
+      "tarea": "Chequeo Combustible del GE",
+      "responsable": "Facunfo",
+      "observacion": ""
+    },
+    {
+      "id": 1790974253431,
+      "dia": "Viernes",
+      "horario": "",
+      "tarea": "Limpíeza de galerias y parrillas",
+      "responsable": "Facundo",
+      "observacion": "Limpieza de las canaletas , las parrillas , el lavadero, pasar la sopladora en los pasillos, limpiar el silo "
+    },
+    {
+      "id": 1790974272427,
+      "dia": "Martes",
+      "horario": "",
+      "tarea": "Limpieza de Casita",
+      "responsable": "Club",
+      "observacion": ""
+    },
+    {
+      "id": 1790974308258,
+      "dia": "Miércoles",
+      "horario": "",
+      "tarea": "Corte de pasto",
+      "responsable": "Facundo",
+      "observacion": ""
+    },
+    {
+      "id": 1790974326497,
+      "dia": "Jueves",
+      "horario": "",
+      "tarea": "Corte de pasto",
+      "responsable": "Facundo",
+      "observacion": ""
+    }
+  ],
   "presupuestosData": [
     {
       "id": 1790714215885,
@@ -1150,9 +1199,9 @@
       "id": 1790811152254,
       "fecha": "2026-09-28",
       "autor": "Alberto Ferreyra",
-      "importe": 864000,
+      "importe": 4752000,
       "estado": "Pendiente",
-      "descripcion": "La zinguería por dos dormys, sería: \n5 tramos zinguería tipo americana \n11 soportes \nDos cierres \nDos boquetas 3 * 4 \nOcho caños tres por cuatro \nDos conectores 3 por 4 \nOcho granpas tres por cuatro \nUn sellador para zinguerías \nTornillos varios de distintas maneras \nTotal de materiales \n432.000\nMano de obra puedo recortar y colocar la singuería \n432.000\nTotal del trabajo \n864.000 \nPor 2 dormis",
+      "descripcion": "La zinguería por dos dormys, sería: \n5 tramos zinguería tipo americana \n11 soportes \nDos cierres \nDos boquetas 3 * 4 \nOcho caños tres por cuatro \nDos conectores 3 por 4 \nOcho granpas tres por cuatro \nUn sellador para zinguerías \nTornillos varios de distintas maneras \nTotal de materiales \n432.000\nMano de obra puedo recortar y colocar la singuería \n432.000\nTotal del trabajo \n864.000 \nPor 2 dormis\n\nTotal:\n\nLa tirada del 19 y 19 bis al 28 que habarcan un total de 11 dormis saldría de mano de obra y materiales\n4.752.000\nTodo esto es en tapa galva 30",
       "adjuntos": []
     },
     {
@@ -1174,7 +1223,7 @@
       "domicilio": "",
       "whatsapp": "+54 9 11 2177-3900",
       "puesto": "Categoría Maestranza 3",
-      "puestoDescripcion": ""
+      "puestoDescripcion": "1.\tConvenio colectivo 805/2023 – categoría Maestranza 3 – tareas asignadas mantenimiento de tareas generales – Mantenimiento y Reparaciones, Ejecución de trabajos operativos y técnicos de mantenimiento edilicio o de infraestructura (albañilería, pintura, electricidad básica o plomería intermedia); Cuidado de Áreas Verdes y Deportivas, Labores de parquización, manejo de maquinaria para el mantenimiento de predios; utilización de herramientas especializadas y vehículos livianos o maquinaria de mantenimiento asignada a las áreas de servicios. \n2.\tHoras extras puede trabajar, dichas horas se abonan al 50% sobre las horas trabajadas en exceso de la jornada ordinaria durante los días hábiles y al 100% las horas extras se realizan durante el descanso.\n\nPuede trabajar de lunes a viernes de 7 a 16 hs o de lunes a viernes de 17 a 15 hs y 4 hs los sabados."
     },
     "horarios": {
       "invierno": {
@@ -1189,7 +1238,7 @@
     "vacaciones": [
       {
         "id": 1790774164516,
-        "inicio": "2026-10-29",
+        "inicio": "2026-10-19",
         "fin": "2026-11-02",
         "anio": 2026,
         "diasTotales": null,
@@ -1226,6 +1275,12 @@
         "fecha": "2026-10-01",
         "tarea": "Lija e hidrolavadora",
         "observacion": "Buenas tardes Dani , hoy estuve lijando y pintando puertitas de gabinetes y pase la hidro dnd me faltó ayer"
+      },
+      {
+        "id": 1790972552613,
+        "fecha": "2026-10-02",
+        "tarea": "Canaletas - parrillas - lavadero",
+        "observacion": "Buenas tardes Dani , hoy limpie las canaletas , las parrillas , el lavadero, pase la sopladora en los pasillos, limpie el silo y corte un poco el cerco de entrada entre el dormy 8 y 9"
       }
     ]
   },
@@ -1344,5 +1399,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-01T20:50:12.488Z"
+  "fechaExportacion": "2026-10-02T20:52:39.313Z"
 }
