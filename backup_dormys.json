@@ -1281,6 +1281,12 @@
         "fecha": "2026-10-02",
         "tarea": "Canaletas - parrillas - lavadero",
         "observacion": "Buenas tardes Dani , hoy limpie las canaletas , las parrillas , el lavadero, pase la sopladora en los pasillos, limpie el silo y corte un poco el cerco de entrada entre el dormy 8 y 9"
+      },
+      {
+        "id": 1791233489155,
+        "fecha": "2026-10-05",
+        "tarea": "Corte de pasto",
+        "observacion": "Cambio maceta"
       }
     ]
   },
@@ -1399,5 +1405,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-02T20:56:15.147Z"
+  "fechaExportacion": "2026-10-05T20:51:48.553Z"
 }
