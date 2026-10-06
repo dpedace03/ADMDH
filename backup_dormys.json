@@ -1187,7 +1187,7 @@
       "autor": "Mauricio Sanchez",
       "importe": 1200000,
       "estado": "Aprobado",
-      "descripcion": "Presupuesto pintura de techo de madera\nLimpieza de tirantes y maChimbres\nLijada fina\n2 manos de Cetol \nPresupuesto mano de obra\n1.200.000 IVA incluido",
+      "descripcion": "\n*PRESUPUESTO - PINTURA DE TECHO DE MADERA*\n\n*Detalle de trabajos a realizar:*\n\n*1. Preparación de la superficie*\n- Limpieza completa de tirantes y machimbres.\n- Lijado fino en toda la superficie para garantizar adherencia.\n\n*2. Terminación*\n- Aplicación de 2 manos de protector para madera Cetol .\n- recorte prolijo en bordes y paredes.\n\n*3. Entrega*\n- Limpieza final de la zona de trabajo.\n\n*VALOR MANO DE OBRA:*\n*$ 1.200.000 (IVA incluido)\n",
       "adjuntos": []
     },
     {
@@ -1196,7 +1196,7 @@
       "autor": "Mauricio Sanchez",
       "importe": 800000,
       "estado": "Aprobado",
-      "descripcion": "Presupuesto techo de chapa\n\nBirutiar óxido de chapa\nLimpiaza completa con diluyente\nPintura completa en sintético negro\nPresupuesto mano de obra \n800.000 IVA incluido",
+      "descripcion": "\n*PRESUPUESTO - PINTURA DE TECHO DE CHAPA LAVADERO*\n\n*Detalle de trabajos a realizar:*\n\n*1. Preparación de la superficie*\n- Viruteado completo de toda la chapa para remover óxido existente.\n- Limpieza profunda con diluyente para desengrasar y garantizar adherencia.\n\n*2. Terminación*\n- Pintado completo del techo en sintético color negro.\n- Aplicación prolija y pareja, cubriendo toda la superficie.\n\n*3. Entrega*\n- Limpieza final de la zona de trabajo.\n- Trabajo entregado terminado.\n\n*VALOR MANO DE OBRA:*\n*$ 800.000 (IVA INCLUIDO)*",
       "adjuntos": []
     },
     {
@@ -1449,5 +1449,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-06T20:20:25.802Z"
+  "fechaExportacion": "2026-10-06T20:24:40.045Z"
 }
