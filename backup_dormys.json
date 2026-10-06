@@ -1287,6 +1287,12 @@
         "fecha": "2026-10-05",
         "tarea": "Corte de pasto",
         "observacion": "Cambio maceta"
+      },
+      {
+        "id": 1791315318400,
+        "fecha": "2026-10-06",
+        "tarea": "Corte de pasto",
+        "observacion": "Buenas tardes Dani , hoy corte pasto delante del silo, de paquete , de la pileta , en la plaza, del dormy 29 al 33 , del dormy 34 al 51 del lado de la pileta y pase la sopladora en los pasillos"
       }
     ]
   },
@@ -1405,5 +1411,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-05T20:51:48.553Z"
+  "fechaExportacion": "2026-10-06T19:35:26.395Z"
 }
