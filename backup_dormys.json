@@ -535,7 +535,7 @@
     },
     "57": {
       "estado": "Reparación urgente",
-      "presupuesto": "",
+      "presupuesto": "06/10: Hoy lo termina.",
       "orden": "7",
       "fecha": "2026-09-28"
     },
@@ -1129,6 +1129,13 @@
       "tarea": "Pintura de techito DH 74 y DH 75",
       "responsable": "Mauricio Sanchez",
       "observacion": "Hoy comenzo la pintura del techo exterior ubicado entre el DH 7 y 75"
+    },
+    {
+      "id": 1791317892422,
+      "fecha": "2026-10-06",
+      "tarea": "Carga de combustible GE",
+      "responsable": "Facundo",
+      "observacion": "Hoy Facundo recargo el grupo electrogeno."
     }
   ],
   "cronogramaData": [
@@ -1238,8 +1245,8 @@
       "fecha": "2026-09-28",
       "autor": "Alberto Ferreyra",
       "importe": 3590000,
-      "estado": "Pendiente",
-      "descripcion": "Arreglo de 1 dormy:\n\n30 listones de 4 m \n\nDos y medio rollos de membrana por espuma \n\n1 rollo de ruberoy\n\n70 m yesero \n\nUna cenefa de 4 metros 1 x 8 \n\nMachimbre media por cinco \n\nClavo de distintas medidas \n\nCal arena y cemento \n\nTotal de materiales 1.520.000 $\n\nY de mano de obra \n\nPor bajar las Tejas cambiar cobertura y listones en mal estado por todo nuevo , cambiar tirantes y machimbre en mal estado poner cenefa de una por ocho y volver a colocar de vuelta las Tejas \n\n1.970.000 $  \n\nTotal del trabajo \n\n3.590.000 $",
+      "estado": "Aprobado",
+      "descripcion": "Arreglo de dormy 91:\n\n30 listones de 4 m \n\nDos y medio rollos de membrana por espuma \n\n1 rollo de ruberoy\n\n70 m yesero \n\nUna cenefa de 4 metros 1 x 8 \n\nMachimbre media por cinco \n\nClavo de distintas medidas \n\nCal arena y cemento \n\nTotal de materiales 1.520.000 $\n\nY de mano de obra \n\nPor bajar las Tejas cambiar cobertura y listones en mal estado por todo nuevo , cambiar tirantes y machimbre en mal estado poner cenefa de una por ocho y volver a colocar de vuelta las Tejas \n\n1.970.000 $  \n\nTotal del trabajo \n\n3.590.000 $",
       "adjuntos": []
     }
   ],
@@ -1440,5 +1447,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-06T19:49:52.944Z"
+  "fechaExportacion": "2026-10-06T20:18:23.492Z"
 }
