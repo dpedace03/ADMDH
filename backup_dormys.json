@@ -887,6 +887,13 @@
       "descripcion": "Service ",
       "observacion": "Se hizo el service con 1758 hs, proximo service 2000 hs.",
       "importe": 0
+    },
+    {
+      "id": 1791315607066,
+      "fecha": "2026-10-06",
+      "descripcion": "Carga de combustible",
+      "observacion": "Facundo cargo hoy el grupo electrogeno, le puso combustible desde el barril que esta en la sala conectado a el.",
+      "importe": 0
     }
   ],
   "matafuegosData": [
@@ -971,6 +978,13 @@
       "categoria": "Mantenimiento",
       "responsable": "",
       "descripcion": "La Comision define un trabajo y solicita presupuesto a proveedores.\nSe elige proveedor, este debe facturar , ofrecer garantia, y tener seguro.\nSe aprueba presupuesto y se le pide la FC al proveedor: usualmente hacen dos: la de materiales y la de MO. La debe enviar a federika@lamartona.com.ar con copia a la comision.\nLa Comision envia a Federika la aporbacion de la FC para que le pague.\nUsualmente se aprueba la FC de materiales antes para que el proveedor ya los pueda comprar y pueda comenzar a trabajar y la de MO cuando el trabajo este finalizado y aporbado.\n\nLas FC presentadas y aprobadas hasta el dia miercoles se pagan el mismo viernes. Sino pasa a la semana proxima."
+    },
+    {
+      "id": 1791316157413,
+      "nombre": "Chequeo de hs consumidas del grupo electrogeno.",
+      "categoria": "Grupo electrogeno",
+      "responsable": "",
+      "descripcion": "1) La llave del Grupo electrogeno esta en el Silo.\n2) Ingresar y consultar el visor del grupo: Cantidad de horas que pasaron desde el ultimo servicio. Deben pasar 250 para pedir a Fenk el nuevo service.\n3) Pedir Service a FENK al 11-4971-5896.\n4) Si hace falta pedir combustible al pañol."
     }
   ],
   "tareasData": [
@@ -1101,7 +1115,22 @@
       "descripcion": ""
     }
   ],
-  "registrosData": [],
+  "registrosData": [
+    {
+      "id": 1791315396974,
+      "fecha": "2026-10-06",
+      "tarea": "Reparacion pileta",
+      "responsable": "Mauricio Sanchez",
+      "observacion": "Hoy se comenzo la reparacion de la pileta"
+    },
+    {
+      "id": 1791315454653,
+      "fecha": "2026-10-06",
+      "tarea": "Pintura de techito DH 74 y DH 75",
+      "responsable": "Mauricio Sanchez",
+      "observacion": "Hoy comenzo la pintura del techo exterior ubicado entre el DH 7 y 75"
+    }
+  ],
   "cronogramaData": [
     {
       "id": 1790974169449,
@@ -1150,7 +1179,7 @@
       "fecha": "2026-09-29",
       "autor": "Mauricio Sanchez",
       "importe": 1200000,
-      "estado": "Pendiente",
+      "estado": "Aprobado",
       "descripcion": "Presupuesto pintura de techo de madera\nLimpieza de tirantes y maChimbres\nLijada fina\n2 manos de Cetol \nPresupuesto mano de obra\n1.200.000 IVA incluido",
       "adjuntos": []
     },
@@ -1159,7 +1188,7 @@
       "fecha": "2026-09-29",
       "autor": "Mauricio Sanchez",
       "importe": 800000,
-      "estado": "Pendiente",
+      "estado": "Aprobado",
       "descripcion": "Presupuesto techo de chapa\n\nBirutiar óxido de chapa\nLimpiaza completa con diluyente\nPintura completa en sintético negro\nPresupuesto mano de obra \n800.000 IVA incluido",
       "adjuntos": []
     },
@@ -1168,7 +1197,7 @@
       "fecha": "2026-09-25",
       "autor": "Mauricio Sanchez",
       "importe": 5700000,
-      "estado": "Pendiente",
+      "estado": "Aprobado",
       "descripcion": "Presupuesto reparación de pileta dormys\n\nCortar Linia recta una y 3 diagonales como junta de dilatación\nSellar juntas\nRetirar carpeta hueca y reparar\nPintura completa de pileta\nTrabajo terminado $ 5.700.000 mano de obra",
       "adjuntos": []
     },
@@ -1411,5 +1440,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-06T19:35:26.395Z"
+  "fechaExportacion": "2026-10-06T19:49:52.944Z"
 }
