@@ -1423,13 +1423,15 @@
     {
       "id": 1790714526208,
       "nombre": "Mauricio",
-      "apellido": "Samchez",
+      "apellido": "Sanchez",
       "dni": "1111111",
       "whatsapp": "+54 9 11 5310-2239",
       "tareas": [
         "Albañil",
         "Pintura",
-        "Plomería"
+        "Jardinería",
+        "Plomería",
+        "Carpinteria"
       ]
     }
   ],
@@ -1447,5 +1449,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-06T20:18:23.492Z"
+  "fechaExportacion": "2026-10-06T20:20:25.802Z"
 }
