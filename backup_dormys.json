@@ -1275,6 +1275,20 @@
       "estado": "Aprobado",
       "descripcion": "Arreglo de dormy 91:\n\n30 listones de 4 m \n\nDos y medio rollos de membrana por espuma \n\n1 rollo de ruberoy\n\n70 m yesero \n\nUna cenefa de 4 metros 1 x 8 \n\nMachimbre media por cinco \n\nClavo de distintas medidas \n\nCal arena y cemento \n\nTotal de materiales 1.520.000 $\n\nY de mano de obra \n\nPor bajar las Tejas cambiar cobertura y listones en mal estado por todo nuevo , cambiar tirantes y machimbre en mal estado poner cenefa de una por ocho y volver a colocar de vuelta las Tejas \n\n1.970.000 $  \n\nTotal del trabajo \n\n3.590.000 $",
       "adjuntos": []
+    },
+    {
+      "id": 1791396287717,
+      "fecha": "2026-10-07",
+      "autor": "Brote",
+      "importe": 2800000,
+      "estado": "Pendiente",
+      "descripcion": "Corte de pasto del predio",
+      "adjuntos": [
+        {
+          "id": "file_1791396275091_7wjt4",
+          "name": "Presupuesto_BROTE_Dormys_WhatsApp.png"
+        }
+      ]
     }
   ],
   "facundoData": {
@@ -1461,8 +1475,20 @@
         "Albañil",
         "Pintura",
         "Jardinería",
+        "Electricidad",
         "Plomería",
-        "Carpinteria"
+        "Carpinteria",
+        "Herreria"
+      ]
+    },
+    {
+      "id": 1791396412358,
+      "nombre": "Mariano",
+      "apellido": "Brotes",
+      "dni": "11111111",
+      "whatsapp": "+54 9 11 5349-0751",
+      "tareas": [
+        "Jardinería"
       ]
     }
   ],
@@ -1480,5 +1506,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-07T17:57:38.251Z"
+  "fechaExportacion": "2026-10-07T18:07:31.958Z"
 }
