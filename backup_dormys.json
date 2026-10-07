@@ -1370,6 +1370,12 @@
         "fecha": "2026-10-06",
         "tarea": "Corte de pasto",
         "observacion": "Buenas tardes Dani , hoy corte pasto delante del silo, de paquete , de la pileta , en la plaza, del dormy 29 al 33 , del dormy 34 al 51 del lado de la pileta y pase la sopladora en los pasillos"
+      },
+      {
+        "id": 1791398295224,
+        "fecha": "2026-10-07",
+        "tarea": "Corte de pasto y lijando puertitas de gabinetes",
+        "observacion": "Buenas tardes Dani , hoy corte pasto delante de la casita , del dormy 1 al 29 y a la tarde estuve lijando y pintando puertitas de gabinetes"
       }
     ]
   },
@@ -1506,5 +1512,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-07T18:07:31.958Z"
+  "fechaExportacion": "2026-10-07T18:38:25.608Z"
 }
