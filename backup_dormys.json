@@ -1170,6 +1170,13 @@
       "tarea": "Chequeo de combustible",
       "responsable": "Facundo",
       "observacion": "Facundo chequeo el combustible y esta lleno."
+    },
+    {
+      "id": 1791498790896,
+      "fecha": "2026-10-08",
+      "tarea": "Pintura de techito DH 74 y DH 75",
+      "responsable": "Mauricio Sanchez",
+      "observacion": "Hoy se dio la segunda mano al techito"
     }
   ],
   "cronogramaData": [
@@ -1310,6 +1317,15 @@
           "name": "PROPUESTA ABONO LA MARTONA.pdf"
         }
       ]
+    },
+    {
+      "id": 1791498882779,
+      "fecha": "2026-10-08",
+      "autor": "Mauricio Sanchez",
+      "importe": 0,
+      "estado": "Pendiente",
+      "descripcion": "Cortar y bordear todo el pasto del predio",
+      "adjuntos": []
     }
   ],
   "facundoData": {
@@ -1539,5 +1555,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-08T22:17:09.752Z"
+  "fechaExportacion": "2026-10-08T22:35:20.628Z"
 }
