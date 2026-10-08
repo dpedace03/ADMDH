@@ -1383,6 +1383,12 @@
         "fecha": "2026-10-07",
         "tarea": "Corte de pasto y lijando puertitas de gabinetes",
         "observacion": "Buenas tardes Dani , hoy corte pasto delante de la casita , del dormy 1 al 29 y a la tarde estuve lijando y pintando puertitas de gabinetes"
+      },
+      {
+        "id": 1791485040651,
+        "fecha": "2026-10-08",
+        "tarea": "Corte de pasto del 52 al 99",
+        "observacion": "Buenas tardes Dani , hoy corte pasto del dormy 52 al 99"
       }
     ]
   },
@@ -1519,5 +1525,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-08T16:52:57.085Z"
+  "fechaExportacion": "2026-10-08T19:56:09.434Z"
 }
