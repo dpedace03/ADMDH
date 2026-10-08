@@ -1163,6 +1163,13 @@
       "tarea": "Reparacion goteras",
       "responsable": "Alberto Ferreyra",
       "observacion": "El vecino del DH 58 aviso de que le llueve mucho el techo."
+    },
+    {
+      "id": 1791478275345,
+      "fecha": "2026-10-08",
+      "tarea": "Chequeo de combustible",
+      "responsable": "Facundo",
+      "observacion": "Facundo chequeo el combustible y esta lleno."
     }
   ],
   "cronogramaData": [
@@ -1512,5 +1519,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-07T18:38:25.608Z"
+  "fechaExportacion": "2026-10-08T16:52:57.085Z"
 }
