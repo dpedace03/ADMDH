@@ -1296,6 +1296,20 @@
           "name": "Presupuesto_BROTE_Dormys_WhatsApp.png"
         }
       ]
+    },
+    {
+      "id": 1791497798427,
+      "fecha": "2026-10-08",
+      "autor": "FENK",
+      "importe": 250000,
+      "estado": "Pendiente",
+      "descripcion": "Presupuesto de abono mensual del grupo electrogeno y propuesta de mejora.",
+      "adjuntos": [
+        {
+          "id": "file_1791497755641_7g5l5",
+          "name": "PROPUESTA ABONO LA MARTONA.pdf"
+        }
+      ]
     }
   ],
   "facundoData": {
@@ -1525,5 +1539,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-08T19:56:09.434Z"
+  "fechaExportacion": "2026-10-08T22:17:09.752Z"
 }
