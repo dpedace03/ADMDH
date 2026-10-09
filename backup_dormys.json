@@ -1184,6 +1184,20 @@
       "tarea": "Mosquitero Casita",
       "responsable": "Facundo",
       "observacion": "Hoy llego el mosquitero de la Casita al pañol y lo llevaron para alla."
+    },
+    {
+      "id": 1791557160883,
+      "fecha": "2026-10-09",
+      "tarea": "Limpieza de Casita",
+      "responsable": "Club",
+      "observacion": "Se realizo la limpieza de la Casita por las empleadas que envio el CLub."
+    },
+    {
+      "id": 1791557248828,
+      "fecha": "2026-10-09",
+      "tarea": "Pintura de techito DH 74 y DH 75",
+      "responsable": "Mauricio Sanchez",
+      "observacion": "Se dieron dos manos, tarea finalizada."
     }
   ],
   "cronogramaData": [
@@ -1324,15 +1338,6 @@
           "name": "PROPUESTA ABONO LA MARTONA.pdf"
         }
       ]
-    },
-    {
-      "id": 1791498882779,
-      "fecha": "2026-10-08",
-      "autor": "Mauricio Sanchez",
-      "importe": 0,
-      "estado": "Pendiente",
-      "descripcion": "Cortar y bordear todo el pasto del predio",
-      "adjuntos": []
     },
     {
       "id": 1791556748059,
@@ -1571,5 +1576,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-09T14:39:26.868Z"
+  "fechaExportacion": "2026-10-09T14:48:01.930Z"
 }
