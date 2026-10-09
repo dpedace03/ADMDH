@@ -1177,6 +1177,13 @@
       "tarea": "Pintura de techito DH 74 y DH 75",
       "responsable": "Mauricio Sanchez",
       "observacion": "Hoy se dio la segunda mano al techito"
+    },
+    {
+      "id": 1791546130318,
+      "fecha": "2026-10-09",
+      "tarea": "Mosquitero Casita",
+      "responsable": "Facundo",
+      "observacion": "Hoy llego el mosquitero de la Casita al pañol y lo llevaron para alla."
     }
   ],
   "cronogramaData": [
@@ -1325,6 +1332,15 @@
       "importe": 0,
       "estado": "Pendiente",
       "descripcion": "Cortar y bordear todo el pasto del predio",
+      "adjuntos": []
+    },
+    {
+      "id": 1791556748059,
+      "fecha": "2026-10-09",
+      "autor": "Mauricio Sanchez",
+      "importe": 8500000,
+      "estado": "Pendiente",
+      "descripcion": "Presupuesto mantenimiento de césped dormys Martina\nBordeo de todo el previo \nCorte total de todo el previo\nIncluye máquinas tractor combustible todos los elementos de cortado y mantenimiento de máquinas\n\n....mantenimiento  de 2 a 3 días semanales  facturación durante 30 día osea mensual mente \nPresupuesto final IVA incluido 8.500.000",
       "adjuntos": []
     }
   ],
@@ -1555,5 +1571,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-08T22:35:20.628Z"
+  "fechaExportacion": "2026-10-09T14:39:26.868Z"
 }
