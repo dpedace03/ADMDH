@@ -1440,6 +1440,12 @@
         "fecha": "2026-10-08",
         "tarea": "Corte de pasto del 52 al 99",
         "observacion": "Buenas tardes Dani , hoy corte pasto del dormy 52 al 99"
+      },
+      {
+        "id": 1791569127540,
+        "fecha": "2026-10-09",
+        "tarea": "Limpieza y corte de pasto",
+        "observacion": "Buenas tardes Dani , hoy limpie las canaletas, las parrillas, el lavadero, corte pasto del dormy 34 al 51 ( el pasto estaba largo, y está creciendo bien, los riesgos están funcionando correctamente) y pase la sopladora"
       }
     ]
   },
@@ -1576,5 +1582,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-09T14:48:59.642Z"
+  "fechaExportacion": "2026-10-09T18:05:35.370Z"
 }
