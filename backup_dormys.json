@@ -947,7 +947,7 @@
     "informes": {
       "numero": 11,
       "sub": 8,
-      "oculto": false
+      "oculto": true
     },
     "gastos": {
       "numero": 7,
@@ -1618,5 +1618,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-11T14:00:10.490Z"
+  "fechaExportacion": "2026-10-11T14:11:25.359Z"
 }
