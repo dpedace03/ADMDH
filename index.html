@@ -335,6 +335,9 @@
         .menu-estructura { margin-top: 10px; background: #f8fafc; border: 1px dashed var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; line-height: 1.7; text-align: left; }
         .menu-estructura .menu-error { color: #b91c1c; font-weight: 700; }
         #tabla-menu-config input { width: 80px; text-align: center; }
+        #tabla-menu-config input[type=checkbox] { width: 22px; height: 22px; cursor: pointer; }
+        .menu-estructura .menu-aviso { color: #b45309; font-weight: 700; }
+        .menu-estructura .menu-oculto { opacity: 0.5; text-decoration: line-through; }
 
         /* Botón "+" junto al título: muestra / oculta el formulario de alta */
         .alta-oculta { display: none !important; }
@@ -1884,10 +1887,11 @@
                     Cada botón tiene un <b>número</b> y un <b>subnúmero</b>. Con subnúmero <b>0</b> el botón aparece en el <b>menú principal</b>.
                     Un botón con el mismo número y un subnúmero distinto de 0 aparece en la <b>pantalla que se abre al hacer clic</b> en el botón de ese número.
                     Ejemplo: el botón <b>1 · 0</b> está en el menú principal; el botón <b>1 · 2</b> está dentro de la pantalla del botón 1 · 0.
+                    Con <b>Ocultar</b> el botón deja de verse en el menú (podés volver a mostrarlo desde acá).
                 </p>
                 <div style="overflow-x: auto;">
                     <table>
-                        <thead><tr><th>Botón</th><th class="col-nowrap">Número</th><th class="col-nowrap">Subnúmero</th></tr></thead>
+                        <thead><tr><th>Botón</th><th class="col-nowrap">Número</th><th class="col-nowrap">Subnúmero</th><th class="col-nowrap">Ocultar</th></tr></thead>
                         <tbody id="tabla-menu-config"></tbody>
                     </table>
                 </div>
@@ -5462,16 +5466,16 @@
         let menuConfig = JSON.parse(localStorage.getItem('menuConfig')) || {};   // { idBoton: { numero, sub } }
         let submenuOrigen = null;   // número del submenú desde el que se abrió la pantalla actual (para el botón "volver")
 
-        // Valores por defecto: todos en el menú principal (subnúmero 0), numerados según el orden original
+        // Valores por defecto: todos en el menú principal (subnúmero 0), visibles, numerados según el orden original
         function valoresMenu(config) {
             return BOTONES_MENU.map((b, i) => {
                 const c = (config || {})[b.id] || {};
                 const numero = parseInt(c.numero), sub = parseInt(c.sub);
-                return { b, orden: i, numero: numero >= 1 ? numero : i + 1, sub: sub >= 0 ? sub : 0 };
+                return { b, orden: i, numero: numero >= 1 ? numero : i + 1, sub: sub >= 0 ? sub : 0, oculto: !!c.oculto };
             });
         }
 
-        // Arma la estructura: botones del menú principal y los hijos de cada uno
+        // Arma la estructura: botones del menú principal y los hijos de cada uno (incluye los ocultos)
         function calcularEstructuraMenu(items) {
             const porNumero = (a, b) => a.numero - b.numero || a.sub - b.sub || a.orden - b.orden;
             const numerosPadre = new Set(items.filter(x => x.sub === 0).map(x => x.numero));
@@ -5489,11 +5493,14 @@
                     </button>`;
         }
 
+        // Los botones ocultos no se dibujan en el menú principal ni en las pantallas de botones
         function renderMenuPrincipal() {
             const grid = document.getElementById('menu-principal-grid');
             if (!grid) return;
-            const est = calcularEstructuraMenu(valoresMenu(menuConfig));
-            grid.innerHTML = est.principal.map(x => tileMenuHTML(x.b, `abrirBotonMenu('${x.b.id}', false)`)).join('');
+            const visibles = calcularEstructuraMenu(valoresMenu(menuConfig)).principal.filter(x => !x.oculto);
+            grid.innerHTML = visibles.length
+                ? visibles.map(x => tileMenuHTML(x.b, `abrirBotonMenu('${x.b.id}', false)`)).join('')
+                : '<p class="relato-vacio" style="grid-column: 1 / -1;">No hay botones visibles. Podés volver a mostrarlos desde Configuración (⚙️) → Botones del Menú.</p>';
         }
 
         function ejecutarBotonMenu(b, origen) {
@@ -5502,21 +5509,21 @@
             showSection(b.seccion);
         }
 
-        // Clic en un botón: si tiene botones hijos abre su pantalla (submenú); si no, abre su módulo
+        // Clic en un botón: si tiene botones hijos visibles abre su pantalla (submenú); si no, abre su módulo
         function abrirBotonMenu(id, desdeSubmenu) {
             const items = valoresMenu(menuConfig);
             const item = items.find(x => x.b.id === id);
             if (!item) return;
             const est = calcularEstructuraMenu(items);
-            if (item.sub === 0 && est.hijosDe(item.numero).length > 0) { abrirSubmenu(item.numero); return; }
+            if (item.sub === 0 && est.hijosDe(item.numero).some(x => !x.oculto)) { abrirSubmenu(item.numero); return; }
             ejecutarBotonMenu(item.b, desdeSubmenu ? item.numero : null);
         }
 
         function abrirSubmenu(numero) {
             const items = valoresMenu(menuConfig);
             const padre = items.find(x => x.numero === numero && x.sub === 0);
-            if (!padre) return;
-            const hijos = calcularEstructuraMenu(items).hijosDe(numero);
+            if (!padre || padre.oculto) { showSection('admin-dormys'); return; }
+            const hijos = calcularEstructuraMenu(items).hijosDe(numero).filter(x => !x.oculto);
             // Si el botón padre tiene su propia pantalla, se ofrece también como primer botón
             let html = padre.b.proximamente ? '' : tileMenuHTML(padre.b, `ejecutarBotonMenu(BOTONES_MENU.find(b => b.id === '${padre.b.id}'), ${numero})`, `Abrir ${padre.b.texto}`);
             html += hijos.map(x => tileMenuHTML(x.b, `abrirBotonMenu('${x.b.id}', true)`)).join('');
@@ -5546,11 +5553,12 @@
                     <td><span style="font-size: 1.2rem;">${x.b.icono}</span> <b>${escHtml(x.b.texto)}</b></td>
                     <td class="col-nowrap"><input type="number" min="1" step="1" id="mc-num-${x.b.id}" value="${x.numero}" oninput="previsualizarMenuConfig()"></td>
                     <td class="col-nowrap"><input type="number" min="0" step="1" id="mc-sub-${x.b.id}" value="${x.sub}" oninput="previsualizarMenuConfig()"></td>
+                    <td class="col-nowrap" style="text-align: center;"><input type="checkbox" id="mc-oc-${x.b.id}" title="Ocultar este botón" ${x.oculto ? 'checked' : ''} onchange="previsualizarMenuConfig()"></td>
                 </tr>`).join('');
             previsualizarMenuConfig();
         }
 
-        // Lee lo que hay escrito en la tabla y devuelve { items, errores }
+        // Lee lo que hay escrito en la tabla y devuelve { items, validos, errores }
         function leerMenuConfigFormulario() {
             const errores = [];
             const items = BOTONES_MENU.map((b, i) => {
@@ -5560,7 +5568,7 @@
                 const sub = /^\d+$/.test(sb) ? parseInt(sb) : NaN;
                 if (!(numero >= 1)) errores.push(`"${b.texto}": el número debe ser un entero desde 1.`);
                 if (!(sub >= 0)) errores.push(`"${b.texto}": el subnúmero debe ser un entero desde 0.`);
-                return { b, orden: i, numero, sub };
+                return { b, orden: i, numero, sub, oculto: document.getElementById(`mc-oc-${b.id}`).checked };
             });
             const validos = items.filter(x => x.numero >= 1 && x.sub >= 0);
             const vistos = {};
@@ -5578,16 +5586,33 @@
         function previsualizarMenuConfig() {
             const box = document.getElementById('menu-config-estructura');
             if (!box) return;
-            const { validos, errores } = leerMenuConfigFormulario();
+            const { items, validos, errores } = leerMenuConfigFormulario();
+            items.forEach(x => { const fila = document.getElementById(`mc-oc-${x.b.id}`).closest('tr'); fila.style.opacity = x.oculto ? '0.55' : '1'; });
+
             const est = calcularEstructuraMenu(validos);
-            let html = '<b>Así quedaría el menú:</b><br>';
+            const etiqueta = x => {
+                const t = `${x.b.icono} ${escHtml(x.b.texto)}`;
+                return x.oculto ? `<span class="menu-oculto">${t}</span> 🙈 <i>oculto</i>` : t;
+            };
+            const avisos = [];
+            est.principal.forEach(x => {
+                const hijos = est.hijosDe(x.numero);
+                if (x.sub === 0 && x.oculto && hijos.some(h => !h.oculto)) {
+                    avisos.push(`"${x.b.texto}" está oculto: los botones de su pantalla (${hijos.filter(h => !h.oculto).map(h => h.b.texto).join(', ')}) tampoco se van a poder abrir desde el menú.`);
+                }
+            });
+            if (est.principal.length && est.principal.every(x => x.oculto)) avisos.push('Todos los botones están ocultos: el menú principal va a quedar vacío (se pueden volver a mostrar desde acá).');
+
+            const cantOcultos = items.filter(x => x.oculto).length;
+            let html = `<b>Así quedaría el menú:</b>${cantOcultos ? ` <span style="color: var(--secondary);">(${cantOcultos} oculto${cantOcultos === 1 ? '' : 's'})</span>` : ''}<br>`;
             html += est.principal.map(x => {
                 const hijos = est.hijosDe(x.numero);
-                const base = `<b>${x.numero}</b> ${x.b.icono} ${escHtml(x.b.texto)}`;
+                const base = `<b>${x.numero}</b> ${etiqueta(x)}`;
                 return x.sub === 0 && hijos.length
-                    ? `${base}  →  <span style="color: var(--secondary);">pantalla con:</span> ${hijos.map(h => `<b>${h.numero}·${h.sub}</b> ${h.b.icono} ${escHtml(h.b.texto)}`).join(', ')}`
+                    ? `${base}  →  <span style="color: var(--secondary);">pantalla con:</span> ${hijos.map(h => `<b>${h.numero}·${h.sub}</b> ${etiqueta(h)}`).join(', ')}`
                     : base;
             }).join('<br>');
+            if (avisos.length) html += `<br><br>${avisos.map(a => `<span class="menu-aviso">ℹ ${escHtml(a)}</span>`).join('<br>')}`;
             if (errores.length) html += `<br><br>${errores.map(e => `<span class="menu-error">⚠ ${escHtml(e)}</span>`).join('<br>')}`;
             box.innerHTML = html;
         }
@@ -5596,7 +5621,7 @@
             const { items, errores } = leerMenuConfigFormulario();
             if (errores.length) return alert('No se puede guardar el menú:\n\n' + errores.map(e => '• ' + e).join('\n'));
             menuConfig = {};
-            items.forEach(x => { menuConfig[x.b.id] = { numero: x.numero, sub: x.sub }; });
+            items.forEach(x => { menuConfig[x.b.id] = { numero: x.numero, sub: x.sub, oculto: x.oculto }; });
             localStorage.setItem('menuConfig', JSON.stringify(menuConfig));
             renderMenuPrincipal();
             previsualizarMenuConfig();
@@ -5604,13 +5629,12 @@
         }
 
         function restaurarMenuConfig() {
-            if (!confirm('¿Volver al orden original? Todos los botones quedarán en el menú principal.')) return;
+            if (!confirm('¿Volver al orden original? Todos los botones quedarán en el menú principal y visibles.')) return;
             menuConfig = {};
             localStorage.removeItem('menuConfig');
             renderMenuConfig();
             renderMenuPrincipal();
         }
-
 
         // =====================================================================
         //  RESUMEN SEMANAL Y MENSUAL: relato coloquial de todo lo registrado
