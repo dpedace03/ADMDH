@@ -921,83 +921,103 @@
   "menuConfig": {
     "empleados": {
       "numero": 1,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "casita": {
       "numero": 11,
-      "sub": 11
+      "sub": 11,
+      "oculto": true
     },
     "techos": {
       "numero": 3,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "presupuestos": {
       "numero": 6,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "proveedores": {
       "numero": 5,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "informes": {
       "numero": 11,
-      "sub": 8
+      "sub": 8,
+      "oculto": false
     },
     "gastos": {
       "numero": 7,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "piscina": {
       "numero": 11,
-      "sub": 3
+      "sub": 3,
+      "oculto": false
     },
     "electrogeno": {
       "numero": 15,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "matafuegos": {
       "numero": 11,
-      "sub": 5
+      "sub": 5,
+      "oculto": true
     },
     "tareas": {
       "numero": 11,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "herramientas": {
       "numero": 1,
-      "sub": 1
+      "sub": 1,
+      "oculto": false
     },
     "procedimientos": {
       "numero": 18,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "registro": {
       "numero": 11,
-      "sub": 1
+      "sub": 1,
+      "oculto": false
     },
     "cronograma": {
       "numero": 11,
-      "sub": 6
+      "sub": 6,
+      "oculto": false
     },
     "cronograma-anual": {
       "numero": 11,
-      "sub": 12
+      "sub": 12,
+      "oculto": false
     },
     "resumen-semanal": {
       "numero": 11,
-      "sub": 13
+      "sub": 13,
+      "oculto": false
     },
     "resumen-mensual": {
       "numero": 11,
-      "sub": 14
+      "sub": 14,
+      "oculto": false
     },
     "hoy": {
       "numero": 19,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     },
     "semana": {
       "numero": 20,
-      "sub": 0
+      "sub": 0,
+      "oculto": false
     }
   },
   "procedimientosData": [
@@ -1598,5 +1618,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-11T13:54:10.193Z"
+  "fechaExportacion": "2026-10-11T13:59:19.205Z"
 }
