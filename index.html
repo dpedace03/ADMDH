@@ -323,6 +323,10 @@
         .resumen-count.con { background: #fef3c7; color: #92400e; font-weight: 700; }
         .relato { background: #fffdf7; border: 1px solid #f1e8c9; border-radius: 12px; padding: 18px 20px; line-height: 1.75; font-size: 1rem; color: #1f2937; }
         .relato p { margin: 0 0 10px 0; }
+        .relato-linea { margin: 3px 0; }
+        .relato mark { background: #fde68a; border-radius: 3px; padding: 0 1px; color: inherit; }
+        .btn-lupa.coincide { background: #fde68a; border-radius: 6px; }
+        .resumen-buscar { display: block; width: 100%; max-width: 520px; margin: 6px auto 12px auto; }
         .relato-dia h4 { margin: 14px 0 2px 0; color: var(--primary); font-size: 1rem; }
         .relato-sem { margin-top: 18px; padding-top: 4px; border-top: 2px solid #e5dcb8; }
         .relato-sem-t { margin: 8px 0 0 0; color: #92400e; font-size: 1.05rem; }
@@ -500,6 +504,7 @@
         .agenda-sec li { padding: 5px 0; border-top: 1px dashed #e2e8f0; font-size: 0.9rem; word-break: break-word; }
         .agenda-sec li:first-child { border-top: none; }
         .agenda-sec li small { display: block; color: #475569; font-size: 0.8rem; white-space: pre-wrap; }
+        .agenda-fecha { display: inline-block; background: #e2e8f0; color: #334155; border-radius: 6px; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; margin-right: 6px; vertical-align: middle; }
         .agenda-vacio { text-align: center; color: var(--secondary); padding: 16px 8px; font-style: italic; }
         .anio-nav { display: flex; align-items: center; gap: 8px; }
         .anio-nav button, .anio-nav strong { white-space: nowrap; }
@@ -809,6 +814,36 @@
         </div>
     </section>
 
+    <!-- HOY: la misma agenda del día que el "Hoy" del Cronograma anual -->
+    <section id="sec-hoy" class="section">
+      <div style="max-width: 760px; margin: 0 auto;">
+        <div class="agenda-nav">
+            <button type="button" class="btn-action" onclick="moverHoy(-1)" title="Día anterior">◀</button>
+            <h3 id="hoy-titulo">Fecha</h3>
+            <button type="button" class="btn-action" onclick="moverHoy(1)" title="Día siguiente">▶</button>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+            <button type="button" class="btn-action" onclick="mostrarHoy(hoyISO())">Hoy</button>
+        </div>
+        <div id="hoy-contenido"></div>
+      </div>
+    </section>
+
+    <!-- SEMANA: lo mismo que Hoy, juntando todos los días desde el lunes hasta la fecha actual -->
+    <section id="sec-semana" class="section">
+      <div style="max-width: 760px; margin: 0 auto;">
+        <div class="agenda-nav">
+            <button type="button" class="btn-action" onclick="moverSemana(-1)" title="Semana anterior">◀</button>
+            <h3 id="semana-titulo">Semana</h3>
+            <button type="button" class="btn-action" onclick="moverSemana(1)" title="Semana siguiente">▶</button>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+            <button type="button" class="btn-action" onclick="mostrarSemana(lunesDe(hoyISO()))">Semana actual</button>
+        </div>
+        <div id="semana-contenido"></div>
+      </div>
+    </section>
+
     <!-- RESUMEN SEMANAL -->
     <section id="sec-resumen-semanal" class="section">
       <div id="rs-lista">
@@ -822,6 +857,7 @@
             </div>
         </div>
         <p style="font-size: 0.85rem; color: var(--secondary);">Elegí una semana para leer el relato de todo lo que se registró en esos días.</p>
+        <input type="search" id="rs-buscar-lista" class="resumen-buscar" autocomplete="off" placeholder="🔎 Buscar en lo registrado de este mes (ej: pintura, Juan, techo, pagó...)" oninput="buscarResumenSemanal(this.value)">
         <div class="resumen-grid" id="rs-semanas"></div>
       </div>
       <div id="rs-detalle" style="display: none; max-width: 760px; margin: 0 auto;">
@@ -833,6 +869,7 @@
         <div style="display: flex; justify-content: center; margin-bottom: 12px;">
             <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="cerrarDetalleSemana()">← Volver a las semanas</button>
         </div>
+        <input type="search" id="rs-buscar-detalle" class="resumen-buscar" autocomplete="off" placeholder="🔎 Buscar en esta semana (ej: pintura, Juan, techo, pagó...)" oninput="buscarResumenSemanal(this.value)">
         <div id="rs-relato"></div>
       </div>
     </section>
@@ -850,6 +887,7 @@
             </div>
         </div>
         <p style="font-size: 0.85rem; color: var(--secondary);">Elegí un mes para leer el relato de todo lo que se registró durante ese mes.</p>
+        <input type="search" id="rm-buscar-lista" class="resumen-buscar" autocomplete="off" placeholder="🔎 Buscar en lo registrado de este año (ej: pintura, Juan, techo, pagó...)" oninput="buscarResumenMensual(this.value)">
         <div class="resumen-grid" id="rm-meses"></div>
       </div>
       <div id="rm-detalle" style="display: none; max-width: 760px; margin: 0 auto;">
@@ -861,6 +899,7 @@
         <div style="display: flex; justify-content: center; margin-bottom: 12px;">
             <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="cerrarDetalleMes()">← Volver a los meses</button>
         </div>
+        <input type="search" id="rm-buscar-detalle" class="resumen-buscar" autocomplete="off" placeholder="🔎 Buscar en este mes (ej: pintura, Juan, techo, pagó...)" oninput="buscarResumenMensual(this.value)">
         <div id="rm-relato"></div>
       </div>
     </section>
@@ -2071,6 +2110,8 @@
             'registro': 'Registro de Actividades',
             'cronograma': 'Cronograma Semanal',
             'cronograma-anual': 'Cronograma Anual',
+            'hoy': 'Hoy',
+            'semana': 'Semana',
             'resumen-semanal': 'Resumen semanal',
             'resumen-mensual': 'Resumen mensual',
             'stats': 'Estadísticas del Sistema',
@@ -2593,6 +2634,8 @@
             if (sectionId === 'stats') renderCharts();
             if (sectionId === 'reparaciones') renderGrillaReparaciones();
             if (FORMS_ALTA[sectionId]) cerrarFormAlta(sectionId);
+            if (sectionId === 'hoy') mostrarHoy(hoyISO());
+            if (sectionId === 'semana') mostrarSemana(lunesDe(hoyISO()));
             if (sectionId === 'resumen-semanal') irMesActualResumenSemanal();
             if (sectionId === 'resumen-mensual') irAnioActualResumenMensual();
             if (sectionId === 'admin-dormys') { submenuOrigen = null; renderMenuPrincipal(); }
@@ -4966,7 +5009,33 @@
             return marcas;
         }
 
-        // Arma el título y el contenido (secciones agrupadas) de un día; lo usan la ventana y la vista de un día
+        // Dibuja las secciones (una por módulo) con los registros recibidos: [{ ev, iso }].
+        // conFecha = true agrega la fecha de cada registro (para períodos de varios días).
+        function htmlSeccionesAgenda(entradas, conFecha) {
+            let html = '';
+            SECCIONES_AGENDA.forEach(sec => {
+                const items = entradas.filter(x => x.ev.tipo === sec.tipo)
+                    .sort((a, b) => a.iso.localeCompare(b.iso) || (sec.tipo === 'semanal' ? (a.ev.orden || '').localeCompare(b.ev.orden || '') : 0));
+                if (items.length === 0) return;
+                html += `
+                    <div class="agenda-sec" style="--sec-color: ${sec.color};">
+                        <div class="agenda-sec-head">
+                            <span>${sec.icono} ${sec.titulo}<span class="agenda-count">${items.length}</span></span>
+                            <button type="button" class="agenda-link" onclick="irAModuloDesdeDia('${sec.modulo}', '${sec.tab || ''}')">Ir al módulo →</button>
+                        </div>
+                        <ul>${items.map(({ ev: it, iso }) => {
+                            let det = it.detalle.slice();
+                            if (it.tipo === 'cumple') det = [`Cumple ${parseInt(iso.slice(0, 4)) - parseInt(it.nacimiento.slice(0, 4))} años`];
+                            const etiqueta = (conFecha && !it.match.desde)
+                                ? `<span class="agenda-fecha">${DIAS_SEMANA_ES[dowDeISO(iso)].slice(0, 3)} ${iso.slice(8)}/${iso.slice(5, 7)}</span>` : '';
+                            return `<li>${etiqueta}<b>${escHtml(it.titulo)}</b>${det.length ? `<small>${det.map(escHtml).join('\n')}</small>` : ''}</li>`;
+                        }).join('')}</ul>
+                    </div>`;
+            });
+            return html;
+        }
+
+        // Arma el título y el contenido (secciones agrupadas) de un día; lo usan la ventana, la vista de un día y la pantalla Hoy
         function construirAgendaDia(iso) {
             const [y, m, d] = iso.split('-').map(Number);
             const fecha = new Date(y, m - 1, d);
@@ -4977,29 +5046,30 @@
             const registros = eventos.filter(e => !e.sinMarca).length;
             let html = eventos.length === 0 ? ''
                 : `<div class="agenda-resumen">${registros ? `${registros} registro(s) en esta fecha` : 'No hay registros en esta fecha'}</div>`;
-
-            SECCIONES_AGENDA.forEach(sec => {
-                const items = eventos.filter(e => e.tipo === sec.tipo);
-                if (items.length === 0) return;
-                if (sec.tipo === 'semanal') items.sort((a, b) => (a.orden || '').localeCompare(b.orden || ''));
-                html += `
-                    <div class="agenda-sec" style="--sec-color: ${sec.color};">
-                        <div class="agenda-sec-head">
-                            <span>${sec.icono} ${sec.titulo}<span class="agenda-count">${items.length}</span></span>
-                            <button type="button" class="agenda-link" onclick="irAModuloDesdeDia('${sec.modulo}', '${sec.tab || ''}')">Ir al módulo →</button>
-                        </div>
-                        <ul>${items.map(it => {
-                            let det = it.detalle.slice();
-                            if (it.tipo === 'cumple') det = [`Cumple ${y - parseInt(it.nacimiento.slice(0, 4))} años`];
-                            return `<li><b>${escHtml(it.titulo)}</b>${det.length ? `<small>${det.map(escHtml).join('\n')}</small>` : ''}</li>`;
-                        }).join('')}</ul>
-                    </div>`;
-            });
-
+            html += htmlSeccionesAgenda(eventos.map(ev => ({ ev, iso })), false);
             if (eventos.length === 0) {
                 html += '<div class="agenda-vacio">Nada registrado ni programado para este día.</div>';
             }
             return { titulo, html };
+        }
+
+        // Lo mismo que un día, pero juntando todos los días entre dos fechas (inclusive)
+        function construirAgendaRango(desdeISO, hastaISO) {
+            const todos = recolectarEventosAgenda();
+            const entradas = [], vistos = new Set();
+            for (let iso = desdeISO, i = 0; iso <= hastaISO && i < 8; iso = sumarDiasISO(iso, 1), i++) {
+                todos.forEach(ev => {
+                    if (!coincideAgenda(ev.match, iso)) return;
+                    if (ev.match.desde) { if (vistos.has(ev)) return; vistos.add(ev); }   // un período (vacaciones) se cuenta una sola vez
+                    entradas.push({ ev, iso });
+                });
+            }
+            const registros = entradas.filter(x => !x.ev.sinMarca).length;
+            let html = entradas.length === 0 ? ''
+                : `<div class="agenda-resumen">${registros ? `${registros} registro(s) en estos días` : 'No hay registros en estos días'}</div>`;
+            html += htmlSeccionesAgenda(entradas, true);
+            if (entradas.length === 0) html += '<div class="agenda-vacio">Nada registrado ni programado en estos días.</div>';
+            return html;
         }
 
         function sumarDiasISO(iso, delta) {
@@ -5385,7 +5455,9 @@
             { id: 'cronograma',         icono: '📅',  texto: 'Cronograma semanal', seccion: 'cronograma' },
             { id: 'cronograma-anual',   icono: '🗓️', texto: 'Cronograma anual',   seccion: 'cronograma-anual' },
             { id: 'resumen-semanal',    icono: '🗒️', texto: 'Resumen semanal',    seccion: 'resumen-semanal' },
-            { id: 'resumen-mensual',    icono: '📖',  texto: 'Resumen mensual',    seccion: 'resumen-mensual' }
+            { id: 'resumen-mensual',    icono: '📖',  texto: 'Resumen mensual',    seccion: 'resumen-mensual' },
+            { id: 'hoy',                icono: '☀️', texto: 'Hoy',                seccion: 'hoy' },
+            { id: 'semana',             icono: '📆',  texto: 'Semana',             seccion: 'semana' }
         ];
         let menuConfig = JSON.parse(localStorage.getItem('menuConfig')) || {};   // { idBoton: { numero, sub } }
         let submenuOrigen = null;   // número del submenú desde el que se abrió la pantalla actual (para el botón "volver")
@@ -5545,10 +5617,65 @@
         // =====================================================================
         const ORDEN_HECHOS = ['registro', 'tarea-emp', 'vacaciones', 'novedad', 'reparacion', 'pago', 'presupuesto', 'electro', 'matafuego', 'cumple'];
 
-        function corto(t, max = 160) {
-            t = String(t ?? '').replace(/\s+/g, ' ').trim().replace(/[.!?]+$/, '');   // sin punto final: el relato lo agrega al unir las frases
-            return t.length > max ? t.slice(0, max).trimEnd() + '…' : t;
+        // ----- Búsqueda: sin distinguir mayúsculas ni acentos, todas las palabras deben aparecer -----
+        function normalizarBusqueda(t) {
+            return Array.from(String(t ?? '')).map(c => (c.normalize('NFD').replace(/[\u0300-\u036f]/g, '') || c).toLowerCase()).join('');
         }
+        function terminosDe(texto) {
+            return normalizarBusqueda(String(texto || '').trim()).split(/\s+/).filter(Boolean);
+        }
+        function decodificarEntidades(s) {
+            return s.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+        }
+        function textoDeHTML(html) {
+            return decodificarEntidades(html.replace(/<[^>]*>/g, ''));
+        }
+        // Escapa el texto y marca con <mark> las palabras buscadas
+        function resaltarTexto(t, terminos) {
+            if (!terminos.length) return escHtml(t);
+            const tn = normalizarBusqueda(t);
+            if (tn.length !== t.length) return escHtml(t);
+            let out = '', i = 0;
+            while (i < t.length) {
+                let mejor = -1, largo = 0;
+                for (const w of terminos) {
+                    const j = tn.indexOf(w, i);
+                    if (j >= 0 && (mejor < 0 || j < mejor || (j === mejor && w.length > largo))) { mejor = j; largo = w.length; }
+                }
+                if (mejor < 0) break;
+                out += escHtml(t.slice(i, mejor)) + '<mark>' + escHtml(t.slice(mejor, mejor + largo)) + '</mark>';
+                i = mejor + largo;
+            }
+            return out + escHtml(t.slice(i));
+        }
+        function resaltarHTML(html, terminos) {
+            return html.split(/(<[^>]*>)/).map(seg => seg.startsWith('<') ? seg : resaltarTexto(decodificarEntidades(seg), terminos)).join('');
+        }
+        function capitalizarHTML(html) {
+            return html.replace(/^((?:<[^>]*>)*)([a-záéíóúñü])/i, (m, tags, c) => tags + c.toUpperCase());
+        }
+        function valoresCrudos(d) {
+            return Object.values(d || {}).filter(v => typeof v === 'string' || typeof v === 'number').join(' ');
+        }
+
+        // Texto libre dentro del relato: si pasa de 50 caracteres se muestra el comienzo con "…" y una lupa 🔍 con el detalle completo
+        let terminosActivos = [];
+        const LIMITE_TEXTO_RELATO = 50;
+        function textoLargo(texto, tituloModal, comillas = false) {
+            const completo = String(texto ?? '').trim();
+            const t = completo.replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+            const q = x => comillas ? `"${x}"` : x;
+            if (t.length <= LIMITE_TEXTO_RELATO) return q(escHtml(t));
+            let corte = t.slice(0, LIMITE_TEXTO_RELATO);
+            const sp = corte.lastIndexOf(' ');
+            if (sp > LIMITE_TEXTO_RELATO / 2 && t[LIMITE_TEXTO_RELATO] !== ' ') corte = corte.slice(0, sp);   // no cortar una palabra a la mitad
+            corte = corte.trimEnd();
+            const resto = normalizarBusqueda(t.slice(corte.length));
+            const coincide = terminosActivos.some(w => resto.includes(w));   // la búsqueda está en la parte que no se ve
+            const enc = x => encodeURIComponent(x);
+            return `${q(escHtml(corte) + '…')} <button type="button" class="btn-lupa${coincide ? ' coincide' : ''}" title="Ver el detalle completo" onclick="abrirModalTextoDetalle(decodeURIComponent('${enc(tituloModal)}'), decodeURIComponent('${enc(completo)}'))">🔍</button>`;
+        }
+
         function plural(n, sing, plur) { return `${n} ${n === 1 ? sing : plur}`; }
         function listaConY(partes) {
             if (partes.length <= 1) return partes.join('');
@@ -5635,15 +5762,16 @@
             return out.sort((a, b) => a.iso.localeCompare(b.iso) || ORDEN_HECHOS.indexOf(a.h.tipo) - ORDEN_HECHOS.indexOf(b.h.tipo));
         }
 
-        // Una frase coloquial por cada hecho (sin punto final ni mayúscula inicial: se arman al unirlas)
+        // Una frase coloquial (en HTML) por cada hecho; sin mayúscula inicial ni punto final: se agregan al armar el renglón
         function fraseHecho(it, hoy) {
-            const h = it.h, d = h.d, emp = nombreEmpleado();
-            const resp = d.responsable ? d.responsable : '';
+            const h = it.h, d = h.d, e = escHtml, L = textoLargo;
+            const emp = e(nombreEmpleado());
+            const resp = d.responsable ? e(d.responsable) : '';
             switch (h.tipo) {
                 case 'registro':
-                    return `se anotó "${corto(d.tarea, 120)}"${resp ? ` (a cargo de ${resp})` : ''}${d.observacion ? `. Dejaron esta observación: "${corto(d.observacion, 140)}"` : ''}`;
+                    return `se anotó ${L(d.tarea || 'Sin descripción', 'Actividad registrada', true)}${resp ? ` (a cargo de ${resp})` : ''}${d.observacion ? `. Dejaron esta observación: ${L(d.observacion, 'Observación', true)}` : ''}`;
                 case 'tarea-emp':
-                    return `${emp} hizo "${corto(d.tarea, 120)}"${d.observacion ? ` (${corto(d.observacion, 120)})` : ''}`;
+                    return `${emp} hizo ${L(d.tarea || 'Sin descripción', 'Tarea realizada', true)}${d.observacion ? ` (${L(d.observacion, 'Observación')})` : ''}`;
                 case 'vacaciones': {
                     const rango = rangoTexto(h.ini, h.fin);
                     const dias = d.diasTotales != null ? ` (días totales: ${d.diasTotales}${d.diasTomados != null ? `, tomados: ${d.diasTomados}` : ''})` : '';
@@ -5651,29 +5779,29 @@
                     return `${emp} ${verbo} ${rango}${dias}`;
                 }
                 case 'novedad':
-                    return `en el Dormy ${d.dormy || '—'} se cargó una novedad de techos: ${corto(d.descripcion || 'sin detalle', 140)}${d.estado ? ` (estado: ${d.estado})` : ''}${d.monto ? `, por ${fmtMonto(d.monto)}` : ''}${d.observacion ? `. Observación: ${corto(d.observacion, 140)}` : ''}`;
+                    return `en el Dormy ${e(d.dormy || '—')} se cargó una novedad de techos: ${L(d.descripcion || 'sin detalle', 'Descripción de la novedad')}${d.estado ? ` (estado: ${e(d.estado)})` : ''}${d.monto ? `, por ${e(fmtMonto(d.monto))}` : ''}${d.observacion ? `. Observación: ${L(d.observacion, 'Observación de la novedad')}` : ''}`;
                 case 'reparacion':
-                    return `el techo del Dormy ${d.dormy} quedó marcado como "${d.estado || 'Sin registrar'}"${d.orden ? ` (orden ${d.orden})` : ''}${d.presupuesto ? `, presupuesto ${d.presupuesto}` : ''}`;
+                    return `el techo del Dormy ${e(d.dormy)} quedó marcado como "${e(d.estado || 'Sin registrar')}"${d.orden ? ` (orden ${e(d.orden)})` : ''}${d.presupuesto ? `, presupuesto ${e(d.presupuesto)}` : ''}`;
                 case 'pago':
-                    return `${resp ? resp + ' pagó' : 'se pagó'} ${fmtMonto(d.monto)}${d.concepto ? ` en concepto de ${corto(d.concepto, 100)}` : ''}`;
+                    return `${resp ? resp + ' pagó' : 'se pagó'} ${e(fmtMonto(d.monto))}${d.concepto ? ` en concepto de ${L(d.concepto, 'Concepto del pago')}` : ''}`;
                 case 'presupuesto': {
-                    const quien = d.autor || 'un proveedor';
-                    const imp = d.importe ? ` por ${fmtMonto(d.importe)}` : '';
-                    const det = d.descripcion ? ` (${corto(d.descripcion, 140)})` : '';
-                    if (d.estado === 'Solicitado') return `se le pidió un presupuesto a ${quien}${d.descripcion ? ` para ${corto(d.descripcion, 140)}` : ''}`;
+                    const quien = e(d.autor || 'un proveedor');
+                    const imp = d.importe ? ` por ${e(fmtMonto(d.importe))}` : '';
+                    const det = d.descripcion ? ` (${L(d.descripcion, 'Descripción del presupuesto')})` : '';
+                    if (d.estado === 'Solicitado') return `se le pidió un presupuesto a ${quien}${d.descripcion ? ` para ${L(d.descripcion, 'Descripción del presupuesto')}` : ''}`;
                     if (d.estado === 'Aprobado') return `se aprobó el presupuesto de ${quien}${imp}${det}`;
                     if (d.estado === 'Rechazado') return `se rechazó el presupuesto de ${quien}${imp}${det}`;
                     if (d.estado === 'Pendiente') return `quedó pendiente el presupuesto de ${quien}${imp}${det}`;
-                    return `se registró un presupuesto de ${quien}${d.estado ? ` en estado "${d.estado}"` : ''}${imp}${det}`;
+                    return `se registró un presupuesto de ${quien}${d.estado ? ` en estado "${e(d.estado)}"` : ''}${imp}${det}`;
                 }
                 case 'electro':
-                    return `en el grupo electrógeno: ${corto(d.descripcion || 'novedad', 140)}${d.importe ? `, por ${fmtMonto(d.importe)}` : ''}${d.observacion ? `. Observación: ${corto(d.observacion, 120)}` : ''}`;
+                    return `en el grupo electrógeno: ${L(d.descripcion || 'novedad', 'Descripción de la novedad del grupo electrógeno')}${d.importe ? `, por ${e(fmtMonto(d.importe))}` : ''}${d.observacion ? `. Observación: ${L(d.observacion, 'Observación')}` : ''}`;
                 case 'matafuego': {
-                    const que = `el matafuego N° ${d.nro || '—'}${d.ubicacion ? ` (${d.ubicacion})` : ''}`;
+                    const que = `el matafuego N° ${e(d.nro || '—')}${d.ubicacion ? ` (${e(d.ubicacion)})` : ''}`;
                     return h.fecha < hoy ? `venció ${que}` : (h.fecha === hoy ? `hoy vence ${que}` : `vence ${que}`);
                 }
                 case 'cumple': {
-                    const nom = `${d.nombre || ''} ${d.apellido || ''}`.trim();
+                    const nom = e(`${d.nombre || ''} ${d.apellido || ''}`.trim());
                     const edad = it.anio - parseInt(d.nacimiento.slice(0, 4));
                     return it.iso < hoy ? `fue el cumpleaños de ${nom} (cumplió ${edad} años)`
                          : (it.iso === hoy ? `hoy es el cumpleaños de ${nom} (cumple ${edad} años)` : `es el cumpleaños de ${nom} (cumple ${edad} años)`);
@@ -5682,23 +5810,33 @@
             return '';
         }
 
-        // Une las frases de un día como si se contaran en voz alta
-        function unirFrasesDia(frases) {
-            const conectores = ['Además', 'También', 'Después', 'Por otro lado'];
-            return frases.map((f, i) => {
-                const t = escHtml(f.replace(/[.!?\s]+$/, ''));
-                if (i === 0) return t.charAt(0).toUpperCase() + t.slice(1) + '.';
-                const ultimo = i === frases.length - 1 && frases.length > 2;
-                return `${ultimo ? 'Por último' : conectores[(i - 1) % conectores.length]}, ${t}.`;
-            }).join(' ');
+        // Un renglón por cada hecho, ya filtrado por la búsqueda (todas las palabras tienen que aparecer) y con lo buscado resaltado
+        function lineasPeriodo(items, hoy, terminos) {
+            terminosActivos = terminos;
+            const out = [];
+            items.forEach(it => {
+                let html = fraseHecho(it, hoy);
+                if (!html) return;
+                if (terminos.length) {
+                    const crudo = it.h.tipo === 'cumple' ? '' : valoresCrudos(it.h.d);   // incluye la parte que queda detrás de la lupa
+                    const todo = normalizarBusqueda(`${textoDeHTML(html)} ${crudo} ${nombreDia(it.iso)} ${fechaLarga(it.iso)} ${it.iso}`);
+                    if (!terminos.every(w => todo.includes(w))) return;
+                }
+                html = capitalizarHTML(html);
+                if (!/<\/button>$/.test(html)) html += '.';
+                if (terminos.length) html = resaltarHTML(html, terminos);
+                out.push({ it, iso: it.iso, html });
+            });
+            terminosActivos = [];
+            return out;
         }
 
-        function parrafosPorDia(items, hoy) {
-            const dias = [...new Set(items.map(i => i.iso))];
-            return dias.map(iso => {
-                const frases = items.filter(i => i.iso === iso).map(i => fraseHecho(i, hoy)).filter(Boolean);
-                return `<div class="relato-dia"><h4>${nombreDia(iso)}</h4><p>${unirFrasesDia(frases)}</p></div>`;
-            }).join('');
+        // Agrupa los renglones por día: título del día y un renglón por novedad
+        function parrafosPorDia(lineas) {
+            const dias = [...new Set(lineas.map(l => l.iso))];
+            return dias.map(iso => `<div class="relato-dia"><h4>${nombreDia(iso)}</h4>${
+                lineas.filter(l => l.iso === iso).map(l => `<div class="relato-linea">${l.html}</div>`).join('')
+            }</div>`).join('');
         }
 
         function relacionConHoy(desde, hasta, hoy) {
@@ -5733,53 +5871,76 @@
             return `<p class="relato-cierre">${escHtml(t)}</p>`;
         }
 
+        function textoBusqueda(n, termino, unidad) {
+            const donde = unidad === 'semana' ? 'en esta semana' : 'en este mes';
+            return n === 0 ? `No encontré nada que coincida con «${termino}» ${donde}.`
+                           : `Encontré ${plural(n, 'coincidencia', 'coincidencias')} con «${termino}» ${donde}:`;
+        }
+
         function relatoSemana(sm) {
-            const hoy = hoyISO();
-            const items = hechosDelPeriodo(sm.desde, sm.hasta, recolectarHechosResumen());
+            const hoy = hoyISO(), terminos = terminosDe(rsTermino);
+            const todos = hechosDelPeriodo(sm.desde, sm.hasta, recolectarHechosResumen());
+            const lineas = lineasPeriodo(todos, hoy, terminos);
             const rel = relacionConHoy(sm.desde, sm.hasta, hoy);
             const rango = rangoTexto(sm.desde, sm.hasta);
             const intro = { pasada: `Repasemos cómo fue la semana ${rango}.`, actual: `Veamos cómo viene la semana ${rango}.`, futura: `Esta es la semana ${rango}, que todavía no llegó.` }[rel];
-            let html = `<div class="relato"><p>${escHtml(intro)} ${escHtml(textoNivel(items.length, rel, 'semana'))}</p>`;
-            html += parrafosPorDia(items, hoy) + cierreResumen(items) + '</div>';
-            return html;
+            const detalle = terminos.length ? textoBusqueda(lineas.length, rsTermino.trim(), 'semana') : textoNivel(todos.length, rel, 'semana');
+            return `<div class="relato"><p>${escHtml(intro)} ${escHtml(detalle)}</p>${parrafosPorDia(lineas)}${cierreResumen(lineas.map(l => l.it))}</div>`;
         }
 
         function relatoMes(anio, mes0) {
-            const hoy = hoyISO();
+            const hoy = hoyISO(), terminos = terminosDe(rmTermino);
             const desde = isoDeFecha(anio, mes0, 1), hasta = isoDeFecha(anio, mes0, new Date(anio, mes0 + 1, 0).getDate());
             const hechos = recolectarHechosResumen();
-            const items = hechosDelPeriodo(desde, hasta, hechos);
+            const todos = hechosDelPeriodo(desde, hasta, hechos);
+            const lineasMes = lineasPeriodo(todos, hoy, terminos);
             const rel = relacionConHoy(desde, hasta, hoy);
             const mesTxt = `el mes de ${MESES_ES[mes0].toLowerCase()} de ${anio}`;
             const intro = { pasada: `Repasemos cómo fue ${mesTxt}.`, actual: `Veamos cómo viene ${mesTxt}.`, futura: `Este es ${mesTxt}, que todavía no llegó.` }[rel];
-            let html = `<div class="relato"><p>${escHtml(intro)} ${escHtml(textoNivel(items.length, rel, 'mes'))}</p>`;
+            const detalle = terminos.length ? textoBusqueda(lineasMes.length, rmTermino.trim(), 'mes') : textoNivel(todos.length, rel, 'mes');
+            let html = `<div class="relato"><p>${escHtml(intro)} ${escHtml(detalle)}</p>`;
             semanasDelMes(anio, mes0).forEach(sm => {
-                const its = hechosDelPeriodo(sm.desde, sm.hasta, hechos);
+                const lineas = lineasPeriodo(hechosDelPeriodo(sm.desde, sm.hasta, hechos), hoy, terminos);
                 const rango = rangoTexto(sm.desde, sm.hasta, false);
-                html += its.length
-                    ? `<div class="relato-sem"><h4 class="relato-sem-t">Semana ${sm.n} · ${escHtml(rango)}</h4>${parrafosPorDia(its, hoy)}</div>`
-                    : `<p class="relato-vacio" style="margin-top: 14px;">Semana ${sm.n} (${escHtml(rango)}): sin registros.</p>`;
+                if (lineas.length) html += `<div class="relato-sem"><h4 class="relato-sem-t">Semana ${sm.n} · ${escHtml(rango)}</h4>${parrafosPorDia(lineas)}</div>`;
+                else if (!terminos.length) html += `<p class="relato-vacio" style="margin-top: 14px;">Semana ${sm.n} (${escHtml(rango)}): sin registros.</p>`;
             });
-            html += cierreResumen(items) + '</div>';
-            return html;
+            return html + cierreResumen(lineasMes.map(l => l.it)) + '</div>';
         }
 
         // ---------- Resumen semanal: lista de semanas del mes ----------
         let rsAnio = new Date().getFullYear(), rsMes0 = new Date().getMonth(), rsSel = null;
 
+        let rsTermino = '';   // lo que se escribió en el buscador (compartido entre la lista y el detalle)
+
         function renderResumenSemanal() {
             document.getElementById('rs-mes-titulo').innerText = `${MESES_ES[rsMes0]} ${rsAnio}`;
-            const hechos = recolectarHechosResumen(), hoy = hoyISO();
-            document.getElementById('rs-semanas').innerHTML = semanasDelMes(rsAnio, rsMes0).map((sm, i) => {
-                const n = hechosDelPeriodo(sm.desde, sm.hasta, hechos).length;
+            const hechos = recolectarHechosResumen(), hoy = hoyISO(), terminos = terminosDe(rsTermino);
+            let html = '', mostradas = 0;
+            semanasDelMes(rsAnio, rsMes0).forEach((sm, i) => {
+                const items = hechosDelPeriodo(sm.desde, sm.hasta, hechos);
+                const n = terminos.length ? lineasPeriodo(items, hoy, terminos).length : items.length;
+                if (terminos.length && n === 0) return;   // con búsqueda solo se muestran las semanas con coincidencias
+                mostradas++;
                 const actual = hoy >= sm.desde && hoy <= sm.hasta;
-                return `<button type="button" class="home-grid-btn resumen-tile${actual ? ' actual' : ''}" onclick="abrirSemanaResumen(${rsAnio}, ${rsMes0}, ${i})">
+                const cuenta = terminos.length ? plural(n, 'coincidencia', 'coincidencias') : (n ? plural(n, 'registro', 'registros') : 'Sin registros');
+                html += `<button type="button" class="home-grid-btn resumen-tile${actual ? ' actual' : ''}" onclick="abrirSemanaResumen(${rsAnio}, ${rsMes0}, ${i})">
                             <span style="font-size: 1.6rem;">🗒️</span>
                             <span style="font-weight: bold; font-size: 1.05rem; color: var(--text);">Semana ${sm.n}${actual ? ' (actual)' : ''}</span>
                             <span class="resumen-sub">${escHtml(rangoTexto(sm.desde, sm.hasta, false))}</span>
-                            <span class="resumen-count${n ? ' con' : ''}">${n ? plural(n, 'registro', 'registros') : 'Sin registros'}</span>
+                            <span class="resumen-count${n ? ' con' : ''}">${cuenta}</span>
                         </button>`;
-            }).join('');
+            });
+            document.getElementById('rs-semanas').innerHTML = mostradas ? html
+                : `<p class="relato-vacio" style="grid-column: 1 / -1; text-align: center;">No hay coincidencias con «${escHtml(rsTermino.trim())}» en ${MESES_ES[rsMes0]} ${rsAnio}.</p>`;
+        }
+
+        // Buscador de las dos pantallas del resumen semanal (lista y detalle)
+        function buscarResumenSemanal(valor) {
+            rsTermino = valor;
+            ['rs-buscar-lista', 'rs-buscar-detalle'].forEach(id => { const el = document.getElementById(id); if (el.value !== valor) el.value = valor; });
+            if (rsSel) document.getElementById('rs-relato').innerHTML = relatoSemana(semanasDelMes(rsSel.anio, rsSel.mes0)[rsSel.idx]);
+            else renderResumenSemanal();
         }
 
         function cambiarMesResumenSemanal(delta) {
@@ -5790,7 +5951,8 @@
 
         function irMesActualResumenSemanal() {
             const h = new Date();
-            rsAnio = h.getFullYear(); rsMes0 = h.getMonth(); rsSel = null;
+            rsAnio = h.getFullYear(); rsMes0 = h.getMonth(); rsSel = null; rsTermino = '';
+            document.getElementById('rs-buscar-lista').value = ''; document.getElementById('rs-buscar-detalle').value = '';
             document.getElementById('rs-detalle').style.display = 'none';
             document.getElementById('rs-lista').style.display = 'block';
             renderResumenSemanal();
@@ -5827,27 +5989,43 @@
         // ---------- Resumen mensual: lista de meses del año ----------
         let rmAnio = new Date().getFullYear(), rmSel = null;
 
+        let rmTermino = '';
+
         function renderResumenMensual() {
             document.getElementById('rm-anio-titulo').innerText = rmAnio;
-            const hechos = recolectarHechosResumen(), hoy = hoyISO();
-            let html = '';
+            const hechos = recolectarHechosResumen(), hoy = hoyISO(), terminos = terminosDe(rmTermino);
+            let html = '', mostrados = 0;
             for (let m = 0; m < 12; m++) {
                 const desde = isoDeFecha(rmAnio, m, 1), hasta = isoDeFecha(rmAnio, m, new Date(rmAnio, m + 1, 0).getDate());
-                const n = hechosDelPeriodo(desde, hasta, hechos).length;
+                const items = hechosDelPeriodo(desde, hasta, hechos);
+                const n = terminos.length ? lineasPeriodo(items, hoy, terminos).length : items.length;
+                if (terminos.length && n === 0) continue;   // con búsqueda solo se muestran los meses con coincidencias
+                mostrados++;
                 const actual = hoy >= desde && hoy <= hasta;
+                const cuenta = terminos.length ? plural(n, 'coincidencia', 'coincidencias') : (n ? plural(n, 'registro', 'registros') : 'Sin registros');
                 html += `<button type="button" class="home-grid-btn resumen-tile${actual ? ' actual' : ''}" onclick="abrirMesResumen(${rmAnio}, ${m})">
                             <span style="font-size: 1.6rem;">📖</span>
                             <span style="font-weight: bold; font-size: 1.05rem; color: var(--text);">${MESES_ES[m]}${actual ? ' (actual)' : ''}</span>
-                            <span class="resumen-count${n ? ' con' : ''}">${n ? plural(n, 'registro', 'registros') : 'Sin registros'}</span>
+                            <span class="resumen-count${n ? ' con' : ''}">${cuenta}</span>
                         </button>`;
             }
-            document.getElementById('rm-meses').innerHTML = html;
+            document.getElementById('rm-meses').innerHTML = mostrados ? html
+                : `<p class="relato-vacio" style="grid-column: 1 / -1; text-align: center;">No hay coincidencias con «${escHtml(rmTermino.trim())}» en ${rmAnio}.</p>`;
+        }
+
+        // Buscador de las dos pantallas del resumen mensual (lista y detalle)
+        function buscarResumenMensual(valor) {
+            rmTermino = valor;
+            ['rm-buscar-lista', 'rm-buscar-detalle'].forEach(id => { const el = document.getElementById(id); if (el.value !== valor) el.value = valor; });
+            if (rmSel) document.getElementById('rm-relato').innerHTML = relatoMes(rmSel.anio, rmSel.mes0);
+            else renderResumenMensual();
         }
 
         function cambiarAnioResumenMensual(delta) { rmAnio += delta; renderResumenMensual(); }
 
         function irAnioActualResumenMensual() {
-            rmAnio = new Date().getFullYear(); rmSel = null;
+            rmAnio = new Date().getFullYear(); rmSel = null; rmTermino = '';
+            document.getElementById('rm-buscar-lista').value = ''; document.getElementById('rm-buscar-detalle').value = '';
             document.getElementById('rm-detalle').style.display = 'none';
             document.getElementById('rm-lista').style.display = 'block';
             renderResumenMensual();
@@ -5876,6 +6054,43 @@
             document.getElementById('rm-detalle').style.display = 'none';
             document.getElementById('rm-lista').style.display = 'block';
             renderResumenMensual();
+        }
+
+
+        // =====================================================================
+        //  HOY y SEMANA: la agenda del día (la del Cronograma anual) para hoy / lo que va de la semana
+        // =====================================================================
+        let hoyVistaIso = null, semanaLunesIso = null;
+
+        function lunesDe(iso) {
+            return sumarDiasISO(iso, -((dowDeISO(iso) + 6) % 7));
+        }
+
+        function mostrarHoy(iso) {
+            hoyVistaIso = iso;
+            const { titulo, html } = construirAgendaDia(iso);
+            document.getElementById('hoy-titulo').innerText = iso === hoyISO() ? `${titulo} (hoy)` : titulo;
+            document.getElementById('hoy-contenido').innerHTML = html;
+        }
+
+        function moverHoy(delta) {
+            if (hoyVistaIso) mostrarHoy(sumarDiasISO(hoyVistaIso, delta));
+        }
+
+        // Semana de lunes a domingo; la semana en curso llega solo hasta hoy
+        function mostrarSemana(lunesIso) {
+            semanaLunesIso = lunesIso;
+            const hoy = hoyISO(), domingo = sumarDiasISO(lunesIso, 6);
+            const enCurso = hoy >= lunesIso && hoy <= domingo;
+            const hasta = enCurso ? hoy : domingo;
+            document.getElementById('semana-titulo').innerHTML = hasta === lunesIso
+                ? `${escHtml(nombreDia(lunesIso))} de ${lunesIso.slice(0, 4)}${enCurso ? ' (hoy)' : ''}`
+                : `Del ${escHtml(nombreDia(lunesIso).toLowerCase())} al ${escHtml(nombreDia(hasta).toLowerCase())} de ${hasta.slice(0, 4)}${enCurso ? ' <span style="font-weight: normal; color: var(--secondary);">(hasta hoy)</span>' : ''}`;
+            document.getElementById('semana-contenido').innerHTML = construirAgendaRango(lunesIso, hasta);
+        }
+
+        function moverSemana(delta) {
+            if (semanaLunesIso) mostrarSemana(sumarDiasISO(semanaLunesIso, 7 * delta));
         }
 
         window.onload = async function() {
