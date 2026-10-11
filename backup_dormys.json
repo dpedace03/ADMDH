@@ -957,7 +957,7 @@
     "piscina": {
       "numero": 11,
       "sub": 3,
-      "oculto": false
+      "oculto": true
     },
     "electrogeno": {
       "numero": 15,
@@ -1618,5 +1618,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-11T13:59:19.205Z"
+  "fechaExportacion": "2026-10-11T14:00:10.490Z"
 }
