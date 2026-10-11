@@ -968,8 +968,8 @@
       "sub": 1
     },
     "procedimientos": {
-      "numero": 11,
-      "sub": 2
+      "numero": 18,
+      "sub": 0
     },
     "registro": {
       "numero": 11,
@@ -980,7 +980,23 @@
       "sub": 6
     },
     "cronograma-anual": {
-      "numero": 8,
+      "numero": 11,
+      "sub": 12
+    },
+    "resumen-semanal": {
+      "numero": 11,
+      "sub": 13
+    },
+    "resumen-mensual": {
+      "numero": 11,
+      "sub": 14
+    },
+    "hoy": {
+      "numero": 19,
+      "sub": 0
+    },
+    "semana": {
+      "numero": 20,
       "sub": 0
     }
   },
@@ -1582,5 +1598,5 @@
   "textoImporteConfig": "Importe Total: $",
   "appBgColor": "#88baf7",
   "appCardBgColor": "#c5e0e2",
-  "fechaExportacion": "2026-10-11T13:09:19.890Z"
+  "fechaExportacion": "2026-10-11T13:54:10.193Z"
 }
