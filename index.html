@@ -577,6 +577,7 @@
             <button class="btn-header-icon" onclick="showSection('config')" title="Configuración">⚙️</button>
             <button class="btn-header-icon" onclick="showSection('admin-dormys')" title="Ir a la Pantalla Principal">🏠</button>
             <button class="btn-header-icon" id="btn-volver-submenu" style="display: none;" onclick="volverASubmenu()" title="Volver a la pantalla anterior">⬅️</button>
+            <button class="btn-header-icon" id="btn-db-estado" style="display: none;" onclick="dbIrAConfig()" title="Base de datos">☁️</button>
             <h2 id="main-header-title">Administración Dormys</h2>
         </div>
     </header>
@@ -1880,6 +1881,44 @@
             </div>
         </div>
 
+        <div style="margin-bottom: 20px;" id="bloque-db">
+            <h4>☁️ Base de datos (Supabase)</h4>
+            <div class="card-box" style="margin-top: 10px;">
+                <p style="font-size: 0.85rem; color: var(--secondary); line-height: 1.5; margin-bottom: 10px;">
+                    Los datos que ingresás se guardan también en la base de datos. <b>Pasos:</b>
+                    1) En Supabase abrí <b>SQL Editor</b> y ejecutá el archivo <b>schema_dormys.sql</b>.
+                    2) En <b>Settings → API</b> copiá la <b>Project URL</b> y la clave <b>anon public</b> y pegalas acá.
+                    3) Guardá la conexión, probala y hacé la <b>primera sincronización</b> (Subir o Descargar).
+                    Después cada cambio se envía solo, y al abrir la app se traen los datos de la base.
+                </p>
+                <div class="form-group">
+                    <label>URL del proyecto</label>
+                    <input type="text" id="db-url" placeholder="https://xxxxxxxx.supabase.co" autocomplete="off">
+                </div>
+                <div class="form-group" style="margin-top: 8px;">
+                    <label>Clave anon public</label>
+                    <input type="password" id="db-key" placeholder="eyJ..." autocomplete="off">
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action" onclick="dbGuardarConexion()">Guardar conexión</button>
+                    <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="dbProbarConexion()">Probar conexión</button>
+                </div>
+                <div id="db-estado-box" class="menu-estructura"></div>
+                <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action" onclick="dbSubirTodo()">⬆️ Subir los datos de este equipo</button>
+                    <button type="button" class="btn-action" style="background-color: var(--warning);" onclick="dbDescargarTodo()">⬇️ Descargar los datos de la base</button>
+                    <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="dbSincronizarAhora()">🔄 Sincronizar ahora</button>
+                </div>
+                <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" id="db-auto" style="width: auto;" onchange="dbToggleAuto(this.checked)"> Sincronizar automáticamente al guardar
+                </label>
+                <p style="font-size: 0.78rem; color: var(--secondary); margin-top: 10px; line-height: 1.5;">
+                    ⚠️ La clave se guarda solo en este navegador. Con la configuración de seguridad que trae el esquema, cualquiera que tenga la clave puede leer y escribir en la base: no la compartas.
+                    Los archivos adjuntos se guardan en Supabase Storage (bucket <b>adjuntos</b>).
+                </p>
+            </div>
+        </div>
+
         <div style="margin-bottom: 20px;">
             <h4>Botones del Menú (número y subnúmero)</h4>
             <div class="card-box" style="margin-top: 10px;">
@@ -2661,7 +2700,7 @@
                 document.getElementById('anual-calendario').style.display = 'block';
                 renderCronogramaAnual();
             }
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); renderMenuConfig(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); renderMenuConfig(); if (typeof dbRenderConfig === 'function') dbRenderConfig(); }
         }
 
         // =====================================================================
@@ -4475,6 +4514,11 @@
 
         // --- CARGA AUTOMÁTICA DE BACKUP DESDE GITHUB ---
         async function cargarDatosDesdeGitHub() {
+            // Con la base de datos activa, la base es la fuente de los datos: no se restaura un backup viejo de GitHub encima
+            if (typeof dbConfigurada === 'function' && dbConfigurada() && dbCfg.inicializado) {
+                console.log('ℹ️ Base de datos activa: no se restaura el backup de GitHub al abrir.');
+                return;
+            }
             try {
                 const apiRes = await fetch(GITHUB_CONTENTS_API + '?t=' + Date.now());
                 let targetFile = 'backup_dormys.json';
@@ -4504,7 +4548,7 @@
 
         function aplicarDatosBackup(data) {
             if (!data) return;
-            localStorage.clear();
+            if (typeof dbLimpiarLocalStorage === 'function') dbLimpiarLocalStorage(); else localStorage.clear();
 
             if (data.dormysData) { dormysData = data.dormysData; localStorage.setItem('dormysData', JSON.stringify(data.dormysData)); }
             if (data.reparacionesData) { reparacionesData = data.reparacionesData; localStorage.setItem('reparacionesData', JSON.stringify(data.reparacionesData)); }
@@ -5631,7 +5675,7 @@
         function restaurarMenuConfig() {
             if (!confirm('¿Volver al orden original? Todos los botones quedarán en el menú principal y visibles.')) return;
             menuConfig = {};
-            localStorage.removeItem('menuConfig');
+            localStorage.setItem('menuConfig', '{}');
             renderMenuConfig();
             renderMenuPrincipal();
         }
@@ -6314,6 +6358,675 @@
             };
             reader.readAsText(file, 'UTF-8');
         }
+    </script>
+
+    <script>
+// =====================================================================
+//  BASE DE DATOS (Supabase): los datos que se ingresan en la app se guardan también en la base
+//  - La app sigue guardando en el navegador (rápido y sin conexión); cada cambio se envía a la base.
+//  - Al abrir la app se envían los cambios pendientes y se descargan los datos de la base.
+//  - Los archivos adjuntos van a Supabase Storage (bucket "adjuntos").
+// =====================================================================
+const DB_CFG_KEY = 'supabaseConfig', DB_SNAP_KEY = 'dbSnapshot';
+const dbRawSet = Storage.prototype.setItem;
+const dbRawRemove = Storage.prototype.removeItem;
+let dbSilencio = 0;   // > 0: lo que se escribe en localStorage no dispara sincronización
+function dbSetRaw(k, v) { dbRawSet.call(localStorage, k, v); }
+
+// ---------- Conversión de tipos (la misma para lo local y lo que devuelve la base) ----------
+const DBT = {
+    int:   v => { const n = parseInt(v); return Number.isFinite(n) ? n : null; },
+    dormy: v => { const n = parseInt(v); return n >= 1 && n <= 99 ? n : null; },
+    intN:  v => (v === '' || v == null) ? null : DBT.int(v),
+    num2:  v => { const n = Number(v); return Number.isFinite(n) ? Math.round(n * 100) / 100 : 0; },
+    num1:  v => { const n = Number(v); return Number.isFinite(n) ? Math.round(n * 10) / 10 : 0; },
+    txt:   v => v == null ? '' : String(v),
+    fecha: v => { const s = String(v ?? ''); return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : null; },
+    hora:  v => { const m = String(v ?? '').match(/^(\d{1,2}):(\d{2})/); return m ? `${m[1].padStart(2, '0')}:${m[2]}:00` : null; },
+    bool:  v => !!v
+};
+const AL = { s: v => v ?? '', n: v => v ?? 0, dormy: v => v == null ? '' : String(v), hora: v => v ? String(v).slice(0, 5) : '', raw: v => v };
+
+// ---------- Tablas: clave primaria, columnas con su tipo y columnas obligatorias ----------
+const T_ID = { id: DBT.int };
+const DB_TABLAS = {
+    app_config:            { pk: ['clave'],  cols: { clave: DBT.txt, valor: DBT.txt } },
+    categorias:            { pk: ['nombre'], orden: 'id', cols: { nombre: DBT.txt, color: DBT.txt } },
+    estados:               { pk: ['nombre'], orden: 'id', cols: { nombre: DBT.txt, color: DBT.txt } },
+    estados_presupuesto:   { pk: ['nombre'], orden: 'id', cols: { nombre: DBT.txt, color: DBT.txt } },
+    dormys:                { pk: ['numero'], cols: { numero: DBT.int, duenio: DBT.txt } },
+    reparaciones:          { pk: ['dormy_numero'], cols: { dormy_numero: DBT.int, estado: DBT.txt, presupuesto: DBT.txt, orden: DBT.txt, fecha: DBT.fecha } },
+    novedades:             { pk: ['id'], cols: { ...T_ID, dormy_numero: DBT.dormy, fecha: DBT.fecha, estado: DBT.txt, monto: DBT.num2, descripcion: DBT.txt, observacion: DBT.txt } },
+    pagos:                 { pk: ['id'], cols: { ...T_ID, fecha: DBT.fecha, responsable: DBT.txt, monto: DBT.num2, concepto: DBT.txt } },
+    presupuestos:          { pk: ['id'], cols: { ...T_ID, fecha: DBT.fecha, autor: DBT.txt, importe: DBT.num2, estado: DBT.txt, descripcion: DBT.txt } },
+    adjuntos:              { pk: ['file_id'], cols: { file_id: DBT.txt, nombre: DBT.txt, storage_path: DBT.txt, mime_type: DBT.txt, novedad_id: DBT.int, pago_id: DBT.int, presupuesto_id: DBT.int } },
+    tareas_proveedor:      { pk: ['nombre'], orden: 'id', cols: { nombre: DBT.txt } },
+    proveedores:           { pk: ['id'], cols: { ...T_ID, nombre: DBT.txt, apellido: DBT.txt, dni: DBT.txt, whatsapp: DBT.txt } },
+    proveedor_tareas:      { pk: ['proveedor_id', 'tarea_nombre'], cols: { proveedor_id: DBT.int, tarea_nombre: DBT.txt } },
+    grupo_electrogeno:     { pk: ['id'], cols: { ...T_ID, descripcion: DBT.txt, service: DBT.txt, combustible: DBT.txt, horas_ultimo_service: DBT.num1, horas_totales: DBT.num1, observacion: DBT.txt } },
+    electrogeno_novedades: { pk: ['id'], cols: { ...T_ID, fecha: DBT.fecha, importe: DBT.num2, descripcion: DBT.txt, observacion: DBT.txt } },
+    matafuegos:            { pk: ['id'], cols: { ...T_ID, nro: DBT.txt, ubicacion: DBT.txt, vencimiento: DBT.fecha } },
+    tareas:                { pk: ['id'], cols: { ...T_ID, nombre: DBT.txt, responsable: DBT.txt, categoria: DBT.txt, descripcion: DBT.txt } },
+    registros:             { pk: ['id'], cols: { ...T_ID, fecha: DBT.fecha, tarea: DBT.txt, responsable: DBT.txt, observacion: DBT.txt } },
+    cronograma:            { pk: ['id'], cols: { ...T_ID, dia: DBT.txt, horario: DBT.txt, tarea: DBT.txt, responsable: DBT.txt, observacion: DBT.txt } },
+    cronograma_anual:      { pk: ['anio', 'mes'], cols: { anio: DBT.int, mes: DBT.int, texto: DBT.txt } },
+    herramientas:          { pk: ['id'], cols: { ...T_ID, nombre: DBT.txt, descripcion: DBT.txt, estado: DBT.txt } },
+    procedimientos:        { pk: ['id'], cols: { ...T_ID, nombre: DBT.txt, categoria: DBT.txt, responsable: DBT.txt, descripcion: DBT.txt } },
+    empleado_ficha:        { pk: ['id'], cols: { ...T_ID, nombre: DBT.txt, apellido: DBT.txt, dni: DBT.txt, fecha_nacimiento: DBT.fecha, domicilio: DBT.txt, whatsapp: DBT.txt, puesto: DBT.txt, puesto_descripcion: DBT.txt } },
+    empleado_horarios:     { pk: ['temporada'], cols: { temporada: DBT.txt, hora_inicio: DBT.hora, hora_fin: DBT.hora } },
+    empleado_vacaciones:   { pk: ['id'], req: ['fecha_inicio', 'fecha_fin'], cols: { ...T_ID, anio: DBT.intN, fecha_inicio: DBT.fecha, fecha_fin: DBT.fecha, dias_totales: DBT.intN, dias_tomados: DBT.intN } },
+    empleado_tareas:       { pk: ['id'], req: ['fecha'], cols: { ...T_ID, fecha: DBT.fecha, tarea: DBT.txt, observacion: DBT.txt } },
+    menu_botones:          { pk: ['id'], cols: { id: DBT.txt, texto: DBT.txt, numero: DBT.int, subnumero: DBT.int, oculto: DBT.bool } }
+};
+// Orden de dependencias: primero los "padres", después los que los referencian
+const DB_ORDEN = ['app_config', 'categorias', 'estados', 'estados_presupuesto', 'dormys', 'reparaciones', 'novedades', 'pagos', 'presupuestos', 'adjuntos',
+    'tareas_proveedor', 'proveedores', 'proveedor_tareas', 'grupo_electrogeno', 'electrogeno_novedades', 'matafuegos', 'tareas', 'registros',
+    'cronograma', 'cronograma_anual', 'herramientas', 'procedimientos', 'empleado_ficha', 'empleado_horarios', 'empleado_vacaciones', 'empleado_tareas', 'menu_botones'];
+
+function dbNormFila(tabla, raw) {
+    const m = DB_TABLAS[tabla], o = {};
+    Object.keys(m.cols).forEach(c => { o[c] = m.cols[c](raw[c]); });
+    const obligatorias = [...m.pk, ...(m.req || [])];
+    return obligatorias.every(c => o[c] !== null && o[c] !== '') ? o : null;   // fila incompleta: no se sincroniza
+}
+const dbPk = (tabla, fila) => DB_TABLAS[tabla].pk.map(c => fila[c]).join('\u0001');
+
+// ---------- Lectura de localStorage ----------
+function dbLeerJSON(k) {
+    const v = localStorage.getItem(k);
+    if (v === null) return undefined;
+    try { return JSON.parse(v); } catch { return undefined; }
+}
+const dbMimeDe = n => ({ pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp' }[String(n || '').split('.').pop().toLowerCase()] || '');
+
+// ---------- Stores: cada dato de la app y las tablas donde se guarda ----------
+// Un store sabe: leer (de localStorage), aFilas (a filas de tabla), deFilas (de filas de tabla a dato de la app) y escribir.
+const DB_STORES = [];
+
+// campos: [columna, campoLocal, aLocal, deItem]
+function dbMapa(campos) {
+    return {
+        aFila: it => Object.fromEntries(campos.map(([col, campo, , deItem]) => [col, deItem ? deItem(it) : it[campo]])),
+        deFila: (f, base) => { const o = { ...(base || {}) }; campos.forEach(([col, campo, aLocal]) => { o[campo] = (aLocal || AL.raw)(f[col]); }); return o; }
+    };
+}
+
+// Lista de objetos con id (opcionalmente con archivos adjuntos: refs [{id, name}])
+function dbStoreLista(clave, tabla, campos, adj) {
+    const m = dbMapa([['id', 'id', AL.raw], ...campos]);
+    DB_STORES.push({
+        claves: [clave],
+        tablas: adj ? [tabla, 'adjuntos'] : [tabla],
+        owner: adj ? adj.col : null,
+        filtro: adj ? { adjuntos: f => f[adj.col] != null } : null,
+        leer: () => { const v = dbLeerJSON(clave); return Array.isArray(v) ? v : undefined; },
+        aFilas(lista) {
+            const out = { [tabla]: [] };
+            if (adj) out.adjuntos = [];
+            lista.forEach(it => {
+                if (!it || typeof it !== 'object') return;
+                const f = m.aFila(it);
+                out[tabla].push(f);
+                if (adj) (it[adj.campo] || []).forEach(r => {
+                    if (!r || !r.id) return;
+                    out.adjuntos.push({ file_id: r.id, nombre: r.name, storage_path: `${adj.prefijo}/${DBT.int(it.id)}/${r.id}`, mime_type: dbMimeDe(r.name), novedad_id: null, pago_id: null, presupuesto_id: null, [adj.col]: it.id });
+                });
+            });
+            return out;
+        },
+        deFilas(filas, local) {
+            const porId = new Map((local || []).map(x => [DBT.int(x.id), x]));
+            return filas[tabla].map(f => {
+                const o = m.deFila(f, porId.get(f.id));
+                if (adj) o[adj.campo] = (filas.adjuntos || []).filter(a => a[adj.col] === f.id).sort((a, b) => a.file_id.localeCompare(b.file_id)).map(a => ({ id: a.file_id, name: a.nombre }));
+                return o;
+            });
+        },
+        escribir: lista => dbSetRaw(clave, JSON.stringify(lista))
+    });
+}
+
+dbStoreLista('novedades', 'novedades', [['dormy_numero', 'dormy', AL.dormy], ['fecha', 'fecha', AL.s], ['estado', 'estado', AL.s], ['monto', 'monto', AL.n], ['descripcion', 'descripcion', AL.s], ['observacion', 'observacion', AL.s]],
+    { col: 'novedad_id', campo: 'archivos', prefijo: 'novedades' });
+dbStoreLista('pagos', 'pagos', [['fecha', 'fecha', AL.s], ['responsable', 'responsable', AL.s], ['monto', 'monto', AL.n], ['concepto', 'concepto', AL.s]],
+    { col: 'pago_id', campo: 'facturas', prefijo: 'pagos' });
+dbStoreLista('presupuestosData', 'presupuestos', [['fecha', 'fecha', AL.s], ['autor', 'autor', AL.s], ['importe', 'importe', AL.n], ['estado', 'estado', AL.s], ['descripcion', 'descripcion', AL.s]],
+    { col: 'presupuesto_id', campo: 'adjuntos', prefijo: 'presupuestos' });
+dbStoreLista('electrogenoNovedades', 'electrogeno_novedades', [['fecha', 'fecha', AL.s], ['importe', 'importe', AL.n], ['descripcion', 'descripcion', AL.s], ['observacion', 'observacion', AL.s]]);
+dbStoreLista('matafuegosData', 'matafuegos', [['nro', 'nro', AL.s], ['ubicacion', 'ubicacion', AL.s], ['vencimiento', 'vencimiento', AL.s]]);
+dbStoreLista('tareasData', 'tareas', [['nombre', 'nombre', AL.s], ['responsable', 'responsable', AL.s], ['categoria', 'categoria', AL.s], ['descripcion', 'descripcion', AL.s]]);
+dbStoreLista('registrosData', 'registros', [['fecha', 'fecha', AL.s], ['tarea', 'tarea', AL.s], ['responsable', 'responsable', AL.s], ['observacion', 'observacion', AL.s]]);
+dbStoreLista('cronogramaData', 'cronograma', [['dia', 'dia', AL.s], ['horario', 'horario', AL.s], ['tarea', 'tarea', AL.s], ['responsable', 'responsable', AL.s], ['observacion', 'observacion', AL.s]]);
+dbStoreLista('herramientasData', 'herramientas', [['nombre', 'nombre', AL.s], ['descripcion', 'descripcion', AL.s], ['estado', 'estado', AL.s]]);
+dbStoreLista('procedimientosData', 'procedimientos', [['nombre', 'nombre', AL.s], ['categoria', 'categoria', AL.s], ['responsable', 'responsable', AL.s], ['descripcion', 'descripcion', AL.s]]);
+
+// Listas de {nombre, color} (categorías y estados): la clave es el nombre
+function dbStoreNombreColor(clave, tabla) {
+    DB_STORES.push({
+        claves: [clave], tablas: [tabla],
+        leer: () => { const v = dbLeerJSON(clave); return Array.isArray(v) ? v : undefined; },
+        aFilas: lista => ({ [tabla]: lista.map(x => typeof x === 'string' ? { nombre: x, color: '#3b82f6' } : { nombre: x && x.nombre, color: x && x.color }) }),
+        deFilas: (filas, local) => filas[tabla].map(f => ({ ...((local || []).find(x => x && x.nombre === f.nombre) || {}), nombre: f.nombre, color: f.color })),
+        escribir: lista => dbSetRaw(clave, JSON.stringify(lista))
+    });
+}
+dbStoreNombreColor('categoriasConfig', 'categorias');
+dbStoreNombreColor('estadosConfig', 'estados');
+dbStoreNombreColor('estadosPresupuestoConfig', 'estados_presupuesto');
+
+// Ajustes sueltos (cada uno es un texto en localStorage)
+const DB_CONFIG_CLAVES = { textoImporteConfig: 'texto_importe', appBgColor: 'app_bg_color', appCardBgColor: 'app_card_bg_color', textoWhatsappPresupuesto: 'texto_whatsapp_presupuesto' };
+DB_STORES.push({
+    claves: Object.keys(DB_CONFIG_CLAVES), tablas: ['app_config'],
+    leer: () => { const o = {}; let hay = false; Object.keys(DB_CONFIG_CLAVES).forEach(k => { const v = localStorage.getItem(k); if (v !== null) { o[k] = v; hay = true; } }); return hay ? o : undefined; },
+    aFilas: o => ({ app_config: Object.keys(o).map(k => ({ clave: DB_CONFIG_CLAVES[k], valor: o[k] })) }),
+    deFilas: (filas, local) => {
+        const o = { ...(local || {}) };
+        Object.entries(DB_CONFIG_CLAVES).forEach(([k, clave]) => { const f = filas.app_config.find(x => x.clave === clave); if (f) o[k] = f.valor; });
+        return o;
+    },
+    escribir: o => Object.keys(o).forEach(k => dbSetRaw(k, o[k]))
+});
+
+// Propietarios de los Dormys (objeto por número)
+DB_STORES.push({
+    claves: ['dormysData'], tablas: ['dormys'],
+    leer: () => { const v = dbLeerJSON('dormysData'); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; },
+    aFilas: o => ({ dormys: Object.keys(o).map(n => ({ numero: n, duenio: o[n] && o[n].duenio })) }),
+    deFilas: (filas, local) => { const o = {}; filas.dormys.forEach(f => { o[f.numero] = { ...((local || {})[f.numero] || {}), duenio: f.duenio }; }); return o; },
+    escribir: o => dbSetRaw('dormysData', JSON.stringify(o))
+});
+
+// Estado de las reparaciones de techos (objeto por número de Dormy)
+DB_STORES.push({
+    claves: ['reparacionesData'], tablas: ['reparaciones'],
+    leer: () => { const v = dbLeerJSON('reparacionesData'); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; },
+    aFilas: o => ({ reparaciones: Object.keys(o).map(n => { const r = o[n] || {}; return { dormy_numero: n, estado: r.estado || 'Sin registrar', presupuesto: r.presupuesto, orden: r.orden, fecha: r.fecha }; }) }),
+    deFilas: (filas, local) => {
+        const o = {};
+        filas.reparaciones.forEach(f => { o[f.dormy_numero] = { ...((local || {})[f.dormy_numero] || {}), estado: f.estado, presupuesto: f.presupuesto, orden: f.orden, fecha: f.fecha || '' }; });
+        return o;
+    },
+    escribir: o => dbSetRaw('reparacionesData', JSON.stringify(o))
+});
+
+// Texto de cada mes del cronograma anual: { "2026-09": "texto" }
+DB_STORES.push({
+    claves: ['cronogramaAnualData'], tablas: ['cronograma_anual'],
+    leer: () => { const v = dbLeerJSON('cronogramaAnualData'); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; },
+    aFilas: o => ({ cronograma_anual: Object.keys(o).filter(k => /^\d{4}-\d{2}$/.test(k) && String(o[k] || '').trim()).map(k => ({ anio: k.slice(0, 4), mes: k.slice(5), texto: o[k] })) }),
+    deFilas: filas => { const o = {}; filas.cronograma_anual.forEach(f => { o[`${f.anio}-${String(f.mes).padStart(2, '0')}`] = f.texto; }); return o; },
+    escribir: o => dbSetRaw('cronogramaAnualData', JSON.stringify(o))
+});
+
+// Botones del menú: { idBoton: { numero, sub, oculto } }
+DB_STORES.push({
+    claves: ['menuConfig'], tablas: ['menu_botones'],
+    leer: () => { const v = dbLeerJSON('menuConfig'); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; },
+    aFilas: o => ({ menu_botones: Object.keys(o).map(id => { const c = o[id] || {}; const b = (typeof BOTONES_MENU !== 'undefined' ? BOTONES_MENU : []).find(x => x.id === id); return { id, texto: b ? b.texto : id, numero: c.numero, subnumero: c.sub, oculto: c.oculto }; }) }),
+    deFilas: filas => { const o = {}; filas.menu_botones.forEach(f => { o[f.id] = { numero: f.numero, sub: f.subnumero, oculto: f.oculto }; }); return o; },
+    escribir: o => dbSetRaw('menuConfig', JSON.stringify(o))
+});
+
+// Proveedores y sus tareas (rubros)
+DB_STORES.push({
+    claves: ['proveedoresData', 'tareasProveedorConfig'], tablas: ['tareas_proveedor', 'proveedores', 'proveedor_tareas'],
+    leer: () => {
+        const prov = dbLeerJSON('proveedoresData'), cfg = dbLeerJSON('tareasProveedorConfig');
+        const p = Array.isArray(prov) ? prov : undefined, c = Array.isArray(cfg) ? cfg : undefined;
+        return (p === undefined && c === undefined) ? undefined : { prov: p, cfg: c };
+    },
+    aFilas: v => {
+        const out = {};
+        if (v.cfg) {
+            const nombres = new Set(v.cfg.map(String));
+            (v.prov || []).forEach(p => (p.tareas || []).forEach(t => nombres.add(String(t))));   // todo rubro usado tiene que existir en el catálogo
+            out.tareas_proveedor = [...nombres].map(nombre => ({ nombre }));
+        }
+        if (v.prov) {
+            out.proveedores = v.prov.map(p => ({ id: p.id, nombre: p.nombre, apellido: p.apellido, dni: p.dni, whatsapp: p.whatsapp }));
+            out.proveedor_tareas = [];
+            v.prov.forEach(p => (p.tareas || []).forEach(t => out.proveedor_tareas.push({ proveedor_id: p.id, tarea_nombre: t })));
+        }
+        return out;
+    },
+    deFilas: (filas, local) => {
+        const prevProv = new Map(((local && local.prov) || []).map(p => [DBT.int(p.id), p]));
+        const cfg = (filas.tareas_proveedor || []).map(f => f.nombre);
+        const prov = (filas.proveedores || []).map(f => ({
+            ...(prevProv.get(f.id) || {}), id: f.id, nombre: f.nombre, apellido: f.apellido, dni: f.dni, whatsapp: f.whatsapp,
+            tareas: (filas.proveedor_tareas || []).filter(x => x.proveedor_id === f.id).map(x => x.tarea_nombre)
+        }));
+        return { prov, cfg };
+    },
+    escribir: v => { dbSetRaw('proveedoresData', JSON.stringify(v.prov)); dbSetRaw('tareasProveedorConfig', JSON.stringify(v.cfg)); }
+});
+
+// Grupo electrógeno: la app guarda una lista con un solo elemento
+DB_STORES.push({
+    claves: ['electrogenoData'], tablas: ['grupo_electrogeno'],
+    leer: () => { const v = dbLeerJSON('electrogenoData'); return Array.isArray(v) ? v : undefined; },
+    aFilas: lista => ({ grupo_electrogeno: lista.length ? [{ id: 1, descripcion: lista[0].descripcion, service: lista[0].service, combustible: lista[0].combustible, horas_ultimo_service: lista[0].hrsService, horas_totales: lista[0].hrsTotal, observacion: lista[0].observacion }] : [] }),
+    deFilas: (filas, local) => filas.grupo_electrogeno.slice(0, 1).map(f => ({ ...((local || [])[0] || {}), id: (((local || [])[0] || {}).id) || f.id, descripcion: f.descripcion, service: f.service, combustible: f.combustible, hrsService: f.horas_ultimo_service, hrsTotal: f.horas_totales, observacion: f.observacion })),
+    escribir: lista => dbSetRaw('electrogenoData', JSON.stringify(lista))
+});
+
+// Empleado (Facundo): ficha, horarios, vacaciones y registro de tareas
+DB_STORES.push({
+    claves: ['facundoData'], tablas: ['empleado_ficha', 'empleado_horarios', 'empleado_vacaciones', 'empleado_tareas'],
+    leer: () => { const v = dbLeerJSON('facundoData'); return v && typeof v === 'object' && !Array.isArray(v) ? v : undefined; },
+    aFilas: d => {
+        const f = d.ficha || {}, h = d.horarios || {};
+        return {
+            empleado_ficha: [{ id: 1, nombre: f.nombre, apellido: f.apellido, dni: f.dni, fecha_nacimiento: f.nacimiento, domicilio: f.domicilio, whatsapp: f.whatsapp, puesto: f.puesto, puesto_descripcion: f.puestoDescripcion }],
+            empleado_horarios: ['invierno', 'verano'].map(t => ({ temporada: t, hora_inicio: (h[t] || {}).inicio, hora_fin: (h[t] || {}).fin })),
+            empleado_vacaciones: (d.vacaciones || []).map(v => ({ id: v.id, anio: v.anio, fecha_inicio: v.inicio, fecha_fin: v.fin, dias_totales: v.diasTotales, dias_tomados: v.diasTomados })),
+            empleado_tareas: (d.tareas || []).map(t => ({ id: t.id, fecha: t.fecha, tarea: t.tarea, observacion: t.observacion }))
+        };
+    },
+    deFilas: (filas, local) => {
+        const d = local || {};
+        const f = (filas.empleado_ficha || [])[0];
+        const hor = h => { const r = (filas.empleado_horarios || []).find(x => x.temporada === h); return { inicio: AL.hora(r && r.hora_inicio), fin: AL.hora(r && r.hora_fin) }; };
+        const prevV = new Map((d.vacaciones || []).map(x => [DBT.int(x.id), x])), prevT = new Map((d.tareas || []).map(x => [DBT.int(x.id), x]));
+        return {
+            ...d,
+            ficha: f ? { ...(d.ficha || {}), nombre: f.nombre, apellido: f.apellido, dni: f.dni, nacimiento: f.fecha_nacimiento || '', domicilio: f.domicilio, whatsapp: f.whatsapp, puesto: f.puesto, puestoDescripcion: f.puesto_descripcion }
+                     : (d.ficha || { nombre: '', apellido: '', dni: '', nacimiento: '', domicilio: '', whatsapp: '', puesto: '', puestoDescripcion: '' }),
+            horarios: { invierno: hor('invierno'), verano: hor('verano') },
+            vacaciones: (filas.empleado_vacaciones || []).map(r => ({ ...(prevV.get(r.id) || {}), id: r.id, inicio: r.fecha_inicio, fin: r.fecha_fin, anio: r.anio, diasTotales: r.dias_totales, diasTomados: r.dias_tomados })),
+            tareas: (filas.empleado_tareas || []).map(r => ({ ...(prevT.get(r.id) || {}), id: r.id, fecha: r.fecha, tarea: r.tarea, observacion: r.observacion }))
+        };
+    },
+    escribir: d => dbSetRaw('facundoData', JSON.stringify(d))
+});
+
+const DB_CLAVES = new Set(DB_STORES.flatMap(s => s.claves));
+
+// ---------- Estado, configuración y snapshot (lo último que se sabe que está en la base) ----------
+let dbCfg = (() => { try { return { url: '', key: '', activo: true, inicializado: false, ...JSON.parse(localStorage.getItem(DB_CFG_KEY) || '{}') }; } catch { return { url: '', key: '', activo: true, inicializado: false }; } })();
+let dbSnap = (() => { try { return JSON.parse(localStorage.getItem(DB_SNAP_KEY) || '{}') || {}; } catch { return {}; } })();   // tabla -> { pk: filaJSON }
+let dbEstado = { tipo: 'off', texto: '', hora: null };
+let dbEnCurso = false, dbRepetir = false, dbTimer = null;
+
+const dbConfigurada = () => !!(dbCfg.url && dbCfg.key);
+const dbListo = () => dbConfigurada() && dbCfg.inicializado && dbCfg.activo;
+function dbGuardarCfg() { dbSetRaw(DB_CFG_KEY, JSON.stringify(dbCfg)); }
+function dbGuardarSnap() { try { dbSetRaw(DB_SNAP_KEY, JSON.stringify(dbSnap)); } catch (e) { console.warn('No se pudo guardar el snapshot', e); } }
+
+// ---------- Cambios locales -> filas ----------
+function dbCalcularLocal() {
+    const local = {}, owners = new Set();
+    DB_STORES.forEach(st => {
+        const v = st.leer();
+        if (v === undefined) return;
+        if (st.owner) owners.add(st.owner);
+        const r = st.aFilas(v);
+        Object.keys(r).forEach(t => {
+            local[t] = local[t] || new Map();
+            r[t].forEach(raw => { const f = dbNormFila(t, raw); if (f) local[t].set(dbPk(t, f), f); });
+        });
+    });
+    return { local, owners };
+}
+const dbOwnerDe = f => ['novedad_id', 'pago_id', 'presupuesto_id'].find(c => f[c] != null);
+
+function dbDiff(local, base, owners) {
+    const out = {};
+    DB_ORDEN.forEach(t => {
+        const L = local[t];
+        if (!L) return;
+        const B = base[t] || {};
+        const subir = [], borrar = [];
+        L.forEach((fila, pk) => { if (B[pk] !== JSON.stringify(fila)) subir.push(fila); });
+        Object.keys(B).forEach(pk => {
+            if (L.has(pk)) return;
+            const f = JSON.parse(B[pk]);
+            if (t !== 'adjuntos' || owners.has(dbOwnerDe(f))) borrar.push(f);
+        });
+        out[t] = { subir, borrar };
+    });
+    return out;
+}
+function dbContarPendientes() {
+    try {
+        const { local, owners } = dbCalcularLocal(), d = dbDiff(local, dbSnap, owners);
+        return Object.values(d).reduce((n, x) => n + x.subir.length + x.borrar.length, 0);
+    } catch { return 0; }
+}
+
+// ---------- Acceso a la API ----------
+async function dbFetch(ruta, opts = {}) {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
+    try {
+        const r = await fetch(dbCfg.url + ruta, { ...opts, signal: ctl.signal, headers: { apikey: dbCfg.key, Authorization: 'Bearer ' + dbCfg.key, ...(opts.headers || {}) } });
+        if (!r.ok) {
+            let msg = r.statusText || 'error';
+            try { const j = await r.json(); msg = j.message || j.msg || j.error || msg; if (j.code) msg += ` (${j.code})`; if (j.details) msg += ` · ${j.details}`; } catch { /* sin detalle */ }
+            const e = new Error(`${r.status}: ${msg}`); e.status = r.status; throw e;
+        }
+        return r;
+    } catch (e) {
+        if (e.name === 'AbortError') throw new Error('La base no respondió a tiempo');
+        if (e.status === undefined) throw new Error('No se pudo conectar con la base (¿sin internet o URL incorrecta?)');
+        throw e;
+    } finally { clearTimeout(to); }
+}
+function dbCita(v) { return typeof v === 'number' ? String(v) : `"${String(v).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`; }
+
+async function dbLeerTabla(tabla) {
+    const m = DB_TABLAS[tabla], cols = Object.keys(m.cols).join(','), orden = m.orden || m.pk.join(',');
+    const filas = [];
+    for (let off = 0; ; off += 1000) {
+        const r = await dbFetch(`/rest/v1/${tabla}?select=${cols}&order=${orden}&limit=1000&offset=${off}`);
+        const pag = await r.json();
+        pag.forEach(raw => { const f = dbNormFila(tabla, raw); if (f) filas.push(f); });
+        if (pag.length < 1000) break;
+    }
+    return filas;
+}
+async function dbLeerBase(tablas) {
+    const out = {}, cola = [...tablas];
+    await Promise.all(Array.from({ length: 6 }, async () => { while (cola.length) { const t = cola.shift(); out[t] = await dbLeerTabla(t); } }));
+    return out;
+}
+async function dbUpsert(tabla, filas) {
+    const pk = DB_TABLAS[tabla].pk.join(',');
+    for (let i = 0; i < filas.length; i += 300) {
+        await dbFetch(`/rest/v1/${tabla}?on_conflict=${pk}`, { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(filas.slice(i, i + 300)) });
+    }
+}
+async function dbBorrarFilas(tabla, filas) {
+    const pk = DB_TABLAS[tabla].pk;
+    if (pk.length === 1) {
+        for (let i = 0; i < filas.length; i += 100) {
+            const lista = filas.slice(i, i + 100).map(f => dbCita(f[pk[0]])).join(',');
+            await dbFetch(`/rest/v1/${tabla}?${pk[0]}=${encodeURIComponent(`in.(${lista})`)}`, { method: 'DELETE' });
+        }
+    } else {
+        for (const f of filas) await dbFetch(`/rest/v1/${tabla}?${pk.map(c => `${c}=eq.${encodeURIComponent(f[c])}`).join('&')}`, { method: 'DELETE' });
+    }
+}
+
+// ---------- Archivos adjuntos (IndexedDB <-> Supabase Storage) ----------
+const dbRutaArchivo = p => '/storage/v1/object/adjuntos/' + p.split('/').map(encodeURIComponent).join('/');
+function dbBlobADataURL(blob) { return new Promise((ok, mal) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = mal; r.readAsDataURL(blob); }); }
+
+async function dbSubirArchivos(filas) {
+    const ok = [];
+    for (const f of filas) {
+        if (dbSnap.adjuntos && dbSnap.adjuntos[f.file_id]) { ok.push(f); continue; }   // ya está en la base
+        const url = await obtenerArchivoIDB(f.file_id);
+        if (!url) { console.warn('Adjunto sin archivo en este equipo, no se sube:', f.file_id); continue; }
+        const blob = await (await fetch(url)).blob();
+        await dbFetch(dbRutaArchivo(f.storage_path), { method: 'POST', headers: { 'Content-Type': blob.type || 'application/octet-stream', 'x-upsert': 'true' }, body: blob });
+        ok.push(f);
+    }
+    return ok;
+}
+async function dbDescargarArchivos(filas) {
+    let n = 0;
+    for (const f of filas) {
+        if (await obtenerArchivoIDB(f.file_id)) continue;
+        try {
+            const r = await dbFetch(dbRutaArchivo(f.storage_path));
+            await guardarArchivoIDB(f.file_id, f.nombre, await dbBlobADataURL(await r.blob()));
+            n++;
+        } catch (e) { console.warn('No se pudo descargar el adjunto', f.file_id, e.message); }
+    }
+    return n;
+}
+
+// ---------- Enviar a la base ----------
+// modo 'incremental': solo lo que cambió desde la última sincronización
+// modo 'reemplazar': deja la base igual a los datos de este equipo (borra lo que sobre)
+async function dbPush(modo) {
+    const { local, owners } = dbCalcularLocal();
+    let base;
+    if (modo === 'reemplazar') {
+        const dbFilas = await dbLeerBase(Object.keys(local));
+        base = {};
+        Object.keys(dbFilas).forEach(t => { base[t] = {}; dbFilas[t].forEach(f => { base[t][dbPk(t, f)] = JSON.stringify(f); }); });
+        Object.keys(base).forEach(t => { dbSnap[t] = { ...base[t] }; });
+    } else base = dbSnap;
+    const diff = dbDiff(local, base, owners);
+    let enviadas = 0, borradas = 0;
+    try {
+        for (const t of [...DB_ORDEN].reverse()) {   // primero se borra lo que depende de otras tablas
+            const d = diff[t];
+            if (!d || !d.borrar.length) continue;
+            await dbBorrarFilas(t, d.borrar);
+            if (t === 'adjuntos') d.borrar.forEach(f => dbFetch(dbRutaArchivo(f.storage_path), { method: 'DELETE' }).catch(() => {}));
+            d.borrar.forEach(f => { if (dbSnap[t]) delete dbSnap[t][dbPk(t, f)]; });
+            borradas += d.borrar.length;
+        }
+        for (const t of DB_ORDEN) {
+            const d = diff[t];
+            if (!d || !d.subir.length) continue;
+            const filas = t === 'adjuntos' ? await dbSubirArchivos(d.subir) : d.subir;
+            if (!filas.length) continue;
+            await dbUpsert(t, filas);
+            dbSnap[t] = dbSnap[t] || {};
+            filas.forEach(f => { dbSnap[t][dbPk(t, f)] = JSON.stringify(f); });
+            enviadas += filas.length;
+        }
+    } finally { dbGuardarSnap(); }
+    return { enviadas, borradas };
+}
+
+// ---------- Traer de la base ----------
+async function dbPull() {
+    const dbFilas = await dbLeerBase(DB_ORDEN);
+    let cambio = false;
+    dbSilencio++;
+    try {
+        DB_STORES.forEach(st => {
+            const local = st.leer();
+            const sub = {};
+            st.tablas.forEach(t => { sub[t] = (dbFilas[t] || []).filter(f => !st.filtro || !st.filtro[t] || st.filtro[t](f)); });
+            let hayCambio;
+            if (local === undefined) hayCambio = Object.values(sub).some(a => a.length);
+            else {
+                const loc = st.aFilas(local);
+                hayCambio = st.tablas.some(t => {
+                    if (loc[t] === undefined) return false;
+                    const A = new Map(), B = new Map();
+                    loc[t].forEach(raw => { const f = dbNormFila(t, raw); if (f) A.set(dbPk(t, f), JSON.stringify(f)); });
+                    sub[t].forEach(f => B.set(dbPk(t, f), JSON.stringify(f)));
+                    if (A.size !== B.size) return true;
+                    for (const [k, v] of B) if (A.get(k) !== v) return true;
+                    return false;
+                });
+            }
+            if (hayCambio) { st.escribir(st.deFilas(sub, local)); cambio = true; }
+        });
+        dbSnap = {};
+        Object.keys(dbFilas).forEach(t => { dbSnap[t] = {}; dbFilas[t].forEach(f => { dbSnap[t][dbPk(t, f)] = JSON.stringify(f); }); });
+        dbGuardarSnap();
+    } finally { dbSilencio--; }
+    const descargados = await dbDescargarArchivos(dbFilas.adjuntos || []);
+    return { cambio, descargados };
+}
+
+function dbRecargarSeguro() {
+    const t = Number(sessionStorage.getItem('dbReload') || 0);
+    if (Date.now() - t < 30000) return false;   // evita recargar en bucle
+    sessionStorage.setItem('dbReload', String(Date.now()));
+    location.reload();
+    return true;
+}
+
+// ---------- Indicadores ----------
+function dbEstablecer(tipo, texto) { dbEstado = { tipo, texto, hora: tipo === 'ok' ? new Date() : dbEstado.hora }; dbActualizarUI(); }
+function dbActualizarUI() {
+    const btn = document.getElementById('btn-db-estado');
+    const conf = dbConfigurada();
+    if (btn) {
+        btn.style.display = conf ? 'flex' : 'none';
+        const icono = { ok: '☁️', sync: '🔄', error: '⚠️', pend: '⏳', off: '⏸️' }[dbEstado.tipo] || '☁️';
+        btn.innerText = icono;
+        btn.title = `Base de datos: ${dbEstado.texto || 'sin novedades'}`;
+    }
+    const box = document.getElementById('db-estado-box');
+    if (box) {
+        const pend = dbConfigurada() ? dbContarPendientes() : 0;
+        const hora = dbEstado.hora ? ` · última sincronización: ${dbEstado.hora.toLocaleTimeString('es-AR')}` : '';
+        let html;
+        if (!conf) html = '⏸️ Sin configurar. Cargá la URL y la clave de tu proyecto de Supabase.';
+        else if (!dbCfg.inicializado) html = '⏸️ Conexión guardada. Falta la <b>primera sincronización</b>: elegí <b>Subir</b> (si este equipo tiene tus datos) o <b>Descargar</b> (si la base ya los tiene).';
+        else if (dbEstado.tipo === 'sync') html = `🔄 ${escHtml(dbEstado.texto || 'Sincronizando...')}`;
+        else if (dbEstado.tipo === 'error') html = `<span class="menu-error">⚠ ${escHtml(dbEstado.texto)}</span><br>Los cambios quedan guardados en este equipo y se reintentan al próximo guardado o con «Sincronizar ahora».`;
+        else if (!dbCfg.activo) html = `⏸️ Sincronización automática desactivada${pend ? ` · ${pend} cambio(s) sin enviar` : ''}.`;
+        else html = `✅ ${escHtml(dbEstado.texto || 'Conectado a la base')}${hora}${pend ? ` · <b>${pend}</b> cambio(s) sin enviar` : ''}`;
+        box.innerHTML = html;
+    }
+}
+function dbRenderConfig() {
+    const u = document.getElementById('db-url'), k = document.getElementById('db-key'), a = document.getElementById('db-auto');
+    if (!u) return;
+    u.value = dbCfg.url || '';
+    k.value = '';
+    k.placeholder = dbCfg.key ? '•••••••••• (clave guardada; dejá vacío para conservarla)' : 'eyJ... (clave "anon public")';
+    a.checked = !!dbCfg.activo;
+    dbActualizarUI();
+}
+function dbIrAConfig() {
+    showSection('config');
+    const b = document.getElementById('bloque-db');
+    if (b) b.scrollIntoView({ block: 'start' });
+}
+
+// ---------- Sincronización automática ----------
+function dbProgramarPush() {
+    if (!dbConfigurada()) return;
+    if (!dbListo()) { dbActualizarUI(); return; }
+    clearTimeout(dbTimer);
+    dbEstablecer('pend', 'Cambios pendientes de enviar...');
+    dbTimer = setTimeout(dbPushAutomatico, 800);
+}
+async function dbPushAutomatico() {
+    if (dbEnCurso) { dbRepetir = true; return; }
+    dbEnCurso = true;
+    dbEstablecer('sync', 'Guardando en la base...');
+    try {
+        const r = await dbPush('incremental');
+        dbEstablecer('ok', r.enviadas || r.borradas ? `Guardado en la base (${r.enviadas} enviados, ${r.borradas} borrados)` : 'Todo está guardado en la base');
+    } catch (e) {
+        dbEstablecer('error', e.message);
+    } finally {
+        dbEnCurso = false;
+        if (dbRepetir) { dbRepetir = false; dbProgramarPush(); }
+    }
+}
+async function dbSincronizar(mostrar) {
+    if (dbEnCurso) return;
+    dbEnCurso = true;
+    dbEstablecer('sync', 'Sincronizando...');
+    try {
+        const p = await dbPush('incremental');
+        const r = await dbPull();
+        dbEstablecer('ok', 'Datos sincronizados con la base');
+        if (r.cambio) {
+            if (mostrar) alert('Se actualizaron datos desde la base. La pantalla se va a recargar.');
+            dbRecargarSeguro();
+        } else if (mostrar) alert(`Sincronizado correctamente.\nEnviados: ${p.enviadas} · Borrados: ${p.borradas}${r.descargados ? ` · Archivos descargados: ${r.descargados}` : ''}`);
+    } catch (e) {
+        dbEstablecer('error', e.message);
+        if (mostrar) alert('No se pudo sincronizar:\n' + e.message);
+    } finally { dbEnCurso = false; }
+}
+function dbAlIniciar() {
+    dbActualizarUI();
+    if (!dbConfigurada()) return;
+    if (!dbListo()) { dbEstablecer('off', dbCfg.inicializado ? 'Sincronización automática desactivada' : 'Falta la primera sincronización'); return; }
+    dbSincronizar(false);
+}
+function dbSincronizarAhora() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave de tu proyecto de Supabase.');
+    if (!dbCfg.inicializado) return alert('Primero hacé la primera sincronización: «Subir» o «Descargar».');
+    dbSincronizar(true);
+}
+
+// ---------- Acciones del bloque de Configuración ----------
+function dbGuardarConexion() {
+    let url = document.getElementById('db-url').value.trim().replace(/\/+$/, '');
+    const key = document.getElementById('db-key').value.trim() || dbCfg.key;
+    if (!/^https?:\/\/.+/i.test(url)) return alert('La URL del proyecto tiene que empezar con https:// (ej: https://abcd1234.supabase.co).');
+    if (!key) return alert('Falta la clave "anon public" del proyecto.');
+    const cambio = url !== dbCfg.url || key !== dbCfg.key;
+    dbCfg = { ...dbCfg, url, key };
+    if (cambio) { dbCfg.inicializado = false; dbSnap = {}; dbGuardarSnap(); }
+    dbGuardarCfg();
+    dbRenderConfig();
+    dbEstablecer('off', 'Conexión guardada');
+    alert(cambio ? 'Conexión guardada. Probala y después elegí «Subir» o «Descargar» para la primera sincronización.' : 'Conexión guardada.');
+}
+async function dbProbarConexion() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
+    try {
+        await dbFetch('/rest/v1/app_config?select=clave&limit=1');
+        alert('✅ Conexión correcta: la base responde y las tablas existen.');
+    } catch (e) {
+        let ayuda = '';
+        if (/401|403|Invalid API key/i.test(e.message)) ayuda = '\n\nLa clave no es válida: copiá la "anon public" de Settings → API.';
+        else if (/404|PGRST205|does not exist/i.test(e.message)) ayuda = '\n\nFalta crear las tablas: ejecutá schema_dormys.sql en el SQL Editor de Supabase.';
+        alert('No se pudo usar la base:\n' + e.message + ayuda);
+    }
+}
+function dbToggleAuto(on) {
+    dbCfg.activo = !!on;
+    dbGuardarCfg();
+    dbActualizarUI();
+    if (on && dbListo()) dbProgramarPush();
+}
+async function dbSubirTodo() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
+    if (!confirm('Esto deja la base IGUAL a los datos de este equipo:\n• lo que está acá se sube a la base\n• lo que esté en la base y no acá se BORRA\n\n¿Continuar?')) return;
+    if (dbEnCurso) return;
+    dbEnCurso = true;
+    dbEstablecer('sync', 'Subiendo los datos de este equipo...');
+    try {
+        const r = await dbPush('reemplazar');
+        dbCfg.inicializado = true; dbCfg.activo = true; dbGuardarCfg();
+        dbEstablecer('ok', 'Datos de este equipo subidos a la base');
+        dbRenderConfig();
+        alert(`Listo. La base quedó igual a este equipo.\nFilas enviadas: ${r.enviadas} · borradas: ${r.borradas}`);
+    } catch (e) {
+        dbEstablecer('error', e.message);
+        alert('No se pudo subir:\n' + e.message);
+    } finally { dbEnCurso = false; }
+}
+async function dbDescargarTodo() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
+    if (!confirm('Esto REEMPLAZA los datos de este equipo con los que hay en la base (lo que tengas acá y no esté en la base se pierde).\n\n¿Continuar?')) return;
+    if (dbEnCurso) return;
+    dbEnCurso = true;
+    dbEstablecer('sync', 'Descargando datos de la base...');
+    try {
+        const r = await dbPull();
+        dbCfg.inicializado = true; dbCfg.activo = true; dbGuardarCfg();
+        dbEstablecer('ok', 'Datos descargados de la base');
+        dbRenderConfig();
+        alert(r.cambio ? 'Datos descargados. La pantalla se va a recargar.' : 'Este equipo ya tenía los mismos datos que la base.');
+        if (r.cambio) { sessionStorage.removeItem('dbReload'); dbRecargarSeguro(); }
+    } catch (e) {
+        dbEstablecer('error', e.message);
+        alert('No se pudo descargar:\n' + e.message);
+    } finally { dbEnCurso = false; }
+}
+
+// ---------- Conexión con localStorage de la app ----------
+Storage.prototype.setItem = function (k, v) { dbRawSet.call(this, k, v); if (this === localStorage && !dbSilencio && DB_CLAVES.has(k)) dbProgramarPush(); };
+Storage.prototype.removeItem = function (k) { dbRawRemove.call(this, k); if (this === localStorage && !dbSilencio && DB_CLAVES.has(k)) dbProgramarPush(); };
+
+// Al importar un backup la app vacía localStorage: se conserva la conexión con la base y el snapshot
+function dbLimpiarLocalStorage() {
+    const guardar = [DB_CFG_KEY, DB_SNAP_KEY].map(k => [k, localStorage.getItem(k)]);
+    dbSilencio++;
+    try { localStorage.clear(); guardar.forEach(([k, v]) => { if (v !== null) dbSetRaw(k, v); }); } finally { dbSilencio--; }
+}
+
+window.addEventListener('load', dbAlIniciar);
     </script>
 </body>
 </html>
