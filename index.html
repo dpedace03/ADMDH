@@ -1908,6 +1908,7 @@
                     <button type="button" class="btn-action" onclick="dbSubirTodo()">⬆️ Subir los datos de este equipo</button>
                     <button type="button" class="btn-action" style="background-color: var(--warning);" onclick="dbDescargarTodo()">⬇️ Descargar los datos de la base</button>
                     <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="dbSincronizarAhora()">🔄 Sincronizar ahora</button>
+                    <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="dbCompararConBase()">🔍 Comparar con la base</button>
                 </div>
                 <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border);">
                     <button type="button" class="btn-action" onclick="dbCopiarEnlaceConexion()">📲 Copiar enlace para conectar el celular</button>
@@ -6861,9 +6862,19 @@ async function dbPull() {
     return { cambio, descargados };
 }
 
+// Si se acaba de recargar, no vuelve a hacerlo sola (evita bucles): en ese caso avisa y deja que la persona actualice
+function dbMostrarAvisoDatosNuevos() {
+    if (document.getElementById('aviso-datos')) return;
+    const d = document.createElement('div');
+    d.id = 'aviso-datos';
+    d.style.cssText = 'position: fixed; left: 10px; right: 10px; bottom: 12px; z-index: 9997; background: #065f46; color: #fff; border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: center; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.3); font-size: 0.9rem;';
+    d.innerHTML = '<span>🔄 Hay datos nuevos de la base.</span>'
+        + '<button type="button" onclick="sessionStorage.removeItem(\'dbReload\'); location.reload()" style="background: #fff; color: #065f46; border: none; border-radius: 8px; padding: 8px 14px; font-weight: 700; cursor: pointer;">Actualizar</button>';
+    document.body.appendChild(d);
+}
 function dbRecargarSeguro() {
     const t = Number(sessionStorage.getItem('dbReload') || 0);
-    if (Date.now() - t < 30000) return false;   // evita recargar en bucle
+    if (Date.now() - t < 10000) { dbMostrarAvisoDatosNuevos(); return false; }
     sessionStorage.setItem('dbReload', String(Date.now()));
     location.reload();
     return true;
@@ -6951,7 +6962,12 @@ async function dbSincronizar(mostrar) {
 function dbAlIniciar() {
     dbActualizarUI();
     if (!dbConfigurada()) return;
-    if (!dbListo()) { dbEstablecer('off', dbCfg.inicializado ? 'Sincronización automática desactivada' : 'Falta la primera sincronización'); return; }
+    if (!dbListo()) {
+        dbEstablecer('off', dbCfg.inicializado ? 'Sincronización automática desactivada' : 'Falta la primera sincronización');
+        if (!dbCfg.inicializado) dbMostrarAvisoSinSincronizar();
+        return;
+    }
+    dbUltimoRefresco = Date.now();
     dbSincronizar(false);
 }
 function dbSincronizarAhora() {
@@ -6972,7 +6988,8 @@ function dbGuardarConexion() {
     dbGuardarCfg();
     dbRenderConfig();
     dbEstablecer('off', 'Conexión guardada');
-    alert(cambio ? 'Conexión guardada. Probala y después elegí «Subir» o «Descargar» para la primera sincronización.' : 'Conexión guardada.');
+    if (!dbCfg.inicializado) dbAsistenteInicial();   // revisa la base y propone qué hacer en la primera sincronización
+    else alert('Conexión guardada.');
 }
 async function dbProbarConexion() {
     if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
@@ -6992,9 +7009,16 @@ function dbToggleAuto(on) {
     dbActualizarUI();
     if (on && dbListo()) dbProgramarPush();
 }
-async function dbSubirTodo() {
+async function dbSubirTodo(sinConfirmar) {
     if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
-    if (!confirm('Esto deja la base IGUAL a los datos de este equipo:\n• lo que está acá se sube a la base\n• lo que esté en la base y no acá se BORRA\n\n¿Continuar?')) return;
+    if (!sinConfirmar) {
+        let aviso = '';
+        try {
+            const nB = dbTotalDatos(await dbLeerBase(DB_TABLAS_DATOS), true), nL = dbTotalDatos(dbCalcularLocal().local, false);
+            if (nB > nL) aviso = `\n\n⚠️ ATENCIÓN: la base tiene ${nB} registros y este dispositivo solo ${nL}. Si seguís, los que sobran se BORRAN de la base.\nSi lo que querías es traer los datos de la base a este dispositivo, cancelá y elegí «Descargar».`;
+        } catch { /* sin conexión: se muestra el aviso general */ }
+        if (!confirm('Esto deja la base IGUAL a los datos de este equipo:\n• lo que está acá se sube a la base\n• lo que esté en la base y no acá se BORRA' + aviso + '\n\n¿Continuar?')) return;
+    }
     if (dbEnCurso) return;
     dbEnCurso = true;
     dbEstablecer('sync', 'Subiendo los datos de este equipo...');
@@ -7009,7 +7033,7 @@ async function dbSubirTodo() {
         alert('No se pudo subir:\n' + e.message);
     } finally { dbEnCurso = false; }
 }
-async function dbDescargarTodo(sinConfirmar) {
+async function dbDescargarTodo(sinConfirmar, sinMensajes) {
     if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
     if (!sinConfirmar && !confirm('Esto REEMPLAZA los datos de este equipo con los que hay en la base (lo que tengas acá y no esté en la base se pierde).\n\n¿Continuar?')) return;
     if (dbEnCurso) return;
@@ -7020,7 +7044,7 @@ async function dbDescargarTodo(sinConfirmar) {
         dbCfg.inicializado = true; dbCfg.activo = true; dbGuardarCfg();
         dbEstablecer('ok', 'Datos descargados de la base');
         dbRenderConfig();
-        alert(r.cambio ? 'Datos descargados. La pantalla se va a recargar.' : 'Este equipo ya tenía los mismos datos que la base.');
+        if (!sinMensajes) alert(r.cambio ? 'Datos descargados. La pantalla se va a recargar.' : 'Este equipo ya tenía los mismos datos que la base.');
         if (r.cambio) { sessionStorage.removeItem('dbReload'); dbRecargarSeguro(); }
     } catch (e) {
         dbEstablecer('error', e.message);
@@ -7083,6 +7107,124 @@ async function dbAlCargar() {
     if (await dbProcesarEnlaceConexion()) return;
     dbAlIniciar();
 }
+
+
+// ---------- Ventana de ayuda para la primera sincronización y comparación ----------
+const DB_TABLAS_DATOS = ['novedades', 'pagos', 'presupuestos', 'adjuntos', 'proveedores', 'electrogeno_novedades', 'matafuegos', 'tareas', 'registros', 'cronograma', 'cronograma_anual', 'herramientas', 'procedimientos', 'empleado_vacaciones', 'empleado_tareas'];
+const DB_ETIQUETAS = [['Novedades de techos', 'novedades'], ['Pagos', 'pagos'], ['Presupuestos', 'presupuestos'], ['Registro de actividades', 'registros'], ['Tareas', 'tareas'],
+    ['Proveedores', 'proveedores'], ['Herramientas', 'herramientas'], ['Procedimientos', 'procedimientos'], ['Matafuegos', 'matafuegos'], ['Grupo electrógeno (novedades)', 'electrogeno_novedades'],
+    ['Cronograma semanal', 'cronograma'], ['Textos del cronograma anual', 'cronograma_anual'], ['Empleado: vacaciones', 'empleado_vacaciones'], ['Empleado: registro de tareas', 'empleado_tareas'], ['Archivos adjuntos', 'adjuntos']];
+
+// cantidad de filas de datos: en la base viene como { tabla: [filas] }; en este dispositivo como { tabla: Map }
+function dbCantidad(origen, tabla, esBase) { const x = origen[tabla]; return !x ? 0 : (esBase ? x.length : x.size); }
+function dbTotalDatos(origen, esBase) { return DB_TABLAS_DATOS.reduce((n, t) => n + dbCantidad(origen, t, esBase), 0); }
+
+function dbCerrarModal() { const m = document.getElementById('db-modal'); if (m) m.remove(); }
+function dbModal({ titulo, html, botones }) {
+    dbCerrarModal();
+    const o = document.createElement('div');
+    o.id = 'db-modal';
+    o.style.cssText = 'position: fixed; inset: 0; z-index: 10000; background: rgba(15,23,42,0.6); display: flex; align-items: center; justify-content: center; padding: 14px;';
+    o.innerHTML = `<div style="background: #fff; border-radius: 14px; max-width: 520px; width: 100%; max-height: 90vh; overflow: auto; padding: 18px 18px 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.35);">
+        <h3 style="margin: 0 0 10px 0; color: var(--primary);">${titulo}</h3>
+        <div style="font-size: 0.92rem; line-height: 1.5;">${html}</div>
+        <div class="db-modal-botones" style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;"></div></div>`;
+    document.body.appendChild(o);
+    const cont = o.querySelector('.db-modal-botones');
+    botones.forEach(b => {
+        const el = document.createElement('button');
+        el.type = 'button'; el.className = b.clase || 'btn-reset-form'; el.textContent = b.texto;
+        el.style.cssText = 'width: 100%; padding: 12px; font-size: 0.95rem;';
+        el.onclick = () => { dbCerrarModal(); if (b.accion) b.accion(); };
+        cont.appendChild(el);
+    });
+}
+
+// Compara lo que hay en este dispositivo con lo que hay en la base, módulo por módulo
+async function dbCompararConBase() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
+    let base;
+    try { base = await dbLeerBase(DB_TABLAS_DATOS); } catch (e) { return alert('No se pudo leer la base:\n' + e.message); }
+    const { local } = dbCalcularLocal();
+    let filas = '', difieren = 0;
+    DB_ETIQUETAS.forEach(([nombre, t]) => {
+        const a = dbCantidad(local, t, false), b = dbCantidad(base, t, true);
+        if (a !== b) difieren++;
+        filas += `<tr style="${a !== b ? 'background: #fef3c7;' : ''}"><td>${escHtml(nombre)}</td><td style="text-align: center;">${a}</td><td style="text-align: center;">${b}</td><td style="text-align: center;">${a === b ? '✅' : '⚠️'}</td></tr>`;
+    });
+    const nL = dbTotalDatos(local, false), nB = dbTotalDatos(base, true);
+    let ayuda;
+    if (!difieren) ayuda = '✅ Este dispositivo y la base tienen la misma cantidad de datos.';
+    else if (nB === 0) ayuda = '⚠️ <b>La base está vacía</b>: todavía nadie subió datos. Hacé «Subir los datos de este equipo» desde el dispositivo que tiene tus datos (por ejemplo la compu).';
+    else if (nL === 0) ayuda = '⚠️ Este dispositivo no tiene datos y la base sí: tocá «Descargar los datos de la base».';
+    else ayuda = '⚠️ Hay diferencias. Si la base tiene lo correcto, tocá «Descargar»; si lo correcto es lo de este dispositivo, tocá «Subir».';
+    dbModal({
+        titulo: '🔍 Este dispositivo vs. la base',
+        html: `<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;"><thead><tr><th style="text-align: left;">Módulo</th><th>Acá</th><th>Base</th><th></th></tr></thead><tbody>${filas}</tbody></table>
+               <p style="margin-top: 10px;">${ayuda}</p>
+               <p style="color: var(--secondary); font-size: 0.8rem;">Estado de este dispositivo: ${dbCfg.inicializado ? 'ya hizo la primera sincronización' : '<b>todavía no hizo la primera sincronización</b>'}.</p>`,
+        botones: [{ texto: 'Cerrar', clase: 'btn-action' }]
+    });
+}
+
+// Primera sincronización guiada: mira qué hay en la base y en este dispositivo y propone la acción correcta
+async function dbAsistenteInicial() {
+    if (!dbConfigurada() || dbEnCurso) return;
+    dbEstablecer('sync', 'Revisando la base...');
+    let base;
+    try { base = await dbLeerBase(DB_TABLAS_DATOS); }
+    catch (e) {
+        dbEstablecer('error', e.message);
+        let ayuda = '';
+        if (/401|403|Invalid API key/i.test(e.message)) ayuda = '\n\nLa clave no es válida: copiá la "anon public" de Settings → API.';
+        else if (/404|PGRST205|does not exist/i.test(e.message)) ayuda = '\n\nFalta crear las tablas: ejecutá schema_dormys.sql en el SQL Editor de Supabase.';
+        return alert('No se pudo leer la base:\n' + e.message + ayuda);
+    }
+    dbEstablecer('off', 'Falta la primera sincronización');
+    const nB = dbTotalDatos(base, true), nL = dbTotalDatos(dbCalcularLocal().local, false);
+    const resumen = `<p>La base tiene <b>${nB}</b> registros y este dispositivo tiene <b>${nL}</b>.</p>`;
+    const descargar = { texto: '⬇️ Descargar los datos de la base a este dispositivo', clase: 'btn-action', accion: () => dbDescargarTodo(true) };
+    const subir = { texto: '⬆️ Subir los datos de este dispositivo a la base', clase: 'btn-action', accion: () => dbSubirTodo(true) };
+    const luego = { texto: 'Decidir después', clase: 'btn-reset-form' };
+    if (nB === 0 && nL === 0) {
+        dbModal({ titulo: '☁️ Conectado a la base', html: resumen + '<p>La base todavía no tiene datos. Hacé «Subir los datos de este equipo» desde el dispositivo que tiene tus datos (por ejemplo la compu) y después este dispositivo los va a recibir al abrir la app.</p>',
+            botones: [{ texto: 'Entendido', clase: 'btn-action', accion: () => dbDescargarTodo(true, true) }] });
+    } else if (nB > 0 && nL === 0) {
+        dbModal({ titulo: '☁️ La base ya tiene datos', html: resumen + '<p>Este dispositivo está vacío: lo normal es <b>descargar</b> los datos de la base.</p>', botones: [descargar, luego] });
+    } else if (nL > 0 && nB === 0) {
+        dbModal({ titulo: '☁️ La base está vacía', html: resumen + '<p>Este dispositivo tiene datos y la base no: lo normal es <b>subirlos</b> a la base.</p>', botones: [subir, luego] });
+    } else {
+        dbModal({ titulo: '☁️ La base y este dispositivo tienen datos', html: resumen + '<p>Elegí con cuál quedarte. <b>Lo del otro lado se reemplaza.</b></p>', botones: [descargar, subir, luego] });
+    }
+}
+
+// Aviso cuando este dispositivo está conectado pero todavía no hizo la primera sincronización
+function dbMostrarAvisoSinSincronizar() {
+    if (document.getElementById('aviso-db')) return;
+    const d = document.createElement('div');
+    d.id = 'aviso-db';
+    d.style.cssText = 'position: fixed; left: 10px; right: 10px; bottom: 12px; z-index: 9998; background: #92400e; color: #fff; border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: center; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.3); font-size: 0.9rem;';
+    d.innerHTML = '<span>☁️ Este dispositivo está conectado a la base pero <b>todavía no recibió los datos</b>.</span>'
+        + '<span style="display: flex; gap: 8px; flex: 0 0 auto;"><button type="button" onclick="document.getElementById(\'aviso-db\').remove(); dbAsistenteInicial()" style="background: #fff; color: #92400e; border: none; border-radius: 8px; padding: 8px 14px; font-weight: 700; cursor: pointer;">Elegir ahora</button>'
+        + '<button type="button" onclick="document.getElementById(\'aviso-db\').remove()" style="background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 8px; padding: 8px 10px; cursor: pointer;">Después</button></span>';
+    document.body.appendChild(d);
+}
+
+// Refresco al volver a la app (por ejemplo desde otra aplicación del celular)
+let dbUltimoRefresco = 0;
+function dbHayEdicionEnCurso() {
+    const a = document.activeElement;
+    return !!document.querySelector('.btn-mas.abierto') || [...document.querySelectorAll('.modal')].some(m => getComputedStyle(m).display !== 'none') || !!document.getElementById('db-modal')
+        || (a && ['INPUT', 'TEXTAREA', 'SELECT'].includes(a.tagName));
+}
+function dbRefrescarAlVolver() {
+    if (document.visibilityState !== 'visible' || !dbListo() || dbEnCurso) return;
+    if (Date.now() - dbUltimoRefresco < 60000 || dbHayEdicionEnCurso()) return;   // no se pisa lo que se está escribiendo
+    dbUltimoRefresco = Date.now();
+    dbSincronizar(false);
+}
+document.addEventListener('visibilitychange', dbRefrescarAlVolver);
+window.addEventListener('pageshow', e => { if (e.persisted) dbRefrescarAlVolver(); });
 
 window.addEventListener('load', dbAlCargar);
 
