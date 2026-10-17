@@ -1912,6 +1912,10 @@
                 <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: normal; cursor: pointer;">
                     <input type="checkbox" id="db-auto" style="width: auto;" onchange="dbToggleAuto(this.checked)"> Sincronizar automáticamente al guardar
                 </label>
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 0.85rem;">
+                    <b>Versión de la app en este dispositivo:</b> <span id="app-version-info">—</span>
+                    <button type="button" class="btn-reset-form" style="padding: 6px 12px; font-size: 0.8rem; margin-left: 8px;" onclick="appBuscarActualizacion(true)">Buscar actualización</button>
+                </div>
                 <p style="font-size: 0.78rem; color: var(--secondary); margin-top: 10px; line-height: 1.5;">
                     ⚠️ La clave se guarda solo en este navegador. Con la configuración de seguridad que trae el esquema, cualquiera que tenga la clave puede leer y escribir en la base: no la compartas.
                     Los archivos adjuntos se guardan en Supabase Storage (bucket <b>adjuntos</b>).
@@ -2700,7 +2704,7 @@
                 document.getElementById('anual-calendario').style.display = 'block';
                 renderCronogramaAnual();
             }
-            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); renderMenuConfig(); if (typeof dbRenderConfig === 'function') dbRenderConfig(); }
+            if (sectionId === 'config') { renderConfig(); renderEstadosConfig(); renderCategoriasConfig(); renderEstadosPresConfig(); cargarConfigProveedores(); renderMenuConfig(); if (typeof dbRenderConfig === 'function') dbRenderConfig(); if (typeof appRenderVersion === 'function') appRenderVersion(); }
         }
 
         // =====================================================================
@@ -7027,6 +7031,54 @@ function dbLimpiarLocalStorage() {
 }
 
 window.addEventListener('load', dbAlIniciar);
+
+// =====================================================================
+//  VERSIÓN DE LA APP: avisa si el dispositivo tiene guardada una copia vieja de la página
+// =====================================================================
+let appUltimaVerificacion = 0;
+const appBaseURL = () => location.href.split('#')[0].split('?')[0];
+const appFechaCopia = () => new Date(document.lastModified);   // fecha del archivo que está cargado en este dispositivo
+
+async function appFechaServidor() {
+    const base = appBaseURL();
+    if (!/^https?:/.test(base)) return null;   // abierta como archivo local: no hay servidor para consultar
+    try {
+        const r = await fetch(base, { method: 'HEAD', cache: 'no-store' });
+        const lm = r.headers.get('Last-Modified');
+        return lm ? new Date(lm) : null;
+    } catch { return null; }
+}
+function appMostrarAvisoVersion() {
+    if (document.getElementById('aviso-version')) return;
+    const d = document.createElement('div');
+    d.id = 'aviso-version';
+    d.style.cssText = 'position: fixed; left: 10px; right: 10px; bottom: 12px; z-index: 9999; background: #1e3a8a; color: #fff; border-radius: 12px; padding: 12px 14px; display: flex; gap: 10px; align-items: center; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.3); font-size: 0.9rem;';
+    d.innerHTML = '<span>🔄 Hay una versión nueva de la app. Tus datos no se pierden.</span>'
+        + '<span style="display: flex; gap: 8px; flex: 0 0 auto;"><button type="button" onclick="appActualizar()" style="background: #fff; color: #1e3a8a; border: none; border-radius: 8px; padding: 8px 14px; font-weight: 700; cursor: pointer;">Actualizar</button>'
+        + '<button type="button" onclick="this.closest(\'#aviso-version\').remove()" style="background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 8px; padding: 8px 10px; cursor: pointer;">Después</button></span>';
+    document.body.appendChild(d);
+}
+// Vuelve a pedir la página al servidor ignorando lo guardado en el dispositivo y la recarga
+async function appActualizar() {
+    try { await fetch(appBaseURL(), { cache: 'reload' }); } catch { /* si falla, igual se recarga */ }
+    location.reload();
+}
+async function appBuscarActualizacion(manual) {
+    appUltimaVerificacion = Date.now();
+    const srv = await appFechaServidor();
+    if (!srv) { if (manual) alert('No se pudo consultar el servidor (¿sin internet, o la app está abierta como archivo local?).'); return; }
+    if (srv.getTime() > appFechaCopia().getTime() + 1000) appMostrarAvisoVersion();
+    else if (manual) alert('Ya tenés la última versión de la app.');
+}
+function appRenderVersion() {
+    const el = document.getElementById('app-version-info');
+    if (el) el.textContent = isNaN(appFechaCopia()) ? 'sin datos' : appFechaCopia().toLocaleString('es-AR');
+}
+window.addEventListener('load', () => { appRenderVersion(); setTimeout(() => appBuscarActualizacion(false), 2500); });
+// al volver a la app (por ejemplo desde otra pestaña del celular) se revisa de nuevo, como máximo una vez por minuto
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && Date.now() - appUltimaVerificacion > 60000) appBuscarActualizacion(false);
+});
     </script>
 </body>
 </html>
