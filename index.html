@@ -1909,6 +1909,14 @@
                     <button type="button" class="btn-action" style="background-color: var(--warning);" onclick="dbDescargarTodo()">⬇️ Descargar los datos de la base</button>
                     <button type="button" class="btn-reset-form" style="padding: 8px 14px; font-size: 0.9rem;" onclick="dbSincronizarAhora()">🔄 Sincronizar ahora</button>
                 </div>
+                <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border);">
+                    <button type="button" class="btn-action" onclick="dbCopiarEnlaceConexion()">📲 Copiar enlace para conectar el celular</button>
+                    <input type="text" id="db-enlace" readonly style="display: none; margin-top: 8px; font-size: 0.75rem;" onclick="this.select()">
+                    <p style="font-size: 0.78rem; color: var(--secondary); margin-top: 6px; line-height: 1.5;">
+                        Mandate el enlace al celular (WhatsApp, mail...) y abrilo ahí: el celular se conecta a esta base y descarga los datos, sin tener que escribir la clave.
+                        ⚠️ El enlace incluye la clave de tu base: mandátelo solo a vos.
+                    </p>
+                </div>
                 <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; font-weight: normal; cursor: pointer;">
                     <input type="checkbox" id="db-auto" style="width: auto;" onchange="dbToggleAuto(this.checked)"> Sincronizar automáticamente al guardar
                 </label>
@@ -4542,6 +4550,7 @@
                 
                 if (res.ok) {
                     const data = await res.json();
+                    if (typeof dbConfigurada === 'function' && dbConfigurada() && dbCfg.inicializado) return;   // la base se activó mientras tanto
                     aplicarDatosBackup(data);
                     console.log(`✅ Datos sincronizados automáticamente desde GitHub (${targetFile})`);
                 }
@@ -7000,9 +7009,9 @@ async function dbSubirTodo() {
         alert('No se pudo subir:\n' + e.message);
     } finally { dbEnCurso = false; }
 }
-async function dbDescargarTodo() {
+async function dbDescargarTodo(sinConfirmar) {
     if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
-    if (!confirm('Esto REEMPLAZA los datos de este equipo con los que hay en la base (lo que tengas acá y no esté en la base se pierde).\n\n¿Continuar?')) return;
+    if (!sinConfirmar && !confirm('Esto REEMPLAZA los datos de este equipo con los que hay en la base (lo que tengas acá y no esté en la base se pierde).\n\n¿Continuar?')) return;
     if (dbEnCurso) return;
     dbEnCurso = true;
     dbEstablecer('sync', 'Descargando datos de la base...');
@@ -7030,7 +7039,52 @@ function dbLimpiarLocalStorage() {
     try { localStorage.clear(); guardar.forEach(([k, v]) => { if (v !== null) dbSetRaw(k, v); }); } finally { dbSilencio--; }
 }
 
-window.addEventListener('load', dbAlIniciar);
+
+// ---------- Conectar otro dispositivo con un enlace ----------
+function dbCodificar(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function dbDecodificar(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return JSON.parse(decodeURIComponent(escape(atob(s)))); }
+
+async function dbCopiarEnlaceConexion() {
+    if (!dbConfigurada()) return alert('Primero guardá la URL y la clave.');
+    if (!dbCfg.inicializado) return alert('Primero hacé la primera sincronización con «Subir los datos de este equipo»: así la base ya tiene tus datos cuando conectes el celular.');
+    const base = appBaseURL();
+    if (!/^https?:/.test(base)) return alert('Para generar el enlace abrí la app desde su dirección en internet, no desde un archivo guardado en la compu.');
+    // el "?v=" obliga al celular a pedir la versión más nueva de la app en vez de usar una copia vieja
+    const enlace = `${base}?v=${Date.now()}#conexion=${dbCodificar({ u: dbCfg.url, k: dbCfg.key })}`;
+    const caja = document.getElementById('db-enlace');
+    caja.style.display = 'block'; caja.value = enlace; caja.select();
+    let copiado = false;
+    try { await navigator.clipboard.writeText(enlace); copiado = true; } catch { /* sin permiso del navegador */ }
+    alert(copiado ? 'Enlace copiado. Mandátelo al celular (WhatsApp, mail...) y abrilo ahí.'
+                  : 'Copiá el enlace que apareció en la caja (tocala y copiá) y abrilo en el celular.');
+}
+
+// Si la app se abrió con un enlace de conexión, conecta este dispositivo (y ofrece descargar los datos)
+async function dbProcesarEnlaceConexion() {
+    const m = location.hash.match(/^#conexion=([A-Za-z0-9_-]+)$/);
+    if (!m) return false;
+    const base = appBaseURL();
+    history.replaceState(null, '', base);               // saca la clave de la barra de direcciones
+    fetch(base, { cache: 'reload' }).catch(() => {});   // renueva la copia guardada de la app para las próximas visitas
+    let d = null;
+    try { d = dbDecodificar(m[1]); } catch { /* enlace dañado */ }
+    if (!d || !/^https?:\/\/.+/i.test(d.u || '') || !d.k) { alert('El enlace de conexión no es válido o está incompleto. Generá uno nuevo desde la compu.'); return true; }
+    const url = d.u.replace(/\/+$/, '');
+    if (dbConfigurada() && dbCfg.url === url && dbCfg.key === d.k) { alert('Este dispositivo ya está conectado a esa base de datos.'); return false; }
+    if (!confirm(`Este enlace conecta este dispositivo con la base de datos:\n${url}\n\n¿Conectar?`)) return true;
+    dbCfg = { ...dbCfg, url, key: d.k, activo: true, inicializado: false };
+    dbSnap = {}; dbGuardarSnap(); dbGuardarCfg(); dbActualizarUI();
+    if (confirm('✅ Dispositivo conectado.\n\n¿Descargar ahora los datos de la base?\n\nAceptar: descarga y REEMPLAZA los datos de este dispositivo.\nCancelar: lo elegís después en Configuración.')) {
+        await dbDescargarTodo(true);
+    } else { showSection('config'); dbRenderConfig(); }
+    return true;
+}
+async function dbAlCargar() {
+    if (await dbProcesarEnlaceConexion()) return;
+    dbAlIniciar();
+}
+
+window.addEventListener('load', dbAlCargar);
 
 // =====================================================================
 //  VERSIÓN DE LA APP: avisa si el dispositivo tiene guardada una copia vieja de la página
